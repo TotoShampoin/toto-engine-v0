@@ -45,9 +45,10 @@ int main(int /* argc */, const char* /* argv */[]) {
         2, 3, 0
     });
     
-    auto vertex_shader = TotoEngine::VertexShaderFile(vertex);
-    auto fragment_shader = TotoEngine::FragmentShaderFile(fragment);
-    auto program = TotoEngine::ShaderProgram(vertex_shader, fragment_shader);
+    auto program = TotoEngine::ShaderProgram(
+        TotoEngine::VertexShaderFile(vertex), 
+        TotoEngine::FragmentShaderFile(fragment)
+    );
 
     auto projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
     auto view = glm::mat4(1.0f);
