@@ -1,3 +1,6 @@
 [submodule "utils/CMakeUtils"]
 	path = utils/CMakeUtils
 	url = https://github.com/CoolLibs/CMakeUtils
+[submodule "vendors/imgui"]
+	path = vendors/imgui
+	url = https://github.com/ocornut/imgui

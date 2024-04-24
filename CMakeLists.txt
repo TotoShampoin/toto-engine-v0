@@ -3,6 +3,7 @@ project(TotoEngine)
 
 # includes
 include(utils/CMakeUtils/files_and_folders.cmake)
+include(vendors/imgui.cmake)
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -36,7 +37,7 @@ Cool__target_copy_folder(${PROJECT_NAME} ${${PROJECT_NAME}_INCLUDE_DIR})
 
 # tests
 add_executable(${PROJECT_NAME}_tests ${TESTS})
-target_link_libraries(${PROJECT_NAME}_tests PUBLIC ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_tests PUBLIC ${PROJECT_NAME} imgui)
 target_include_directories(${PROJECT_NAME}_tests PUBLIC ${${PROJECT_NAME}_INCLUDE_DIR})
 set_target_properties(${PROJECT_NAME}_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${${PROJECT_NAME}_OUTPUT_BIN})
 if (MSVC)
