@@ -1,0 +1,45 @@
+#!/usr/bin/python
+
+import sys
+import os
+from tooling.embedder import embedder_bulk
+
+def is_in_root(path = os.getcwd()):
+    return os.path.exists(os.path.join(path, "CMakeLists.txt"))
+
+def get_root():
+    if is_in_root():
+        return os.getcwd()
+    else:
+        current = os.getcwd()
+        while not is_in_root(current):
+            if current == "/":
+                print("Could not find root directory")
+                sys.exit(1)
+            current = os.path.dirname(current)
+        return current
+
+def has_res_and_sources(path = os.getcwd()):
+    return os.path.exists(os.path.join(path, "res")) and os.path.exists(os.path.join(path, "sources"))
+
+root = get_root()
+can_embed = has_res_and_sources()
+
+if not can_embed:
+    print("Could not find res and sources directories")
+    sys.exit(1)
+
+print(f"Files that will be embedded in sources/res:")
+
+for dirpath, dirnames, filenames in os.walk(os.path.join(root, "res")):
+    for filename in filenames:
+        filepath = os.path.relpath(os.path.join(dirpath, filename), root)
+        filepath_inside = os.path.relpath(os.path.join(dirpath, filename), os.path.join(root, "res"))
+        output_path = os.path.join(root, "sources", "res", filepath_inside)
+        print(f"    {filepath}", end="")
+        print("\t-> ", end="")
+        print(output_path)
+    
+input("Agree? (Enter to continue, Ctrl+C to cancel)")
+
+embedder_bulk(os.path.join(root, "res"), os.path.join(root, "sources/res"))
