@@ -11,7 +11,6 @@ out vec2 v_uv;
 uniform mat4 u_projection;
 uniform mat4 u_view;
 uniform mat4 u_model;
-// uniform mat3 u_normal;
 
 void main() {
     mat3 normal_matrix = transpose(inverse(mat3(u_model)));
