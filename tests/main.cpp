@@ -24,27 +24,18 @@ int main(int /* argc */, const char* /* argv */[]) {
     glewInit();
     
     window.makeContextCurrent();
-    auto vertices = std::vector<TotoEngine::Vertex> {
-        {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-        {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}
-    };
-    auto indices = std::vector<TotoEngine::Index>{
-        0, 1, 2,
-        2, 3, 0
-    };
 
-    auto vertex_buffer = TotoEngine::VertexBuffer({
-        {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-        {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}
-    }, {
-        0, 1, 2,
-        2, 3, 0
-    });
-    
+    auto vertex_buffer = TotoEngine::VertexBuffer(
+        {
+            {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
+            {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}
+        }, {
+            0, 1, 2,
+            2, 3, 0
+        }
+    );
     auto program = TotoEngine::ShaderProgram(
         TotoEngine::VertexShaderFile(vertex), 
         TotoEngine::FragmentShaderFile(fragment)
