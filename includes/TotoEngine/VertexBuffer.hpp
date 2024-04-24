@@ -13,10 +13,10 @@ public:
     ~VertexBuffer();
 
     static void bind(const VertexBuffer& buffer) {
-        glBindVertexArray(buffer.vao());
+        bindVertexArray(buffer.vao());
     }
     static void unbind() {
-        glBindVertexArray(0);
+        bindVertexArray(0);
     }
 
     [[nodiscard]] GLuint vao() const { return _vao; }
@@ -30,6 +30,13 @@ private:
     GLuint _vao;
     std::vector<Vertex> _vertices;
     std::vector<Index> _indices;
+
+    static void bindVertexArray(const GLuint& vao) {
+        static GLuint bound_vao = 0;
+        if(bound_vao == vao) return;
+        glBindVertexArray(vao);
+        bound_vao = vao;
+    }
 };
 
 }

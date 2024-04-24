@@ -34,12 +34,22 @@ public:
     }
 
     static void use(const ShaderProgram& program) {
-        glUseProgram(program._program);
+        useProgram(program.program());
+    }
+    static void unuse() {
+        useProgram(0);
     }
 
     [[nodiscard]] GLuint program() const { return _program; }
 private:
     GLuint _program;
+
+    static void useProgram(const GLuint& program) {
+        static GLuint bound_program = 0;
+        if(bound_program == program) return;
+        glUseProgram(program);
+        bound_program = program;
+    }
 };
 
 }
