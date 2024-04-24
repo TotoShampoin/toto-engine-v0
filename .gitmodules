@@ -1,0 +1,3 @@
+[submodule "utils/CMakeUtils"]
+	path = utils/CMakeUtils
+	url = https://github.com/CoolLibs/CMakeUtils
