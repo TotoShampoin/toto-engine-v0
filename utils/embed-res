@@ -29,17 +29,17 @@ if not can_embed:
     print("Could not find res and sources directories")
     sys.exit(1)
 
-print(f"Files that will be embedded in sources/res:")
+# print(f"Files that will be embedded in sources/res:")
 
-for dirpath, dirnames, filenames in os.walk(os.path.join(root, "res")):
-    for filename in filenames:
-        filepath = os.path.relpath(os.path.join(dirpath, filename), root)
-        filepath_inside = os.path.relpath(os.path.join(dirpath, filename), os.path.join(root, "res"))
-        output_path = os.path.join(root, "sources", "res", filepath_inside)
-        print(f"    {filepath}", end="")
-        print("\t-> ", end="")
-        print(output_path)
+# for dirpath, dirnames, filenames in os.walk(os.path.join(root, "res")):
+#     for filename in filenames:
+#         filepath = os.path.relpath(os.path.join(dirpath, filename), root)
+#         filepath_inside = os.path.relpath(os.path.join(dirpath, filename), os.path.join(root, "res"))
+#         output_path = os.path.join(root, "sources", "res", filepath_inside)
+#         print(f"    {filepath}", end="")
+#         print("\t-> ", end="")
+#         print(output_path)
     
-input("Agree? (Enter to continue, Ctrl+C to cancel)")
+# input("Agree? (Enter to continue, Ctrl+C to cancel)")
 
 embedder_bulk(os.path.join(root, "res"), os.path.join(root, "sources/res"))
