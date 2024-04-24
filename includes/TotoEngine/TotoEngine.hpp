@@ -1,6 +1,11 @@
 #pragma once
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include <TotoEngine/Window.hpp>
+#include <TotoEngine/VertexBuffer.hpp>
+#include <TotoEngine/ShaderProgram.hpp>
 
 #define __TOTO_ENGINE_MAJOR__ 0
 #define __TOTO_ENGINE_MINOR__ 0
