@@ -4,7 +4,6 @@
 #include <utility>
 
 namespace TotoEngine {
-namespace IO {
 
 class Window {
 public:
@@ -31,5 +30,4 @@ private:
     GLFWwindow* _glfw_window;
 };
 
-}
 }

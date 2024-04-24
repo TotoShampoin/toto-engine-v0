@@ -1,8 +1,7 @@
-#include "TotoEngine/io/Window.hpp"
+#include "TotoEngine/Window.hpp"
 #include <stdexcept>
 
 namespace TotoEngine {
-namespace IO {
 
 void Window::init() {
     static bool initialized = false;
@@ -31,5 +30,4 @@ Window::~Window() {
     glfwDestroyWindow(_glfw_window);
 }
 
-}
 }

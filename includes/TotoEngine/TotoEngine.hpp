@@ -1,6 +1,6 @@
 #pragma once
 
-#include <TotoEngine/io/Window.hpp>
+#include <TotoEngine/Window.hpp>
 
 #define __TOTO_ENGINE_MAJOR__ 0
 #define __TOTO_ENGINE_MINOR__ 0

@@ -3,9 +3,9 @@
 
 int main(int /* argc */, const char* /* argv */[]) {
     TotoEngine::printInfo();
-    TotoEngine::IO::Window::init();
+    TotoEngine::Window::init();
 
-    TotoEngine::IO::Window window(800, 600, "TotoEngine");
+    TotoEngine::Window window(800, 600, "TotoEngine");
 
     while(!window.shouldClose()) {
         window.makeContextCurrent();
