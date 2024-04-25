@@ -1,8 +1,10 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <optional>
 
 #include "ShaderFile.hpp"
+#include "Primitives.hpp"
 
 namespace TotoEngine {
 
@@ -19,37 +21,23 @@ public:
             std::is_base_of_v<ShaderFile<ShaderType::COMPUTE>, Shaders>)
             && ...));
         _program = glCreateProgram();
-        (glAttachShader(_program, shaders.shader()), ...);
-        glLinkProgram(_program);
-        int success;
-        char info_log[512];
-        glGetProgramiv(_program, GL_LINK_STATUS, &success);
-        if(!success) {
-            glGetProgramInfoLog(_program, 512, nullptr, info_log);
-            std::cerr << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << info_log << std::endl;
-        }
+        (attachShader(shaders.shader()), ...);
+        linkProgram();
     }
     ~ShaderProgram() {
         glDeleteProgram(_program);
     }
 
-    static void use(const ShaderProgram& program) {
-        useProgram(program.program());
-    }
-    static void unuse() {
-        useProgram(0);
-    }
+    constexpr static auto NONE = std::nullopt;
+    static void use(const optional_ref<ShaderProgram>& program);
 
     [[nodiscard]] GLuint program() const { return _program; }
 private:
     GLuint _program;
 
-    static void useProgram(const GLuint& program) {
-        static GLuint bound_program = 0;
-        if(bound_program == program) return;
-        glUseProgram(program);
-        bound_program = program;
-    }
+    void attachShader(const GLuint& shader);
+    void linkProgram();
+    static void useProgram(const GLuint& program);
 };
 
 }

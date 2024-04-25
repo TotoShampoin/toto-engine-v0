@@ -31,12 +31,7 @@ private:
     std::vector<Vertex> _vertices;
     std::vector<Index> _indices;
 
-    static void bindVertexArray(const GLuint& vao) {
-        static GLuint bound_vao = 0;
-        if(bound_vao == vao) return;
-        glBindVertexArray(vao);
-        bound_vao = vao;
-    }
+    static void bindVertexArray(const GLuint& vao);
 };
 
 }
