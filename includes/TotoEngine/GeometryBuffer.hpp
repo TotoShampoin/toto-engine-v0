@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "MeshData.hpp"
+#include "Primitives.hpp"
 #include <vector>
 
 namespace TotoEngine {
