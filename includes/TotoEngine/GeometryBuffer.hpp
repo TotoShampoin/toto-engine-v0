@@ -23,10 +23,10 @@ public:
     ~GeometryBuffer() = default;
 
     static void bind(const GeometryBuffer& buffer) {
-        GL::bindVertexArray(buffer.vao());
+        glBindVertexArray(buffer.vao());
     }
     static void unbind() {
-        GL::bindVertexArray(0);
+        glBindVertexArray(0);
     }
 
     [[nodiscard]] GLuint vao() const { return _vao; }

@@ -7,11 +7,11 @@ namespace TotoEngine {
 
 void ShaderProgram::use(const optional_ref<ShaderProgram>& program) {
     if(!program.has_value()) {
-        GL::useProgram(0);
+        glUseProgram(0);
         return;
     }
     auto& program_ref = program.value().get();
-    GL::useProgram(program_ref.program());
+    glUseProgram(program_ref.program());
 }
 
 void ShaderProgram::attachShader(const GLuint& shader) {
