@@ -24,7 +24,7 @@ using GLTexture = TotoEngine::GLObject<
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
     auto window = Window(800, 600, "TotoEngine");
-    GL::init();
+    glewInit();
 
     imguiInit(window);
 
@@ -78,17 +78,17 @@ int main(int /* argc */, const char* /* argv */[]) {
     glBindTexture(GL_TEXTURE_2D, texture);
     program.uniform("u_texture", 0);
 
-    GL::clearColor({0.0f, 0.0f, 0.0f, 1.0f});
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     while(!window.shouldClose()) {
         Window::makeContextCurrent(window);
-        GL::clear({true, true, false});
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ShaderProgram::use(program);
         GeometryBuffer::bind(vertex_buffer);
-        GL::draw(GL_TRIANGLES, vertex_buffer.indices().size());
+        glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
 
         imguiRender();
 
