@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 
+#include "TotoEngine/GeometryBuffer.hpp"
 #include "TotoEngine/Uniforms.hpp"
 #include "res/shaders/vertex.glsl.hpp"
 #include "res/shaders/fragment.glsl.hpp"
@@ -65,9 +66,9 @@ int main(int /* argc */, const char* /* argv */[]) {
         {// OpenGL rendering
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-            GeometryBuffer::bind(vertex_buffer);
             ShaderProgram::use(program);
-            glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
+            GeometryBuffer::bind(vertex_buffer);
+            GeometryBuffer::draw(vertex_buffer);
         }
 
         {// ImGui rendering
