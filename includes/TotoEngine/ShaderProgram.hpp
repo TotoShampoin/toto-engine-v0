@@ -1,6 +1,8 @@
 #pragma once
 
-#include "GL.hpp"
+#include <GL/glew.h>
+
+#include "GLObject.hpp"
 #include <optional>
 
 #include "ShaderFile.hpp"

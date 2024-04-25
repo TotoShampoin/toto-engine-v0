@@ -1,6 +1,7 @@
 #pragma once
 
-#include "GL.hpp"
+#include <GL/glew.h>
+
 #include <format>
 #include <stdexcept>
 #include <string>

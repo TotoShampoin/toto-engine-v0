@@ -1,8 +1,8 @@
 #pragma once
 
-// #include <GL/glew.h>
+#include <GL/glew.h>
 
-#include "GL.hpp"
+#include "GLObject.hpp"
 #include "Primitives.hpp"
 #include <vector>
 
