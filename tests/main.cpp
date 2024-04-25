@@ -19,7 +19,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     TotoEngine::Window window(800, 600, "TotoEngine");
     glewInit();
 
-    auto vertex_buffer = TotoEngine::VertexBuffer(
+    auto vertex_buffer = TotoEngine::GeometryBuffer(
         {
             {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
             {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
@@ -60,7 +60,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         TotoEngine::Window::makeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-        TotoEngine::VertexBuffer::bind(vertex_buffer);
+        TotoEngine::GeometryBuffer::bind(vertex_buffer);
         TotoEngine::ShaderProgram::use(program);
         glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
 

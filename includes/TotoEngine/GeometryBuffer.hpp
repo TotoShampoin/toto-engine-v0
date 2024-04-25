@@ -7,12 +7,12 @@
 
 namespace TotoEngine {
 
-class VertexBuffer {
+class GeometryBuffer {
 public:
-    VertexBuffer(const std::vector<Vertex>&, const std::vector<Index>&);
-    ~VertexBuffer();
+    GeometryBuffer(const std::vector<Vertex>&, const std::vector<Index>&);
+    ~GeometryBuffer();
 
-    static void bind(const VertexBuffer& buffer) {
+    static void bind(const GeometryBuffer& buffer) {
         bindVertexArray(buffer.vao());
     }
     static void unbind() {

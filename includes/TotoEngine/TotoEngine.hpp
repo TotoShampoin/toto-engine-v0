@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include <TotoEngine/Window.hpp>
-#include <TotoEngine/VertexBuffer.hpp>
+#include <TotoEngine/GeometryBuffer.hpp>
 #include <TotoEngine/ShaderProgram.hpp>
 
 #define __TOTO_ENGINE_MAJOR__ 0

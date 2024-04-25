@@ -1,10 +1,10 @@
-#include "TotoEngine/VertexBuffer.hpp"
+#include "TotoEngine/GeometryBuffer.hpp"
 #include "TotoEngine/MeshData.hpp"
 #include <vector>
 
 namespace TotoEngine {
 
-VertexBuffer::VertexBuffer(const std::vector<Vertex>& vertices, const std::vector<Index>& indices):
+GeometryBuffer::GeometryBuffer(const std::vector<Vertex>& vertices, const std::vector<Index>& indices):
     _vertices(vertices), _indices(indices)
 {
     glGenBuffers(1, &_vbo);
@@ -30,7 +30,7 @@ VertexBuffer::VertexBuffer(const std::vector<Vertex>& vertices, const std::vecto
     glBindVertexArray(0);
 }
 
-VertexBuffer::~VertexBuffer() {
+GeometryBuffer::~GeometryBuffer() {
     glDeleteBuffers(1, &_ibo);
     glDeleteBuffers(1, &_vbo);
     glDeleteVertexArrays(1, &_vao);
