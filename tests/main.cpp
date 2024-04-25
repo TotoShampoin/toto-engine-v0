@@ -10,20 +10,14 @@
 
 #include <vector>
 
+#include "TotoEngine/Window.hpp"
 #include "res/shaders/vertex.glsl.hpp"
 #include "res/shaders/fragment.glsl.hpp"
 
 
 int main(int /* argc */, const char* /* argv */[]) {
-    TotoEngine::printInfo();
-    TotoEngine::Window::init();
-
     TotoEngine::Window window(800, 600, "TotoEngine");
-    window.makeContextCurrent();
-
     glewInit();
-    
-    window.makeContextCurrent();
 
     auto vertex_buffer = TotoEngine::VertexBuffer(
         {
@@ -63,7 +57,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     glEnable(GL_DEPTH_TEST);
     glCullFace(GL_NONE);
     while(!window.shouldClose()) {
-        window.makeContextCurrent();
+        TotoEngine::Window::makeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         TotoEngine::VertexBuffer::bind(vertex_buffer);
@@ -86,8 +80,8 @@ int main(int /* argc */, const char* /* argv */[]) {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
-        window.swapBuffers();
-        window.pollEvents();
+        TotoEngine::Window::swapBuffers(window);
+        TotoEngine::Window::pollEvents();
     }
 
     return 0;

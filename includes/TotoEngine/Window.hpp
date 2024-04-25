@@ -19,9 +19,10 @@ public:
     }
 
     [[nodiscard]] bool shouldClose() const { return glfwWindowShouldClose(_glfw_window); }
-    void makeContextCurrent() { glfwMakeContextCurrent(_glfw_window); }
-    void swapBuffers() { glfwSwapBuffers(_glfw_window); }
+
     static void pollEvents() { glfwPollEvents(); }
+    static void swapBuffers(Window& window) { glfwSwapBuffers(window._glfw_window); }
+    static void makeContextCurrent(Window& window) { glfwMakeContextCurrent(window._glfw_window); }
 
     static void init();
     static void terminate();

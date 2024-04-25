@@ -19,11 +19,13 @@ void Window::terminate() {
 }
 
 Window::Window(int width, int height, const char* title) {
+    Window::init();
     _glfw_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
     if (!_glfw_window) {
         terminate();
         throw std::runtime_error("Failed to create GLFW window");
     }
+    Window::makeContextCurrent(*this);
 }
 
 Window::~Window() {
