@@ -37,7 +37,6 @@ private:
 
     void attachShader(const GLuint& shader);
     void linkProgram();
-    static void useProgram(const GLuint& program);
 };
 
 }
