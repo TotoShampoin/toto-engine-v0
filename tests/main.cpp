@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include <TotoEngine/TotoEngine.hpp>
 
 #include <glm/glm.hpp>
@@ -17,12 +16,34 @@
 void imguiInit(TotoEngine::Window& window);
 void imguiRender();
 
+using GLTexture = TotoEngine::GLObject<
+    [] { GLuint id; glGenTextures(1, &id); return id; },
+    [](GLuint& id) { glDeleteTextures(1, &id); }
+>;
+
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
     auto window = Window(800, 600, "TotoEngine");
     GL::init();
 
     imguiInit(window);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    constexpr int width = 16, height = 16, channels = 4;
+    std::vector<uint8_t> data(width * height * channels, 0);
+    for(int i = 0; i < width * height; i++) {
+        data[i * channels + 0] = (i % 2) * 255;
+        data[i * channels + 1] = (i % 3) * 127;
+        data[i * channels + 2] = (i % 4) * 85;
+        data[i * channels + 3] = 255;
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     auto vertex_buffer = GeometryBuffer(
         {
@@ -53,11 +74,14 @@ int main(int /* argc */, const char* /* argv */[]) {
     } catch(const std::runtime_error& e) {
         std::cerr << e.what() << std::endl;
     }
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    program.uniform("u_texture", 0);
 
     GL::clearColor({0.0f, 0.0f, 0.0f, 1.0f});
-    GL::enable(GL_DEPTH_TEST);
-    GL::enable(GL_CULL_FACE);
-    GL::cullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     while(!window.shouldClose()) {
         Window::makeContextCurrent(window);
         GL::clear({true, true, false});
