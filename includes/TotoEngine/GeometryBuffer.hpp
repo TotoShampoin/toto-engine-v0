@@ -21,6 +21,8 @@ public:
 
     static void draw(const GeometryBuffer& buffer);
 
+    static void cullFace(const GLenum& face);
+
     [[nodiscard]] GLuint vao() const { return _vao; }
     [[nodiscard]] GLuint vbo() const { return _vbo; }
     [[nodiscard]] GLuint ibo() const { return _ibo; }

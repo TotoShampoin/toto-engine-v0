@@ -39,6 +39,12 @@ void GeometryBuffer::draw(const GeometryBuffer& buffer) {
     glDrawElements(GL_TRIANGLES, buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
 }
 
+void GeometryBuffer::cullFace(const GLenum& face) {
+    static GLenum bound_face = 0;
+    if(bound_face == face) return;
+    glCullFace(face);
+}
+
 void GeometryBuffer::bindVertexArray(const GLuint& vao) {
     static GLuint bound_vao = 0;
     if(bound_vao == vao) return;

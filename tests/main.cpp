@@ -11,16 +11,14 @@
 #include <iostream>
 #include <vector>
 
-#include "TotoEngine/GeometryBuffer.hpp"
-#include "TotoEngine/Uniforms.hpp"
 #include "res/shaders/vertex.glsl.hpp"
 #include "res/shaders/fragment.glsl.hpp"
 
 
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
-    Window window(800, 600, "TotoEngine");
-    glewInit();
+    auto window = Window(800, 600, "TotoEngine");
+    GL::init();
 
     auto vertex_buffer = GeometryBuffer(
         {
@@ -57,14 +55,15 @@ int main(int /* argc */, const char* /* argv */[]) {
     ImGui_ImplGlfw_InitForOpenGL(window.GLFWWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 460");
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
-    glCullFace(GL_NONE);
+    GL::clearColor({0.0f, 0.0f, 0.0f, 1.0f});
+    GL::enable(GL_DEPTH_TEST);
+    GL::enable(GL_CULL_FACE);
+    GeometryBuffer::cullFace(GL_BACK);
     while(!window.shouldClose()) {
         Window::makeContextCurrent(window);
 
         {// OpenGL rendering
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+            GL::clear({true, true, false});
 
             ShaderProgram::use(program);
             GeometryBuffer::bind(vertex_buffer);
