@@ -1,10 +1,11 @@
 #include "TotoEngine/ShaderProgram.hpp"
+#include "TotoEngine/Primitives.hpp"
 #include <format>
 #include <stdexcept>
 
 namespace TotoEngine {
 
-void ShaderProgram::use(const std::optional<std::reference_wrapper<ShaderProgram>>& program) {
+void ShaderProgram::use(const optional_ref<ShaderProgram>& program) {
     if(!program.has_value()) {
         useProgram(0);
         return;
