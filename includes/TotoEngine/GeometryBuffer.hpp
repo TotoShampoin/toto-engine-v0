@@ -8,10 +8,19 @@
 
 namespace TotoEngine {
 
+using GLBuffer = GLObject<
+    [] { GLuint id; glGenBuffers(1, &id); return id; },
+    [](GLuint& id) { glDeleteBuffers(1, &id); }
+>;
+using GLVertexArray = GLObject<
+    [] { GLuint id; glGenVertexArrays(1, &id); return id; },
+    [](GLuint& id) { glDeleteVertexArrays(1, &id); }
+>;
+
 class GeometryBuffer {
 public:
     GeometryBuffer(const std::vector<Vertex>&, const std::vector<Index>&);
-    ~GeometryBuffer();
+    ~GeometryBuffer() = default;
 
     static void bind(const GeometryBuffer& buffer) {
         GL::bindVertexArray(buffer.vao());
@@ -26,9 +35,9 @@ public:
     [[nodiscard]] const std::vector<Vertex>& vertices() const { return _vertices; }
     [[nodiscard]] const std::vector<GLuint>& indices() const { return _indices; }
 private:
-    GLuint _vbo;
-    GLuint _ibo;
-    GLuint _vao;
+    GLBuffer _vbo;
+    GLBuffer _ibo;
+    GLVertexArray _vao;
     std::vector<Vertex> _vertices;
     std::vector<Index> _indices;
 

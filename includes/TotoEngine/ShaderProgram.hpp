@@ -9,11 +9,16 @@
 
 namespace TotoEngine {
 
+using GLProgram = GLObject<
+    [] { return glCreateProgram(); },
+    [](GLuint& id) { glDeleteProgram(id); }
+>;
+
 class ShaderProgram {
 public:
     template <typename... Shaders>
     ShaderProgram(const Shaders&... shaders):
-        _program(glCreateProgram()),
+        _program(),
         _uniform(_program)
     {
         static_assert((
@@ -27,9 +32,7 @@ public:
         (attachShader(shaders.shader()), ...);
         linkProgram();
     }
-    ~ShaderProgram() {
-        glDeleteProgram(_program);
-    }
+    ~ShaderProgram() = default;
 
     constexpr static auto NONE = std::nullopt;
     static void use(const optional_ref<ShaderProgram>& program);
@@ -39,7 +42,7 @@ public:
     [[nodiscard]] GLuint program() const { return _program; }
     [[nodiscard]] Uniform& uniform() { return _uniform; }
 private:
-    GLuint _program;
+    GLProgram _program;
     Uniform _uniform;
 
     // static GLuint& boundProgram();

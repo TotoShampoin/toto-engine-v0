@@ -4,11 +4,9 @@
 namespace TotoEngine {
 
 GeometryBuffer::GeometryBuffer(const std::vector<Vertex>& vertices, const std::vector<Index>& indices):
+    _vao(), _vbo(), _ibo(),
     _vertices(vertices), _indices(indices)
 {
-    glGenBuffers(1, &_vbo);
-    glGenBuffers(1, &_ibo);
-    glGenVertexArrays(1, &_vao);
     GL::bindBuffer(GL_ARRAY_BUFFER, _vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
     GL::bindBuffer(GL_ARRAY_BUFFER, 0);
@@ -26,12 +24,6 @@ GeometryBuffer::GeometryBuffer(const std::vector<Vertex>& vertices, const std::v
     glVertexAttribPointer(VERTEX_ATTRIBUTE_UV, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
     GL::bindBuffer(GL_ARRAY_BUFFER, 0);
     GL::bindVertexArray(0);
-}
-
-GeometryBuffer::~GeometryBuffer() {
-    glDeleteBuffers(1, &_ibo);
-    glDeleteBuffers(1, &_vbo);
-    glDeleteVertexArrays(1, &_vao);
 }
 
 }

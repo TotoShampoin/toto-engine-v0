@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
+#include "GL.hpp"
 #include <format>
 #include <stdexcept>
 #include <string>
@@ -50,6 +50,7 @@ public:
 
     [[nodiscard]] GLuint shader() const { return _shader; }
 private:
+    // TODO(GPU): Find a way to make this work with the GLObject class
     GLuint _shader;
 };
 
