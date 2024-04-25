@@ -35,6 +35,8 @@ public:
 private:
     GLuint _program;
 
+    static GLuint& boundProgram();
+    static void useProgram(const GLuint& program);
     void attachShader(const GLuint& shader);
     void linkProgram();
 };

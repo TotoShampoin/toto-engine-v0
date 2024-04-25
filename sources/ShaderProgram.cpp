@@ -5,17 +5,12 @@
 namespace TotoEngine {
 
 void ShaderProgram::use(const std::optional<std::reference_wrapper<ShaderProgram>>& program) {
-    static GLuint bound_program = 0;
     if(!program.has_value()) {
-        glUseProgram(0);
+        useProgram(0);
         return;
     }
     auto& program_ref = program.value().get();
-    if(bound_program == program_ref.program()) {
-        return;
-    }
-    glUseProgram(program_ref.program());
-    bound_program = program_ref.program();
+    useProgram(program_ref.program());
 }
 
 void ShaderProgram::attachShader(const GLuint& shader) {
@@ -30,6 +25,18 @@ void ShaderProgram::linkProgram() {
         glGetProgramInfoLog(_program, 512, nullptr, info_log);
         throw std::runtime_error(std::format("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}", info_log));
     }
+}
+
+GLuint& ShaderProgram::boundProgram() {
+    static GLuint bound_program = 0;
+    return bound_program;
+}
+void ShaderProgram::useProgram(const GLuint& program) {
+    if(boundProgram() == program) {
+        return;
+    }
+    glUseProgram(program);
+    boundProgram() = program;
 }
 
 }
