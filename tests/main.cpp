@@ -8,8 +8,10 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
+#include <iostream>
 #include <vector>
 
+#include "TotoEngine/Uniforms.hpp"
 #include "res/shaders/vertex.glsl.hpp"
 #include "res/shaders/fragment.glsl.hpp"
 
@@ -40,13 +42,14 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
 
     ShaderProgram::use(program);
-    auto u_projection = glGetUniformLocation(program.program(), "u_projection");
-    auto u_view = glGetUniformLocation(program.program(), "u_view");
-    auto u_model = glGetUniformLocation(program.program(), "u_model");
-
-    glUniformMatrix4fv(u_projection, 1, GL_FALSE, &projection[0][0]);
-    glUniformMatrix4fv(u_view, 1, GL_FALSE, &view[0][0]);
-    glUniformMatrix4fv(u_model, 1, GL_FALSE, &model[0][0]);
+    program.uniform("u_projection", projection);
+    program.uniform("u_view", view);
+    program.uniform("u_model", model);
+    try { // voluntary error
+        program.uniform("u_inexistent_uniform", 0);
+    } catch(const std::runtime_error& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -86,7 +89,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::pollEvents();
 
         model = glm::rotate(model, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        glUniformMatrix4fv(u_model, 1, GL_FALSE, &model[0][0]);
+        program.uniform("u_model", model);
     }
 
     return 0;
