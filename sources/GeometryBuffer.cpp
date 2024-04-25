@@ -35,6 +35,10 @@ GeometryBuffer::~GeometryBuffer() {
     glDeleteVertexArrays(1, &_vao);
 }
 
+void GeometryBuffer::draw(const GeometryBuffer& buffer) {
+    glDrawElements(GL_TRIANGLES, buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
+}
+
 void GeometryBuffer::bindVertexArray(const GLuint& vao) {
     static GLuint bound_vao = 0;
     if(bound_vao == vao) return;

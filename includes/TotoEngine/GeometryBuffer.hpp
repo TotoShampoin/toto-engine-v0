@@ -19,6 +19,8 @@ public:
         bindVertexArray(0);
     }
 
+    static void draw(const GeometryBuffer& buffer);
+
     [[nodiscard]] GLuint vao() const { return _vao; }
     [[nodiscard]] GLuint vbo() const { return _vbo; }
     [[nodiscard]] GLuint ibo() const { return _ibo; }
