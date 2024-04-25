@@ -10,16 +10,16 @@
 
 #include <vector>
 
-#include "TotoEngine/Window.hpp"
 #include "res/shaders/vertex.glsl.hpp"
 #include "res/shaders/fragment.glsl.hpp"
 
 
 int main(int /* argc */, const char* /* argv */[]) {
-    TotoEngine::Window window(800, 600, "TotoEngine");
+    using namespace TotoEngine;
+    Window window(800, 600, "TotoEngine");
     glewInit();
 
-    auto vertex_buffer = TotoEngine::GeometryBuffer(
+    auto vertex_buffer = GeometryBuffer(
         {
             {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
             {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
@@ -30,16 +30,16 @@ int main(int /* argc */, const char* /* argv */[]) {
             2, 3, 0
         }
     );
-    auto program = TotoEngine::ShaderProgram(
-        TotoEngine::VertexShaderFile(vertex), 
-        TotoEngine::FragmentShaderFile(fragment)
+    auto program = ShaderProgram(
+        VertexShaderFile(vertex), 
+        FragmentShaderFile(fragment)
     );
 
     auto projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    auto view = glm::mat4(1.0f);
+    auto view = Matrix4(1.0f);
     auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
 
-    TotoEngine::ShaderProgram::use(program);
+    ShaderProgram::use(program);
     auto u_projection = glGetUniformLocation(program.program(), "u_projection");
     auto u_view = glGetUniformLocation(program.program(), "u_view");
     auto u_model = glGetUniformLocation(program.program(), "u_model");
@@ -57,31 +57,36 @@ int main(int /* argc */, const char* /* argv */[]) {
     glEnable(GL_DEPTH_TEST);
     glCullFace(GL_NONE);
     while(!window.shouldClose()) {
-        TotoEngine::Window::makeContextCurrent(window);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        Window::makeContextCurrent(window);
 
-        TotoEngine::GeometryBuffer::bind(vertex_buffer);
-        TotoEngine::ShaderProgram::use(program);
-        glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
+        {// OpenGL rendering
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+            GeometryBuffer::bind(vertex_buffer);
+            ShaderProgram::use(program);
+            glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
+        }
+
+        {// ImGui rendering
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+
+            ImGui::SetNextWindowPos(ImVec2(0, 0));
+            ImGui::SetNextWindowSize(ImVec2(0, 0));
+            ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+            ImGui::Text("%3.2f", ImGui::GetIO().Framerate);
+            ImGui::End();
+
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
+
+        Window::swapBuffers(window);
+        Window::pollEvents();
 
         model = glm::rotate(model, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(u_model, 1, GL_FALSE, &model[0][0]);
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(ImVec2(0, 0));
-        ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-        ImGui::Text("%3.2f", ImGui::GetIO().Framerate);
-        ImGui::End();
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        
-        TotoEngine::Window::swapBuffers(window);
-        TotoEngine::Window::pollEvents();
     }
 
     return 0;
