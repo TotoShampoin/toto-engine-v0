@@ -20,6 +20,13 @@ public:
     static void enable(const GLenum&);
     static void disable(const GLenum&);
 
+    static void bindBuffer(const GLenum& target, const GLuint& buffer);
+    static void bindVertexArray(const GLuint& vao);
+    static void useProgram(const GLuint& program);
+
+    static void cullFace(const GLenum&);
+    static void draw(const GLenum& mode, const size_t& count, const size_t& indices = 0);
+
     static GL& instance() {
         static GL instance;
         return instance;

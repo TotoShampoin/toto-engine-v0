@@ -14,11 +14,15 @@
 #include "res/shaders/vertex.glsl.hpp"
 #include "res/shaders/fragment.glsl.hpp"
 
+void imguiInit(TotoEngine::Window& window);
+void imguiRender();
 
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
     auto window = Window(800, 600, "TotoEngine");
     GL::init();
+
+    imguiInit(window);
 
     auto vertex_buffer = GeometryBuffer(
         {
@@ -50,40 +54,19 @@ int main(int /* argc */, const char* /* argv */[]) {
         std::cerr << e.what() << std::endl;
     }
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window.GLFWWindow(), true);
-    ImGui_ImplOpenGL3_Init("#version 460");
-
     GL::clearColor({0.0f, 0.0f, 0.0f, 1.0f});
     GL::enable(GL_DEPTH_TEST);
     GL::enable(GL_CULL_FACE);
-    GeometryBuffer::cullFace(GL_BACK);
+    GL::cullFace(GL_BACK);
     while(!window.shouldClose()) {
         Window::makeContextCurrent(window);
+        GL::clear({true, true, false});
 
-        {// OpenGL rendering
-            GL::clear({true, true, false});
+        ShaderProgram::use(program);
+        GeometryBuffer::bind(vertex_buffer);
+        GL::draw(GL_TRIANGLES, vertex_buffer.indices().size());
 
-            ShaderProgram::use(program);
-            GeometryBuffer::bind(vertex_buffer);
-            GeometryBuffer::draw(vertex_buffer);
-        }
-
-        {// ImGui rendering
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-
-            ImGui::SetNextWindowPos(ImVec2(0, 0));
-            ImGui::SetNextWindowSize(ImVec2(0, 0));
-            ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-            ImGui::Text("%3.2f", ImGui::GetIO().Framerate);
-            ImGui::End();
-
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        }
+        imguiRender();
 
         Window::swapBuffers(window);
         Window::pollEvents();
@@ -93,4 +76,26 @@ int main(int /* argc */, const char* /* argv */[]) {
     }
 
     return 0;
+}
+
+
+void imguiInit(TotoEngine::Window& window) {
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(window.GLFWWindow(), true);
+    ImGui_ImplOpenGL3_Init("#version 460");
+}
+void imguiRender() {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2(0, 0));
+    ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Text("%3.2f", ImGui::GetIO().Framerate);
+    ImGui::End();
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

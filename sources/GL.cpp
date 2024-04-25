@@ -41,4 +41,35 @@ void GL::disable(const GLenum& capability) {
     }
 }
 
+void GL::bindBuffer(const GLenum& target, const GLuint& buffer) {
+    static GLuint bound_buffer = 0;
+    if(bound_buffer == buffer) return;
+    glBindBuffer(target, buffer);
+    bound_buffer = buffer;
+}
+
+void GL::bindVertexArray(const GLuint& vao) {
+    static GLuint bound_vao = 0;
+    if(bound_vao == vao) return;
+    glBindVertexArray(vao);
+    bound_vao = vao;
+}
+
+void GL::useProgram(const GLuint& program) {
+    static GLuint bound_program = 0;
+    if(bound_program == program) return;
+    glUseProgram(program);
+    bound_program = program;
+}
+
+void GL::cullFace(const GLenum& face) {
+    static GLenum bound_face = 0;
+    if(bound_face == face) return;
+    glCullFace(face);
+}
+
+void GL::draw(const GLenum& mode, const size_t& count, const size_t& indices) {
+    glDrawElements(mode, count, GL_UNSIGNED_INT, reinterpret_cast<void*>(indices));
+}
+
 }

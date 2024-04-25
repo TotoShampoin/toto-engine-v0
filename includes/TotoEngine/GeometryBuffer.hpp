@@ -1,7 +1,8 @@
 #pragma once
 
-#include <GL/glew.h>
+// #include <GL/glew.h>
 
+#include "GL.hpp"
 #include "Primitives.hpp"
 #include <vector>
 
@@ -13,15 +14,11 @@ public:
     ~GeometryBuffer();
 
     static void bind(const GeometryBuffer& buffer) {
-        bindVertexArray(buffer.vao());
+        GL::bindVertexArray(buffer.vao());
     }
     static void unbind() {
-        bindVertexArray(0);
+        GL::bindVertexArray(0);
     }
-
-    static void draw(const GeometryBuffer& buffer);
-
-    static void cullFace(const GLenum& face);
 
     [[nodiscard]] GLuint vao() const { return _vao; }
     [[nodiscard]] GLuint vbo() const { return _vbo; }
@@ -35,7 +32,8 @@ private:
     std::vector<Vertex> _vertices;
     std::vector<Index> _indices;
 
-    static void bindVertexArray(const GLuint& vao);
+    GLenum _cull_face = GL_NONE;
+    GLenum _draw_mode = GL_TRIANGLES;
 };
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
+#include "GL.hpp"
 #include <optional>
 
 #include "ShaderFile.hpp"
@@ -34,9 +34,7 @@ public:
     constexpr static auto NONE = std::nullopt;
     static void use(const optional_ref<ShaderProgram>& program);
 
-    void uniform(const std::string& name, const UniformVariant& value) {
-        _uniform(name, value);
-    }
+    void uniform(const std::string& name, const UniformVariant& value);
 
     [[nodiscard]] GLuint program() const { return _program; }
     [[nodiscard]] Uniform& uniform() { return _uniform; }
@@ -44,8 +42,8 @@ private:
     GLuint _program;
     Uniform _uniform;
 
-    static GLuint& boundProgram();
-    static void useProgram(const GLuint& program);
+    // static GLuint& boundProgram();
+    // static void useProgram(const GLuint& program);
     void attachShader(const GLuint& shader);
     void linkProgram();
 };
