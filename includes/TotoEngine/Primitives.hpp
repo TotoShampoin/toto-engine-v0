@@ -1,8 +1,12 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <optional>
 
 namespace TotoEngine {
+
+template<typename T>
+using optional_ref = std::optional<std::reference_wrapper<T>>;
 
 using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
