@@ -1,7 +1,8 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <iostream>
+#include <format>
+#include <stdexcept>
 #include <string>
 
 namespace TotoEngine {
@@ -40,7 +41,7 @@ public:
         glGetShaderiv(_shader, GL_COMPILE_STATUS, &success);
         if(!success) {
             glGetShaderInfoLog(_shader, 512, nullptr, info_log);
-            std::cerr << "ERROR::SHADER::" << shaderTypeToString(TYPE) << "::COMPILATION_FAILED\n" << info_log << std::endl;
+            throw std::runtime_error(std::format("ERROR::SHADER::{}::COMPILATION_FAILED\n{}", shaderTypeToString(TYPE), info_log));
         }
     }
     ~ShaderFile() {
