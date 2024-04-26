@@ -30,12 +30,12 @@ int main(int /* argc */, const char* /* argv */[]) {
 
     // GLTexture texture;
     // glBindTexture(GL_TEXTURE_2D, texture);
-    Texture<TEXTURE_2D> texture;
-    Texture<TEXTURE_2D>::bind(texture);
-    Texture<TEXTURE_2D>::parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    Texture<TEXTURE_2D>::parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    Texture<TEXTURE_2D>::parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    Texture<TEXTURE_2D>::parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    Texture2D texture;
+    Texture2D::bind(texture);
+    Texture2D::parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    Texture2D::parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    Texture2D::parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    Texture2D::parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     constexpr int width = 16, height = 16, channels = 4;
     std::vector<uint8_t> data(width * height * channels, 0);
     for(int i = 0; i < width * height; i++) {
@@ -44,8 +44,8 @@ int main(int /* argc */, const char* /* argv */[]) {
         data[i * channels + 2] = (i % 4) * 85;
         data[i * channels + 3] = 255;
     }
-    Texture<TEXTURE_2D>::image(width, height, channels, data);
-    Texture<TEXTURE_2D>::bind(Texture<TEXTURE_2D>::NONE);
+    Texture2D::image(width, height, channels, data);
+    Texture2D::bind(Texture2D::NONE);
 
     auto vertex_buffer = GeometryBuffer(
         {
@@ -73,7 +73,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     program.uniform("u_model", model);
 
     glActiveTexture(GL_TEXTURE0);
-    Texture<TEXTURE_2D>::bind(texture);
+    Texture2D::bind(texture);
     program.uniform("u_texture", 0);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

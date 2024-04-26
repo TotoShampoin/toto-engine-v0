@@ -68,4 +68,9 @@ private:
     }
 };
 
+using Texture2D = Texture<TextureTarget::TEXTURE_2D>;
+using Texture2DArray = Texture<TextureTarget::TEXTURE_2D_ARRAY>;
+using Texture3D = Texture<TextureTarget::TEXTURE_3D>;
+using TextureCubeMap = Texture<TextureTarget::TEXTURE_CUBE_MAP>;
+
 }
