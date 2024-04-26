@@ -6,7 +6,7 @@
 
 namespace TotoEngine {
 
-ShaderProgram& BasicMaterial::shader() {
+ShaderProgram& BasicMaterial::globalShader() {
     static auto shader = ShaderProgram(
         VertexShaderFile(vertex),
         FragmentShaderFile(basic_fragment)
@@ -25,7 +25,7 @@ void BasicMaterial::apply() const {
     shader().uniform("u_use_map", map.has_value());
 }
 
-ShaderProgram& PhongMaterial::shader() {
+ShaderProgram& PhongMaterial::globalShader() {
     static auto shader = ShaderProgram(
         VertexShaderFile(vertex),
         FragmentShaderFile(phong_fragment)

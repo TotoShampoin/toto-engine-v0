@@ -11,6 +11,7 @@ namespace TotoEngine {
 class Material {
 public:
     virtual void apply() const = 0;
+    virtual ShaderProgram& shader() const = 0;
 };
 
 class BasicMaterial : public Material {
@@ -20,7 +21,9 @@ public:
     optional_ref<Texture2D> map { std::nullopt };
 
     void apply() const override;
-    static ShaderProgram& shader();
+    ShaderProgram& shader() const override { return globalShader(); }
+private:
+    static ShaderProgram& globalShader();
 };
 
 class PhongMaterial : public Material {
@@ -40,7 +43,9 @@ public:
     optional_ref<Texture2D> opacity_map { std::nullopt };
 
     void apply() const override;
-    static ShaderProgram& shader();
+    ShaderProgram& shader() const override { return globalShader(); }
+private:
+    static ShaderProgram& globalShader();
 };
 
 class PBRMaterial : public Material {
@@ -59,7 +64,9 @@ public:
     optional_ref<Texture2D> normal_map { std::nullopt };
 
     void apply() const override;
-    static ShaderProgram& shader();
+    ShaderProgram& shader() const override { return globalShader(); }
+private:
+    static ShaderProgram& globalShader();
 };
 
 }
