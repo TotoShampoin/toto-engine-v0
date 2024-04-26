@@ -8,25 +8,17 @@
 
 namespace TotoEngine {
 
-class Material {
-public:
-    virtual void apply() const = 0;
-    virtual ShaderProgram& shader() const = 0;
-};
-
-class BasicMaterial : public Material {
+class BasicMaterial {
 public:
     ColorRGB color { 1.0f, 1.0f, 1.0f };
     float opacity { 1.0f };
     optional_ref<Texture2D> map { std::nullopt };
 
-    void apply() const override;
-    ShaderProgram& shader() const override { return globalShader(); }
-private:
-    static ShaderProgram& globalShader();
+    void apply() const;
+    ShaderProgram& shader() const;
 };
 
-class PhongMaterial : public Material {
+class PhongMaterial {
 public:
     ColorRGB ambient { 1.0f, 1.0f, 1.0f };
     ColorRGB diffuse { 1.0f, 1.0f, 1.0f };
@@ -42,13 +34,11 @@ public:
     optional_ref<Texture2D> shininess_map { std::nullopt };
     optional_ref<Texture2D> opacity_map { std::nullopt };
 
-    void apply() const override;
-    ShaderProgram& shader() const override { return globalShader(); }
-private:
-    static ShaderProgram& globalShader();
+    void apply() const;
+    ShaderProgram& shader() const;
 };
 
-class PBRMaterial : public Material {
+class PBRMaterial {
 public:
     ColorRGB albedo { 1.0f, 1.0f, 1.0f };
     float metallic { 0.0f };
@@ -63,10 +53,8 @@ public:
     optional_ref<Texture2D> opacity_map { std::nullopt };
     optional_ref<Texture2D> normal_map { std::nullopt };
 
-    void apply() const override;
-    ShaderProgram& shader() const override { return globalShader(); }
-private:
-    static ShaderProgram& globalShader();
+    void apply() const;
+    ShaderProgram& shader() const;
 };
 
 }
