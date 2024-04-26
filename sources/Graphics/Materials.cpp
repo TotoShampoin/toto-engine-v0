@@ -1,7 +1,7 @@
 #include "TotoEngine/Graphics/Materials.hpp"
 
-#include "../res/shaders/vertex.glsl.hpp"
-#include "../res/shaders/basic_fragment.glsl.hpp"
+#include "../impl/shaders/vertex.glsl.hpp"
+#include "../impl/shaders/basic_fragment.glsl.hpp"
 #include "TotoEngine/Graphics/ShaderFile.hpp"
 #include "TotoEngine/Graphics/ShaderProgram.hpp"
 #include "TotoEngine/Graphics/Texture.hpp"

@@ -19,27 +19,27 @@ def get_root():
             current = os.path.dirname(current)
         return current
 
-def has_res_and_sources(path = os.getcwd()):
-    return os.path.exists(os.path.join(path, "res")) and os.path.exists(os.path.join(path, "sources"))
+def has_impl_and_sources(path = os.getcwd()):
+    return os.path.exists(os.path.join(path, "impl")) and os.path.exists(os.path.join(path, "sources"))
 
 root = get_root()
-can_embed = has_res_and_sources()
+can_embed = has_impl_and_sources()
 
 if not can_embed:
-    print("Could not find res and sources directories")
+    print("Could not find impl and sources directories")
     sys.exit(1)
 
-# print(f"Files that will be embedded in sources/res:")
+# print(f"Files that will be embedded in sources/impl:")
 
-# for dirpath, dirnames, filenames in os.walk(os.path.join(root, "res")):
+# for dirpath, dirnames, filenames in os.walk(os.path.join(root, "impl")):
 #     for filename in filenames:
 #         filepath = os.path.relpath(os.path.join(dirpath, filename), root)
-#         filepath_inside = os.path.relpath(os.path.join(dirpath, filename), os.path.join(root, "res"))
-#         output_path = os.path.join(root, "sources", "res", filepath_inside)
+#         filepath_inside = os.path.relpath(os.path.join(dirpath, filename), os.path.join(root, "impl"))
+#         output_path = os.path.join(root, "sources", "impl", filepath_inside)
 #         print(f"    {filepath}", end="")
 #         print("\t-> ", end="")
 #         print(output_path)
     
 # input("Agree? (Enter to continue, Ctrl+C to cancel)")
 
-embedder_bulk(os.path.join(root, "res"), os.path.join(root, "sources/res"))
+embedder_bulk(os.path.join(root, "impl"), os.path.join(root, "sources/impl"))
