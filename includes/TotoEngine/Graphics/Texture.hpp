@@ -1,8 +1,8 @@
 #pragma once
 
 #include "GLObject.hpp"
-#include "../Aliases.hpp"
-#include "TotoEngine/Instantiation.hpp"
+#include <TotoEngine/Aliases.hpp>
+#include <TotoEngine/Instantiation.hpp>
 #include <GL/gl.h>
 
 namespace TotoEngine {

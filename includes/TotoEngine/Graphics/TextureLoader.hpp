@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TotoEngine/Graphics/Texture.hpp"
+#include <TotoEngine/Graphics/Texture.hpp>
 #include <filesystem>
 
 namespace TotoEngine {

@@ -1,4 +1,3 @@
-#include "TotoEngine/Graphics/Texture.hpp"
 #include <TotoEngine/TotoEngine.hpp>
 
 #include <algorithm>

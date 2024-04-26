@@ -3,9 +3,9 @@
 #include <GL/glew.h>
 
 #include "GLObject.hpp"
-#include "../Aliases.hpp"
-#include "../Primitives.hpp"
-#include "TotoEngine/Instantiation.hpp"
+#include <TotoEngine/Aliases.hpp>
+#include <TotoEngine/Primitives.hpp>
+#include <TotoEngine/Instantiation.hpp>
 #include <vector>
 
 namespace TotoEngine {
