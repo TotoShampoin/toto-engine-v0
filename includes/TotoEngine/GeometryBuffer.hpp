@@ -22,12 +22,8 @@ public:
     GeometryBuffer(const std::vector<Vertex>&, const std::vector<Index>&);
     ~GeometryBuffer() = default;
 
-    static void bind(const GeometryBuffer& buffer) {
-        glBindVertexArray(buffer.vao());
-    }
-    static void unbind() {
-        glBindVertexArray(0);
-    }
+    constexpr static auto NONE = std::nullopt;
+    static void bind(const optional_ref<GeometryBuffer>&);
 
     [[nodiscard]] GLuint vao() const { return _vao; }
     [[nodiscard]] GLuint vbo() const { return _vbo; }
