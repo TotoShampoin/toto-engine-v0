@@ -10,7 +10,7 @@ const int LIGHT_DIRECTIONAL = 2;
 
 struct Ligth {
     vec3 color;
-    float strength;
+    float intensity;
     vec3 pos_or_dir;
     int type;
 };
@@ -56,14 +56,14 @@ vec3 blinnPhong(vec3 light_dir, vec3 light_color, vec3 normal, vec3 diffuse, vec
 
 vec3 calculateLight(Ligth light, vec3 ambient, vec3 diffuse, vec3 specular, vec3 normal, float shininess) {
     if (light.type == LIGHT_AMBIENT) {
-        return ambient * light.color * light.strength;
+        return ambient * light.color * light.intensity;
     } else if (light.type == LIGHT_POINT) {
         vec3 direction = normalize(light.pos_or_dir - v_position);
-        float strength = 1.0 / pow(length(light.pos_or_dir - v_position), 2);
-        return blinnPhong(direction, light.color * light.strength * strength, normal, diffuse, specular, shininess);
+        float intensity = 1.0 / pow(length(light.pos_or_dir - v_position), 2);
+        return blinnPhong(direction, light.color * light.intensity * intensity, normal, diffuse, specular, shininess);
     } else if (light.type == LIGHT_DIRECTIONAL) {
         vec3 direction = normalize(-light.pos_or_dir);
-        return blinnPhong(direction, light.color * light.strength, normal, diffuse, specular, shininess);
+        return blinnPhong(direction, light.color * light.intensity, normal, diffuse, specular, shininess);
     } 
     return vec3(0);
 }

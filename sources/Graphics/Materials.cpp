@@ -14,7 +14,7 @@ ShaderProgram& BasicMaterial::shader() {
     return shader;
 }
 
-void BasicMaterial::apply() {
+void BasicMaterial::apply() const {
     shader().uniform("u_color", color);
     shader().uniform("u_opacity", opacity);
     if(map.has_value()) {
@@ -33,7 +33,7 @@ ShaderProgram& PhongMaterial::shader() {
     return shader;
 }
 
-void PhongMaterial::apply() {
+void PhongMaterial::apply() const {
     shader().uniform("u_ambient", ambient);
     shader().uniform("u_diffuse", diffuse);
     shader().uniform("u_specular", specular);

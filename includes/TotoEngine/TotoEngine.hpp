@@ -13,6 +13,7 @@
 #include <TotoEngine/Graphics/Uniforms.hpp>
 #include <TotoEngine/Graphics/Texture.hpp>
 #include <TotoEngine/Graphics/TextureLoader.hpp>
+#include <TotoEngine/Graphics/Light.hpp>
 
 #define __TOTO_ENGINE_MAJOR__ 0
 #define __TOTO_ENGINE_MINOR__ 0

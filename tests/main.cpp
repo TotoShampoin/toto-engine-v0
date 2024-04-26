@@ -1,3 +1,4 @@
+#include "TotoEngine/Graphics/Light.hpp"
 #include <TotoEngine/TotoEngine.hpp>
 
 #include <algorithm>
@@ -35,6 +36,10 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto material = PhongMaterial();
     auto transform = Transform();
 
+    auto amb_light = Light(LightType::AMBIENT, ColorRGB(1.0f, 1.0f, 1.0f), 0.33333f);
+    auto dir_light = Light(LightType::DIRECTIONAL, ColorRGB(1.0f, 1.0f, 1.0f), 1.0f);
+    dir_light.direction() = glm::normalize(Vector3(1, -1, -1));
+
     // TODO: Implement instancing
     material.diffuse_map = Texture2DManager::create(loadTexture2D("tests_assets/smile.png"));
     material.specular = ColorRGB(1.0f, 1.0f, 1.0f);
@@ -64,13 +69,8 @@ int main(int /* argc */, const char* /* argv */[]) {
         material.shader().uniform("u_view", glm::inverse(camera_transform.matrix()));
         material.shader().uniform("u_model", transform.matrix());
         material.shader().uniform("u_lights_count", 2);
-        material.shader().uniform("u_lights[0].color", ColorRGB(1.0f, 1.0f, 1.0f));
-        material.shader().uniform("u_lights[0].strength", 0.33333f);
-        material.shader().uniform("u_lights[0].type", 0); // amb
-        material.shader().uniform("u_lights[1].color", ColorRGB(1.0f, 1.0f, 1.0f));
-        material.shader().uniform("u_lights[1].strength", 1.0f);
-        material.shader().uniform("u_lights[1].pos_or_dir", glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f)));
-        material.shader().uniform("u_lights[1].type", 2); // dir
+        amb_light.apply(material.shader(), 0);
+        dir_light.apply(material.shader(), 1);
         material.apply();
         glDrawElements(GL_TRIANGLES, vertex_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
 

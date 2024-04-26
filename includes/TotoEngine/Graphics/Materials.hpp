@@ -10,7 +10,7 @@ namespace TotoEngine {
 
 class Material {
 public:
-    virtual void apply() = 0;
+    virtual void apply() const = 0;
 };
 
 class BasicMaterial : public Material {
@@ -19,7 +19,7 @@ public:
     float opacity { 1.0f };
     optional_ref<Texture2D> map { std::nullopt };
 
-    void apply() override;
+    void apply() const override;
     static ShaderProgram& shader();
 };
 
@@ -39,7 +39,7 @@ public:
     optional_ref<Texture2D> shininess_map { std::nullopt };
     optional_ref<Texture2D> opacity_map { std::nullopt };
 
-    void apply() override;
+    void apply() const override;
     static ShaderProgram& shader();
 };
 
@@ -58,7 +58,7 @@ public:
     optional_ref<Texture2D> opacity_map { std::nullopt };
     optional_ref<Texture2D> normal_map { std::nullopt };
 
-    void apply() override;
+    void apply() const override;
     static ShaderProgram& shader();
 };
 
