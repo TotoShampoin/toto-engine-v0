@@ -9,8 +9,7 @@
 
 #include <vector>
 
-#include "res/shaders/vertex.glsl.hpp"
-#include "res/shaders/basic_fragment.glsl.hpp"
+#include "TotoEngine/Graphics/ShaderProgram.hpp"
 
 void imguiInit(TotoEngine::Window& window);
 void imguiRender();
@@ -28,8 +27,6 @@ int main(int /* argc */, const char* /* argv */[]) {
 
     imguiInit(window);
 
-    // GLTexture texture;
-    // glBindTexture(GL_TEXTURE_2D, texture);
     Texture2D texture;
     Texture2D::bind(texture);
     Texture2D::parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -58,25 +55,18 @@ int main(int /* argc */, const char* /* argv */[]) {
             2, 3, 0
         }
     );
-    auto program = ShaderProgram(
-        VertexShaderFile(vertex), 
-        FragmentShaderFile(basic_fragment)
-    );
+    auto material = BasicMaterial();
 
     auto projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
     auto view = Matrix4(1.0f);
     auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
 
-    ShaderProgram::use(program);
-    program.uniform("u_projection", projection);
-    program.uniform("u_view", view);
-    program.uniform("u_model", model);
-
-    glActiveTexture(GL_TEXTURE0);
-    Texture2D::bind(texture);
-    program.uniform("u_map", 0);
-    program.uniform("u_color", ColorRGB(1.0f, 1.0f, 1.0f));
-    program.uniform("u_opacity", 1.0f);
+    ShaderProgram::use(material.shader());
+    material.shader().uniform("u_projection", projection);
+    material.shader().uniform("u_view", view);
+    material.shader().uniform("u_model", model);
+    material.map = std::move(texture);
+    material.apply();
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -86,7 +76,8 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::makeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ShaderProgram::use(program);
+        // ShaderProgram::use(program);
+        ShaderProgram::use(material.shader());
         GeometryBuffer::bind(vertex_buffer);
         glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
 
@@ -96,7 +87,8 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::pollEvents();
 
         model = glm::rotate(model, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        program.uniform("u_model", model);
+        // program.uniform("u_model", model);
+        material.shader().uniform("u_model", model);
     }
 
     return 0;

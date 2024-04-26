@@ -3,43 +3,60 @@
 #include <optional>
 
 #include "Aliases.hpp"
+#include "ShaderProgram.hpp"
 #include "Texture.hpp"
 
 namespace TotoEngine {
 
-struct BasicMaterial {
-    ColorRGB color;
-    float opacity;
-
-    std::optional<Texture2D> map;
+class Material {
+public:
+    virtual void apply() = 0;
 };
-struct PhongMaterial {
-    ColorRGB ambient;
-    ColorRGB diffuse;
-    ColorRGB specular;
-    ColorRGB emissive;
-    float shininess;
-    float opacity;
 
-    std::optional<Texture2D> ambient_map;
-    std::optional<Texture2D> diffuse_map;
-    std::optional<Texture2D> specular_map;
-    std::optional<Texture2D> emissive_map;
-    std::optional<Texture2D> shininess_map;
-    std::optional<Texture2D> opacity_map;
+class BasicMaterial : public Material {
+public:
+    ColorRGB color { 1.0f, 1.0f, 1.0f };
+    float opacity { 1.0f };
+    std::optional<Texture2D> map { std::nullopt };
+
+    void apply() override;
+    static ShaderProgram& shader();
 };
-struct PBRMaterial {
-    ColorRGB albedo;
-    float metallic;
-    float roughness;
-    float ao;
-    float opacity;
+class PhongMaterial : public Material {
+public:
+    ColorRGB ambient { 0.0f, 0.0f, 0.0f };
+    ColorRGB diffuse { 1.0f, 1.0f, 1.0f };
+    ColorRGB specular { 1.0f, 1.0f, 1.0f };
+    ColorRGB emissive { 0.0f, 0.0f, 0.0f };
+    float shininess { 32.0f };
+    float opacity { 1.0f };
 
-    std::optional<Texture2D> albedo_map;
-    std::optional<Texture2D> metallic_map;
-    std::optional<Texture2D> roughness_map;
-    std::optional<Texture2D> ao_map;
-    std::optional<Texture2D> opacity_map;
+    std::optional<Texture2D> ambient_map { std::nullopt };
+    std::optional<Texture2D> diffuse_map { std::nullopt };
+    std::optional<Texture2D> specular_map { std::nullopt };
+    std::optional<Texture2D> emissive_map { std::nullopt };
+    std::optional<Texture2D> shininess_map { std::nullopt };
+    std::optional<Texture2D> opacity_map { std::nullopt };
+
+    void apply() override;
+    static ShaderProgram& shader();
+};
+class PBRMaterial : public Material {
+public:
+    ColorRGB albedo { 1.0f, 1.0f, 1.0f };
+    float metallic { 0.0f };
+    float roughness { 1.0f };
+    float ao { 1.0f };
+    float opacity { 1.0f };
+
+    std::optional<Texture2D> albedo_map { std::nullopt };
+    std::optional<Texture2D> metallic_map { std::nullopt };
+    std::optional<Texture2D> roughness_map { std::nullopt };
+    std::optional<Texture2D> ao_map { std::nullopt };
+    std::optional<Texture2D> opacity_map { std::nullopt };
+
+    void apply() override;
+    static ShaderProgram& shader();
 };
 
 }

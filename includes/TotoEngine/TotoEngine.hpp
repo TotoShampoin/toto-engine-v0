@@ -6,6 +6,7 @@
 #include <TotoEngine/Window.hpp>
 #include <TotoEngine/Graphics/GeometryBuffer.hpp>
 #include <TotoEngine/Graphics/ShaderProgram.hpp>
+#include <TotoEngine/Graphics/Materials.hpp>
 #include <TotoEngine/Graphics/Uniforms.hpp>
 #include <TotoEngine/Graphics/Texture.hpp>
 

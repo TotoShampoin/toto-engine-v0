@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <algorithm>
 
 namespace TotoEngine {
 
@@ -14,9 +15,18 @@ public:
         del(_id);
     }
     GLObject(const GLObject&) = delete;
-    GLObject(GLObject&&) = delete;
     GLObject& operator=(const GLObject&) = delete;
-    GLObject&& operator=(GLObject&&) = delete;
+    GLObject(GLObject&& other):
+        _id(other._id) {
+        other._id = 0;
+    }
+    GLObject&& operator=(GLObject&& other) {
+        if(this != &other) {
+            _id = other._id;
+            other._id = 0;
+        }
+        return std::move(*this);
+    }
 
     [[nodiscard]] GLuint id() const { return _id; }
     [[nodiscard]] operator GLuint() const { return _id; }
