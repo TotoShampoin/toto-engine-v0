@@ -9,7 +9,6 @@
 
 #include <vector>
 
-#include "TotoEngine/Texture.hpp"
 #include "res/shaders/vertex.glsl.hpp"
 #include "res/shaders/fragment.glsl.hpp"
 

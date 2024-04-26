@@ -1,5 +1,5 @@
-#include "TotoEngine/ShaderProgram.hpp"
-#include "TotoEngine/Primitives.hpp"
+#include "TotoEngine/Graphics/ShaderProgram.hpp"
+#include "TotoEngine/Graphics/Primitives.hpp"
 #include <format>
 #include <stdexcept>
 

@@ -1,4 +1,4 @@
-#include "TotoEngine/GeometryBuffer.hpp"
+#include "TotoEngine/Graphics/GeometryBuffer.hpp"
 #include <vector>
 
 namespace TotoEngine {

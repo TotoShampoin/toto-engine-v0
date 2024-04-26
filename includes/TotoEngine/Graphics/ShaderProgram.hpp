@@ -7,7 +7,7 @@
 
 #include "ShaderFile.hpp"
 #include "Primitives.hpp"
-#include "TotoEngine/Uniforms.hpp"
+#include "Uniforms.hpp"
 
 namespace TotoEngine {
 

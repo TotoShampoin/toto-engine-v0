@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GLObject.hpp"
-#include "TotoEngine/Primitives.hpp"
+#include "TotoEngine/Graphics/Primitives.hpp"
 #include <GL/gl.h>
 #include <vector>
 

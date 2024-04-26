@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TotoEngine/GLObject.hpp"
+#include "TotoEngine/Graphics/GLObject.hpp"
 #include <GL/glew.h>
 
 #include <format>
