@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "res/shaders/vertex.glsl.hpp"
-#include "res/shaders/fragment.glsl.hpp"
+#include "res/shaders/basic_fragment.glsl.hpp"
 
 void imguiInit(TotoEngine::Window& window);
 void imguiRender();
@@ -60,7 +60,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     );
     auto program = ShaderProgram(
         VertexShaderFile(vertex), 
-        FragmentShaderFile(fragment)
+        FragmentShaderFile(basic_fragment)
     );
 
     auto projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -74,7 +74,9 @@ int main(int /* argc */, const char* /* argv */[]) {
 
     glActiveTexture(GL_TEXTURE0);
     Texture2D::bind(texture);
-    program.uniform("u_texture", 0);
+    program.uniform("u_map", 0);
+    program.uniform("u_color", ColorRGB(1.0f, 1.0f, 1.0f));
+    program.uniform("u_opacity", 1.0f);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
