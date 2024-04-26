@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TotoEngine/GLObject.hpp"
 #include <GL/glew.h>
 
 #include <format>
@@ -8,7 +9,6 @@
 
 namespace TotoEngine {
 
-// Todo(Learning) Find out what geometry, tess_control and tess_evaluation shaders are
 enum class ShaderType {
     VERTEX = GL_VERTEX_SHADER,
     FRAGMENT = GL_FRAGMENT_SHADER,
@@ -30,10 +30,15 @@ inline constexpr std::string shaderTypeToString(ShaderType type) {
 }
 
 template <ShaderType TYPE>
+class GLShader : public GLObject<
+    [] { return glCreateShader(static_cast<GLenum>(TYPE)); },
+    [](GLuint& id) { glDeleteShader(id); }
+> {};
+
+template <ShaderType TYPE>
 class ShaderFile {
 public:
     ShaderFile(const std::string& shader_source) {
-        _shader = glCreateShader(static_cast<GLenum>(TYPE));
         const char* source = shader_source.c_str();
         glShaderSource(_shader, 1, &source, nullptr);
         glCompileShader(_shader);
@@ -45,14 +50,11 @@ public:
             throw std::runtime_error(std::format("ERROR::SHADER::{}::COMPILATION_FAILED\n{}", shaderTypeToString(TYPE), info_log));
         }
     }
-    ~ShaderFile() {
-        glDeleteShader(_shader);
-    }
+    ~ShaderFile() = default;
 
     [[nodiscard]] GLuint shader() const { return _shader; }
 private:
-    // TODO(GPU): Find a way to make this work with the GLObject class
-    GLuint _shader;
+    GLShader<TYPE> _shader;
 };
 
 using VertexShaderFile = ShaderFile<ShaderType::VERTEX>;
