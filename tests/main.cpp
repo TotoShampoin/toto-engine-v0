@@ -29,8 +29,9 @@ int main(int /* argc */, const char* /* argv */[]) {
 
     imguiInit(window);
 
-    auto camera_projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    auto camera_transform = Transform();
+    // auto camera_projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    // auto camera_transform = Transform();
+    auto camera = Camera(glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f));
 
     auto vertex_buffer = sphere(1, 32, 16);
     auto material = PhongMaterial();
@@ -40,7 +41,6 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto dir_light = Light(LightType::DIRECTIONAL, ColorRGB(1.0f, 1.0f, 1.0f), 1.0f);
     dir_light.direction() = glm::normalize(Vector3(1, -1, -1));
 
-    // TODO: Implement instancing
     material.diffuse_map = Texture2DManager::create(loadTexture2D("tests_assets/smile.png"));
     material.specular = ColorRGB(1.0f, 1.0f, 1.0f);
     material.shininess = 64.f;
@@ -65,13 +65,13 @@ int main(int /* argc */, const char* /* argv */[]) {
 
         GeometryBuffer::bind(vertex_buffer);
         ShaderProgram::use(material.shader());
-        material.shader().uniform("u_projection", camera_projection);
-        material.shader().uniform("u_view", glm::inverse(camera_transform.matrix()));
-        material.shader().uniform("u_model", transform.matrix());
         material.shader().uniform("u_lights_count", 2);
         amb_light.apply(material.shader(), 0);
         dir_light.apply(material.shader(), 1);
         material.apply();
+        material.shader().uniform("u_projection", camera.projectionMatrix());
+        material.shader().uniform("u_view", camera.viewMatrix());
+        material.shader().uniform("u_model", transform.matrix());
         glDrawElements(GL_TRIANGLES, vertex_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
 
         auto time_after_render = std::chrono::high_resolution_clock::now();
@@ -84,8 +84,8 @@ int main(int /* argc */, const char* /* argv */[]) {
 
         // transform.rotate(glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
         transform.rotation() += Vector3(2,3,5) * glm::radians(.1f);
-        camera_transform.position().x = glm::cos(time);
-        camera_transform.position().y = glm::sin(time);
+        camera.position().x = glm::cos(time);
+        camera.position().y = glm::sin(time);
 
         last_time = current_time;
     }

@@ -14,6 +14,7 @@
 #include <TotoEngine/Graphics/Texture.hpp>
 #include <TotoEngine/Graphics/TextureLoader.hpp>
 #include <TotoEngine/Graphics/Light.hpp>
+#include <TotoEngine/Graphics/Camera.hpp>
 
 #define __TOTO_ENGINE_MAJOR__ 0
 #define __TOTO_ENGINE_MINOR__ 0
