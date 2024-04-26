@@ -5,16 +5,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <glm/trigonometric.hpp>
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
 #include <vector>
-
-#include "TotoEngine/Graphics/ShaderProgram.hpp"
-#include "TotoEngine/Graphics/Texture.hpp"
-#include "TotoEngine/Graphics/TextureLoader.hpp"
-#include "TotoEngine/Transform.hpp"
 
 void imguiInit(TotoEngine::Window& window);
 void imguiRender(float render_time);
@@ -35,23 +31,17 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto camera_projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
     auto camera_transform = Transform();
 
-    auto vertex_buffer = GeometryBuffer(
-        {
-            {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-            {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
-            {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-            {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}
-        }, {
-            0, 1, 2,
-            2, 3, 0
-        }
-    );
-    auto material = BasicMaterial();
+    auto vertex_buffer = sphere(1, 32, 16);
+    auto material = PhongMaterial();
     auto transform = Transform();
 
-    material.map = loadTexture2D("tests_assets/smile.png");
+    // TODO: Implement instancing
+    material.diffuse_map = loadTexture2D("tests_assets/uv.png");
+    material.specular = ColorRGB(1.0f, 1.0f, 1.0f);
+    material.shininess = 64.f;
+    material.ambient_map = loadTexture2D("tests_assets/uv.png");
 
-    transform.translate({0.0f, 0.0f, -2.0f});
+    transform.translate({0.0f, 0.0f, -5.0f});
 
     auto start_time = std::chrono::high_resolution_clock::now();
     auto last_time = start_time;
@@ -73,6 +63,14 @@ int main(int /* argc */, const char* /* argv */[]) {
         material.shader().uniform("u_projection", camera_projection);
         material.shader().uniform("u_view", glm::inverse(camera_transform.matrix()));
         material.shader().uniform("u_model", transform.matrix());
+        material.shader().uniform("u_lights_count", 2);
+        material.shader().uniform("u_lights[0].color", ColorRGB(1.0f, 1.0f, 1.0f));
+        material.shader().uniform("u_lights[0].strength", 0.33333f);
+        material.shader().uniform("u_lights[0].type", 0); // amb
+        material.shader().uniform("u_lights[1].color", ColorRGB(1.0f, 1.0f, 1.0f));
+        material.shader().uniform("u_lights[1].strength", 1.0f);
+        material.shader().uniform("u_lights[1].pos_or_dir", glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f)));
+        material.shader().uniform("u_lights[1].type", 2); // dir
         material.apply();
         glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
 
@@ -84,8 +82,10 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::swapBuffers(window);
         Window::pollEvents();
 
-        transform.rotate(glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
+        // transform.rotate(glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
+        transform.rotation() += Vector3(2,3,5) * glm::radians(.1f);
         camera_transform.position().x = glm::cos(time);
+        camera_transform.position().y = glm::sin(time);
 
         last_time = current_time;
     }

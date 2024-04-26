@@ -22,9 +22,10 @@ public:
     void apply() override;
     static ShaderProgram& shader();
 };
+
 class PhongMaterial : public Material {
 public:
-    ColorRGB ambient { 0.0f, 0.0f, 0.0f };
+    ColorRGB ambient { 1.0f, 1.0f, 1.0f };
     ColorRGB diffuse { 1.0f, 1.0f, 1.0f };
     ColorRGB specular { 1.0f, 1.0f, 1.0f };
     ColorRGB emissive { 0.0f, 0.0f, 0.0f };
@@ -41,6 +42,7 @@ public:
     void apply() override;
     static ShaderProgram& shader();
 };
+
 class PBRMaterial : public Material {
 public:
     ColorRGB albedo { 1.0f, 1.0f, 1.0f };
@@ -54,6 +56,7 @@ public:
     std::optional<Texture2D> roughness_map { std::nullopt };
     std::optional<Texture2D> ao_map { std::nullopt };
     std::optional<Texture2D> opacity_map { std::nullopt };
+    std::optional<Texture2D> normal_map { std::nullopt };
 
     void apply() override;
     static ShaderProgram& shader();
