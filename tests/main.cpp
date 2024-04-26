@@ -56,15 +56,17 @@ int main(int /* argc */, const char* /* argv */[]) {
         }
     );
     auto material = BasicMaterial();
+    auto transform = Transform();
+
+    transform.translate({0.0f, 0.0f, -2.0f});
 
     auto projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
     auto view = Matrix4(1.0f);
-    auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
 
     ShaderProgram::use(material.shader());
     material.shader().uniform("u_projection", projection);
     material.shader().uniform("u_view", view);
-    material.shader().uniform("u_model", model);
+    material.shader().uniform("u_model", transform.matrix());
     material.map = std::move(texture);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -75,9 +77,9 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::makeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // ShaderProgram::use(program);
-        ShaderProgram::use(material.shader());
         GeometryBuffer::bind(vertex_buffer);
+        ShaderProgram::use(material.shader());
+        material.shader().uniform("u_model", transform.matrix());
         material.apply();
         glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
 
@@ -86,9 +88,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::swapBuffers(window);
         Window::pollEvents();
 
-        model = glm::rotate(model, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        // program.uniform("u_model", model);
-        material.shader().uniform("u_model", model);
+        transform.rotate(glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
     }
 
     return 0;
