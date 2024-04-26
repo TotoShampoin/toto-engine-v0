@@ -7,6 +7,7 @@
 #include <TotoEngine/Primitives.hpp>
 #include <TotoEngine/Transform.hpp>
 #include <TotoEngine/Graphics/GeometryBuffer.hpp>
+#include <TotoEngine/Graphics/Shapes.hpp>
 #include <TotoEngine/Graphics/ShaderProgram.hpp>
 #include <TotoEngine/Graphics/Materials.hpp>
 #include <TotoEngine/Graphics/Uniforms.hpp>
