@@ -6,7 +6,7 @@
 #include <optional>
 
 #include "ShaderFile.hpp"
-#include "Aliases.hpp"
+#include "../Aliases.hpp"
 #include "Uniforms.hpp"
 
 namespace TotoEngine {

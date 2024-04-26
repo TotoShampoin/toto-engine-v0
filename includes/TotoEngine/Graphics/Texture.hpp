@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GLObject.hpp"
-#include "Aliases.hpp"
+#include "../Aliases.hpp"
 #include <GL/gl.h>
 #include <vector>
 

@@ -66,7 +66,6 @@ int main(int /* argc */, const char* /* argv */[]) {
     material.shader().uniform("u_view", view);
     material.shader().uniform("u_model", model);
     material.map = std::move(texture);
-    material.apply();
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -79,6 +78,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         // ShaderProgram::use(program);
         ShaderProgram::use(material.shader());
         GeometryBuffer::bind(vertex_buffer);
+        material.apply();
         glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
 
         imguiRender();

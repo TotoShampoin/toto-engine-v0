@@ -3,7 +3,8 @@
 #include <GL/glew.h>
 
 #include "GLObject.hpp"
-#include "Aliases.hpp"
+#include "../Aliases.hpp"
+#include "../Primitives.hpp"
 #include <vector>
 
 namespace TotoEngine {
@@ -18,9 +19,9 @@ using GLVertexArray = GLObject<
 >;
 
 struct Vertex {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec2 uv;
+    Vector3 position;
+    Vector3 normal;
+    Vector2 uv;
 };
 static constexpr auto VERTEX_ATTRIBUTE_POSITION = 0;
 static constexpr auto VERTEX_ATTRIBUTE_NORMAL = 1;

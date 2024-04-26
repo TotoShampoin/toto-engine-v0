@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "Aliases.hpp"
+#include "../Primitives.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 

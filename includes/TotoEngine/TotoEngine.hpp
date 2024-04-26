@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include <TotoEngine/Window.hpp>
+#include <TotoEngine/Primitives.hpp>
 #include <TotoEngine/Graphics/GeometryBuffer.hpp>
 #include <TotoEngine/Graphics/ShaderProgram.hpp>
 #include <TotoEngine/Graphics/Materials.hpp>
