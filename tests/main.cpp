@@ -13,10 +13,11 @@
 
 #include "TotoEngine/Graphics/ShaderProgram.hpp"
 #include "TotoEngine/Graphics/Texture.hpp"
+#include "TotoEngine/Graphics/TextureLoader.hpp"
 #include "TotoEngine/Transform.hpp"
 
 void imguiInit(TotoEngine::Window& window);
-void imguiRender(float render_time, float delta_time);
+void imguiRender(float render_time);
 
 using GLTexture = TotoEngine::GLObject<
     [] { GLuint id; glGenTextures(1, &id); return id; },
@@ -48,24 +49,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto material = BasicMaterial();
     auto transform = Transform();
 
-    // TODO: Add a way to instantiate
-    material.map = Texture2D(); {
-        Texture2D::bind(material.map.value());
-        Texture2D::parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        Texture2D::parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        Texture2D::parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        Texture2D::parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        constexpr int width = 16, height = 16, channels = 4;
-        std::vector<uint8_t> data(width * height * channels, 0);
-        for(int i = 0; i < width * height; i++) {
-            data[i * channels + 0] = (i % 2) * 255;
-            data[i * channels + 1] = (i % 3) * 127;
-            data[i * channels + 2] = (i % 4) * 85;
-            data[i * channels + 3] = 255;
-        }
-        Texture2D::image(width, height, channels, data);
-        Texture2D::bind(Texture2D::NONE);
-    }
+    material.map = loadTexture2D("tests_assets/smile.png");
 
     transform.translate({0.0f, 0.0f, -2.0f});
 
@@ -79,7 +63,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     while(!window.shouldClose()) {
         auto current_time = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration<float>(current_time - start_time).count();
-        auto delta_time = std::chrono::duration<float>(current_time - last_time).count();
+        // auto delta_time = std::chrono::duration<float>(current_time - last_time).count();
 
         Window::makeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -95,7 +79,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();
 
-        imguiRender(render_time, delta_time);
+        imguiRender(render_time);
 
         Window::swapBuffers(window);
         Window::pollEvents();
@@ -116,7 +100,7 @@ void imguiInit(TotoEngine::Window& window) {
     ImGui_ImplGlfw_InitForOpenGL(window.GLFWWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 460");
 }
-void imguiRender(float render_time, float delta_time) {
+void imguiRender(float render_time) {
     static std::vector<float> render_times;
     render_times.push_back(1.f / render_time);
     if(render_times.size() > 200) {
