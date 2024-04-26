@@ -36,7 +36,7 @@ void GeometryBuffer::load(const std::vector<Vertex>& vertices, const std::vector
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void GeometryBuffer::bind(const optional_ref<GeometryBuffer>& buffer) {
+void GeometryBuffer::bind(const optional_ref<const GeometryBuffer>& buffer) {
     if(!buffer.has_value()) {
         glBindVertexArray(0);
         return;

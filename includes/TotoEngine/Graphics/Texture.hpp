@@ -23,7 +23,7 @@ template <TextureTarget TARGET>
 class Texture {
 public:
     constexpr static auto NONE = std::nullopt;
-    static void bind(const optional_ref<Texture<TARGET>>& texture) {
+    static void bind(const optional_ref<const Texture<TARGET>>& texture) {
         if(!texture.has_value()) {
             glBindTexture(static_cast<GLenum>(TARGET), 0U);
             return;

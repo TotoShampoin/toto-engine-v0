@@ -5,7 +5,7 @@
 
 namespace TotoEngine {
 
-void ShaderProgram::use(const optional_ref<ShaderProgram>& program) {
+void ShaderProgram::use(const optional_ref<const ShaderProgram>& program) {
     if(!program.has_value()) {
         glUseProgram(0);
         return;

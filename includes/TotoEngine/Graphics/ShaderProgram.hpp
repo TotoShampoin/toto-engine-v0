@@ -38,7 +38,7 @@ public:
     ~ShaderProgram() = default;
 
     constexpr static auto NONE = std::nullopt;
-    static void use(const optional_ref<ShaderProgram>& program);
+    static void use(const optional_ref<const ShaderProgram>& program);
 
     void uniform(const std::string& name, const UniformVariant& value);
 

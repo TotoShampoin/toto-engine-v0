@@ -35,7 +35,7 @@ public:
     GeometryBuffer(const std::vector<Vertex>&, const std::vector<Index>&);
 
     constexpr static auto NONE = std::nullopt;
-    static void bind(const optional_ref<GeometryBuffer>&);
+    static void bind(const optional_ref<const GeometryBuffer>&);
 
     void load(const std::vector<Vertex>& vertices, const std::vector<Index>& indices);
 
