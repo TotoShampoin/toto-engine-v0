@@ -17,7 +17,7 @@ class BasicMaterial : public Material {
 public:
     ColorRGB color { 1.0f, 1.0f, 1.0f };
     float opacity { 1.0f };
-    std::optional<Texture2D> map { std::nullopt };
+    optional_ref<Texture2D> map { std::nullopt };
 
     void apply() override;
     static ShaderProgram& shader();
@@ -32,12 +32,12 @@ public:
     float shininess { 32.0f };
     float opacity { 1.0f };
 
-    std::optional<Texture2D> ambient_map { std::nullopt };
-    std::optional<Texture2D> diffuse_map { std::nullopt };
-    std::optional<Texture2D> specular_map { std::nullopt };
-    std::optional<Texture2D> emissive_map { std::nullopt };
-    std::optional<Texture2D> shininess_map { std::nullopt };
-    std::optional<Texture2D> opacity_map { std::nullopt };
+    optional_ref<Texture2D> ambient_map { std::nullopt };
+    optional_ref<Texture2D> diffuse_map { std::nullopt };
+    optional_ref<Texture2D> specular_map { std::nullopt };
+    optional_ref<Texture2D> emissive_map { std::nullopt };
+    optional_ref<Texture2D> shininess_map { std::nullopt };
+    optional_ref<Texture2D> opacity_map { std::nullopt };
 
     void apply() override;
     static ShaderProgram& shader();
@@ -51,12 +51,12 @@ public:
     float ao { 1.0f };
     float opacity { 1.0f };
 
-    std::optional<Texture2D> albedo_map { std::nullopt };
-    std::optional<Texture2D> metallic_map { std::nullopt };
-    std::optional<Texture2D> roughness_map { std::nullopt };
-    std::optional<Texture2D> ao_map { std::nullopt };
-    std::optional<Texture2D> opacity_map { std::nullopt };
-    std::optional<Texture2D> normal_map { std::nullopt };
+    optional_ref<Texture2D> albedo_map { std::nullopt };
+    optional_ref<Texture2D> metallic_map { std::nullopt };
+    optional_ref<Texture2D> roughness_map { std::nullopt };
+    optional_ref<Texture2D> ao_map { std::nullopt };
+    optional_ref<Texture2D> opacity_map { std::nullopt };
+    optional_ref<Texture2D> normal_map { std::nullopt };
 
     void apply() override;
     static ShaderProgram& shader();

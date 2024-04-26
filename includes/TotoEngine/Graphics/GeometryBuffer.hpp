@@ -5,6 +5,7 @@
 #include "GLObject.hpp"
 #include "../Aliases.hpp"
 #include "../Primitives.hpp"
+#include "TotoEngine/Instantiation.hpp"
 #include <vector>
 
 namespace TotoEngine {
@@ -58,5 +59,8 @@ private:
     GLenum _cull_face = GL_NONE;
     GLenum _draw_mode = GL_TRIANGLES;
 };
+
+using GeometryBufferInstance = Manager<GeometryBuffer>::Instance;
+using GeometryBufferManager = Manager<GeometryBuffer>;
 
 }

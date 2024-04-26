@@ -2,6 +2,7 @@
 
 #include "GLObject.hpp"
 #include "../Aliases.hpp"
+#include "TotoEngine/Instantiation.hpp"
 #include <GL/gl.h>
 
 namespace TotoEngine {
@@ -67,9 +68,25 @@ private:
     }
 };
 
+template <TextureTarget TARGET>
+using TextureInstance = Manager<Texture<TARGET>>::Instance;
+template <TextureTarget TARGET>
+using TextureManager = Manager<Texture<TARGET>>;
+
 using Texture2D = Texture<TextureTarget::TEXTURE_2D>;
+using Texture2DInstance = Manager<Texture2D>::Instance;
+using Texture2DManager = Manager<Texture2D>;
+
 using Texture2DArray = Texture<TextureTarget::TEXTURE_2D_ARRAY>;
+using Texture2DArrayInstance = Manager<Texture2DArray>::Instance;
+using Texture2DArrayManager = Manager<Texture2DArray>;
+
 using Texture3D = Texture<TextureTarget::TEXTURE_3D>;
+using Texture3DInstance = Manager<Texture3D>::Instance;
+using Texture3DManager = Manager<Texture3D>;
+
 using TextureCubeMap = Texture<TextureTarget::TEXTURE_CUBE_MAP>;
+using TextureCubeMapInstance = Manager<TextureCubeMap>::Instance;
+using TextureCubeMapManager = Manager<TextureCubeMap>;
 
 }

@@ -19,7 +19,7 @@ void BasicMaterial::apply() {
     shader().uniform("u_opacity", opacity);
     if(map.has_value()) {
         glActiveTexture(GL_TEXTURE0);
-        Texture2D::bind(map.value());
+        Texture2D::bind(map);
         shader().uniform("u_map", 0);
     }
     shader().uniform("u_use_map", map.has_value());
@@ -42,32 +42,32 @@ void PhongMaterial::apply() {
     shader().uniform("u_opacity", opacity);
     if(ambient_map.has_value()) {
         glActiveTexture(GL_TEXTURE0);
-        Texture2D::bind(ambient_map.value());
+        Texture2D::bind(ambient_map);
         shader().uniform("u_ambient_map", 0);
     }
     if(diffuse_map.has_value()) {
         glActiveTexture(GL_TEXTURE1);
-        Texture2D::bind(diffuse_map.value());
+        Texture2D::bind(diffuse_map);
         shader().uniform("u_diffuse_map", 1);
     }
     if(specular_map.has_value()) {
         glActiveTexture(GL_TEXTURE2);
-        Texture2D::bind(specular_map.value());
+        Texture2D::bind(specular_map);
         shader().uniform("u_specular_map", 2);
     }
     if(emissive_map.has_value()) {
         glActiveTexture(GL_TEXTURE3);
-        Texture2D::bind(emissive_map.value());
+        Texture2D::bind(emissive_map);
         shader().uniform("u_emissive_map", 3);
     }
     if(shininess_map.has_value()) {
         glActiveTexture(GL_TEXTURE4);
-        Texture2D::bind(shininess_map.value());
+        Texture2D::bind(shininess_map);
         shader().uniform("u_shininess_map", 4);
     }
     if(opacity_map.has_value()) {
         glActiveTexture(GL_TEXTURE5);
-        Texture2D::bind(opacity_map.value());
+        Texture2D::bind(opacity_map);
         shader().uniform("u_opacity_map", 5);
     }
     shader().uniform("u_use_ambient_map", ambient_map.has_value());

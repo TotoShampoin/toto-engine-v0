@@ -7,6 +7,7 @@
 
 #include "ShaderFile.hpp"
 #include "../Aliases.hpp"
+#include "TotoEngine/Instantiation.hpp"
 #include "Uniforms.hpp"
 
 namespace TotoEngine {
@@ -52,5 +53,8 @@ private:
     void attachShader(const GLuint& shader);
     void linkProgram();
 };
+
+using ShaderProgramInstance = Manager<ShaderProgram>::Instance;
+using ShaderProgramManager = Manager<ShaderProgram>;
 
 }

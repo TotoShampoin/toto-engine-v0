@@ -1,3 +1,4 @@
+#include "TotoEngine/Graphics/Texture.hpp"
 #include <TotoEngine/TotoEngine.hpp>
 
 #include <algorithm>
@@ -36,10 +37,10 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto transform = Transform();
 
     // TODO: Implement instancing
-    material.diffuse_map = loadTexture2D("tests_assets/uv.png");
+    material.diffuse_map = Texture2DManager::create(loadTexture2D("tests_assets/smile.png"));
     material.specular = ColorRGB(1.0f, 1.0f, 1.0f);
     material.shininess = 64.f;
-    material.ambient_map = loadTexture2D("tests_assets/uv.png");
+    material.ambient_map = Texture2DManager::create(loadTexture2D("tests_assets/uv.png"));
 
     transform.translate({0.0f, 0.0f, -5.0f});
 
@@ -72,7 +73,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         material.shader().uniform("u_lights[1].pos_or_dir", glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f)));
         material.shader().uniform("u_lights[1].type", 2); // dir
         material.apply();
-        glDrawElements(GL_TRIANGLES, vertex_buffer.indices().size(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, vertex_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
 
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();
