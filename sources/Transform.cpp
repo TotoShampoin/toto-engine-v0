@@ -27,7 +27,7 @@ void Transform::lookAt(const Vector3& target, const Vector3& up) {
         _rotation.x = std::atan2(up.y, std::sqrt(up.x * up.x + up.z * up.z));
         return;
     }
-    auto rotation = glm::lookAt(_position, target, up);
+    auto rotation = glm::inverse(glm::lookAt(_position, target, up));
     glm::extractEulerAngleXYZ(rotation, _rotation.x, _rotation.y, _rotation.z);
 }
 
