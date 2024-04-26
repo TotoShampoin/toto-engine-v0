@@ -30,17 +30,24 @@ using Index = unsigned int;
 
 class GeometryBuffer {
 public:
+    GeometryBuffer();
     GeometryBuffer(const std::vector<Vertex>&, const std::vector<Index>&);
-    ~GeometryBuffer() = default;
 
     constexpr static auto NONE = std::nullopt;
     static void bind(const optional_ref<GeometryBuffer>&);
+
+    void load(const std::vector<Vertex>& vertices, const std::vector<Index>& indices);
+
+    [[nodiscard]] size_t vertexCount() const { return _vertices.size(); }
+    [[nodiscard]] size_t indexCount() const { return _indices.size(); }
 
     [[nodiscard]] GLuint vao() const { return _vao; }
     [[nodiscard]] GLuint vbo() const { return _vbo; }
     [[nodiscard]] GLuint ibo() const { return _ibo; }
     [[nodiscard]] const std::vector<Vertex>& vertices() const { return _vertices; }
     [[nodiscard]] const std::vector<GLuint>& indices() const { return _indices; }
+    [[nodiscard]] GLenum cullFace() const { return _cull_face; }
+    [[nodiscard]] GLenum drawMode() const { return _draw_mode; }
 private:
     GLBuffer _vbo;
     GLBuffer _ibo;
