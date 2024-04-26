@@ -14,14 +14,13 @@ public:
     ~GLObject() {
         del(_id);
     }
-    GLObject(const GLObject&) = delete;
-    GLObject& operator=(const GLObject&) = delete;
     GLObject(GLObject&& other):
         _id(other._id) {
         other._id = 0;
     }
     GLObject&& operator=(GLObject&& other) {
         if(this != &other) {
+            del(_id);
             _id = other._id;
             other._id = 0;
         }
@@ -30,6 +29,9 @@ public:
 
     [[nodiscard]] GLuint id() const { return _id; }
     [[nodiscard]] operator GLuint() const { return _id; }
+
+    GLObject(const GLObject&) = delete;
+    GLObject& operator=(const GLObject&) = delete;
 private:
     GLuint _id;
 };
