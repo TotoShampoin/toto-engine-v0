@@ -3,7 +3,6 @@
 #include "GLObject.hpp"
 #include "../Aliases.hpp"
 #include <GL/gl.h>
-#include <vector>
 
 namespace TotoEngine {
 
@@ -41,15 +40,15 @@ public:
 
     template<TextureTarget T = TARGET>
     typename std::enable_if<T == TextureTarget::TEXTURE_2D || T == TextureTarget::TEXTURE_CUBE_MAP>::type
-    static image(const int& width, const int& height, const int& channels, const std::vector<uint8_t>& data) {
+    static image(const int& width, const int& height, const int& channels, const unsigned char* data) {
         GLuint format = getFormat(channels);
-        glTexImage2D(static_cast<GLenum>(T), 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data.data());
+        glTexImage2D(static_cast<GLenum>(T), 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     }
     template<TextureTarget T = TARGET>
     typename std::enable_if<T == TextureTarget::TEXTURE_2D_ARRAY || T == TextureTarget::TEXTURE_CUBE_MAP>::type
-    static image(const int& width, const int& height, const int& depth, const int& channels, const std::vector<uint8_t>& data) {
+    static image(const int& width, const int& height, const int& depth, const int& channels, const unsigned char* data) {
         GLuint format = getFormat(channels);
-        glTexImage3D(static_cast<GLenum>(T), 0, format, width, height, depth, 0, format, GL_UNSIGNED_BYTE, data.data());
+        glTexImage3D(static_cast<GLenum>(T), 0, format, width, height, depth, 0, format, GL_UNSIGNED_BYTE, data);
     }
 
     [[nodiscard]] GLuint texture() const { return _texture; }
