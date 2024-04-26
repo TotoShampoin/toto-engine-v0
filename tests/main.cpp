@@ -33,10 +33,10 @@ int main(int /* argc */, const char* /* argv */[]) {
     // glBindTexture(GL_TEXTURE_2D, texture);
     Texture<TEXTURE_2D> texture;
     Texture<TEXTURE_2D>::bind(texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    Texture<TEXTURE_2D>::parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    Texture<TEXTURE_2D>::parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    Texture<TEXTURE_2D>::parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    Texture<TEXTURE_2D>::parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     constexpr int width = 16, height = 16, channels = 4;
     std::vector<uint8_t> data(width * height * channels, 0);
     for(int i = 0; i < width * height; i++) {
@@ -45,7 +45,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         data[i * channels + 2] = (i % 4) * 85;
         data[i * channels + 3] = 255;
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+    Texture<TEXTURE_2D>::image(width, height, channels, data);
     Texture<TEXTURE_2D>::bind(Texture<TEXTURE_2D>::NONE);
 
     auto vertex_buffer = GeometryBuffer(
