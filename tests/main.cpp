@@ -7,9 +7,9 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-#include <iostream>
 #include <vector>
 
+#include "TotoEngine/Texture.hpp"
 #include "res/shaders/vertex.glsl.hpp"
 #include "res/shaders/fragment.glsl.hpp"
 
@@ -23,13 +23,16 @@ using GLTexture = TotoEngine::GLObject<
 
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
+    using TotoEngine::TextureTarget::TEXTURE_2D;
     auto window = Window(800, 600, "TotoEngine");
     glewInit();
 
     imguiInit(window);
 
-    GLTexture texture;
-    glBindTexture(GL_TEXTURE_2D, texture);
+    // GLTexture texture;
+    // glBindTexture(GL_TEXTURE_2D, texture);
+    Texture<TEXTURE_2D> texture;
+    Texture<TEXTURE_2D>::bind(texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -43,7 +46,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         data[i * channels + 3] = 255;
     }
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
+    Texture<TEXTURE_2D>::bind(Texture<TEXTURE_2D>::NONE);
 
     auto vertex_buffer = GeometryBuffer(
         {
@@ -69,13 +72,9 @@ int main(int /* argc */, const char* /* argv */[]) {
     program.uniform("u_projection", projection);
     program.uniform("u_view", view);
     program.uniform("u_model", model);
-    try { // voluntary error
-        program.uniform("u_inexistent_uniform", 0);
-    } catch(const std::runtime_error& e) {
-        std::cerr << e.what() << std::endl;
-    }
+
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    Texture<TEXTURE_2D>::bind(texture);
     program.uniform("u_texture", 0);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
