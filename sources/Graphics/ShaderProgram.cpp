@@ -1,5 +1,5 @@
 #include "TotoEngine/Graphics/ShaderProgram.hpp"
-#include "TotoEngine/Graphics/Aliases.hpp"
+#include "TotoEngine/Aliases.hpp"
 #include <format>
 #include <stdexcept>
 
