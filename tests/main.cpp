@@ -29,8 +29,6 @@ int main(int /* argc */, const char* /* argv */[]) {
 
     imguiInit(window);
 
-    // auto camera_projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    // auto camera_transform = Transform();
     auto camera = Camera(glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f));
 
     auto vertex_buffer = sphere(1, 32, 16);
@@ -39,7 +37,7 @@ int main(int /* argc */, const char* /* argv */[]) {
 
     auto amb_light = Light(LightType::AMBIENT, ColorRGB(1.0f, 1.0f, 1.0f), 0.33333f);
     auto dir_light = Light(LightType::DIRECTIONAL, ColorRGB(1.0f, 1.0f, 1.0f), 1.0f);
-    dir_light.direction() = glm::normalize(Vector3(1, -1, -1));
+    dir_light.lookAt({1, -1, -1});
 
     material.diffuse_map = Texture2DManager::create(loadTexture2D("tests_assets/smile.png"));
     material.specular = ColorRGB(1.0f, 1.0f, 1.0f);
