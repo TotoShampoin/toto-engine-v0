@@ -2,7 +2,8 @@
 
 #include <GL/glew.h>
 #include <format>
-#include <stdexcept>
+#include <iostream>
+// #include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <variant>
@@ -43,7 +44,8 @@ private:
         if(_uniforms.find(name) == _uniforms.end()) {
             GLint location = glGetUniformLocation(_program, name.c_str());
             if(location == -1) {
-                throw std::runtime_error(std::format("ERROR::SHADER::UNIFORM::NOT_FOUND ({})", name));
+                std::cerr << std::format("Warning: Uniform '{}' not found in shader program\n", name);
+                // throw std::runtime_error(std::format("ERROR::SHADER::UNIFORM::NOT_FOUND ({})", name));
             }
             _uniforms[name] = {location};
         }
