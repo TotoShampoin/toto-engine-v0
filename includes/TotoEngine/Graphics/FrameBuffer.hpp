@@ -18,6 +18,8 @@ class FrameBuffer {
 public:
     FrameBuffer(int width = 256, int height = 256);
 
+    void copyFrom(const FrameBuffer& other);
+
     [[nodiscard]] GLuint framebuffer() const { return _frame_buffer; }
     [[nodiscard]] GLuint renderbuffer() const { return _render_buffer; }
     [[nodiscard]] const Texture2D& texture() const { return _texture; }

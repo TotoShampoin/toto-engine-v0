@@ -28,4 +28,12 @@ FrameBuffer::FrameBuffer(int width, int height):
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void FrameBuffer::copyFrom(const FrameBuffer& other) {
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, other._frame_buffer);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _frame_buffer);
+    glBlitFramebuffer(0, 0, other._width, other._height, 0, 0, _width, _height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+
 }
