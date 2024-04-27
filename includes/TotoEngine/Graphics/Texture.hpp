@@ -39,6 +39,10 @@ public:
         glTexParameterf(static_cast<GLenum>(TARGET), pname, param);
     }
 
+    static void generateMipmap() {
+        glGenerateMipmap(static_cast<GLenum>(TARGET));
+    }
+
     template<TextureTarget T = TARGET>
     typename std::enable_if<T == TextureTarget::TEXTURE_2D || T == TextureTarget::TEXTURE_CUBE_MAP>::type
     static image(const int& width, const int& height, const int& channels, const unsigned char* data) {
