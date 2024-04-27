@@ -1,4 +1,3 @@
-#include "TotoEngine/Graphics/Light.hpp"
 #include <TotoEngine/TotoEngine.hpp>
 
 #include <algorithm>
@@ -53,6 +52,12 @@ int main(int /* argc */, const char* /* argv */[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+
+    GeometryBuffer::bind(vertex_buffer);
+    ShaderProgram::use(material.shader());
+    material.apply();
+    Renderer::apply(material.shader(), {amb_light, dir_light});
+
     while(!window.shouldClose()) {
         auto current_time = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration<float>(current_time - start_time).count();
@@ -61,16 +66,8 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::makeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        GeometryBuffer::bind(vertex_buffer);
-        ShaderProgram::use(material.shader());
-        material.shader().uniform("u_lights_count", 2);
-        amb_light.apply(material.shader(), 0);
-        dir_light.apply(material.shader(), 1);
-        material.apply();
-        material.shader().uniform("u_projection", camera.projectionMatrix());
-        material.shader().uniform("u_view", camera.viewMatrix());
-        material.shader().uniform("u_model", transform.matrix());
-        glDrawElements(GL_TRIANGLES, vertex_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
+        Renderer::apply(material.shader(), transform, camera);
+        Renderer::draw(vertex_buffer);
 
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();
