@@ -10,6 +10,8 @@ namespace TotoEngine {
 
 class BasicMaterial {
 public:
+    BasicMaterial() { (void)shader(); }
+
     ColorRGB color { 1.0f, 1.0f, 1.0f };
     float opacity { 1.0f };
     optional_ref<Texture2D> map { std::nullopt };
@@ -20,6 +22,8 @@ public:
 
 class PhongMaterial {
 public:
+    PhongMaterial() { (void)shader(); }
+
     ColorRGB ambient { 1.0f, 1.0f, 1.0f };
     ColorRGB diffuse { 1.0f, 1.0f, 1.0f };
     ColorRGB specular { 1.0f, 1.0f, 1.0f };
@@ -40,6 +44,8 @@ public:
 
 class PBRMaterial {
 public:
+    PBRMaterial() { (void)shader(); }
+
     ColorRGB albedo { 1.0f, 1.0f, 1.0f };
     float metallic { 0.0f };
     float roughness { 1.0f };

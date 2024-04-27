@@ -3,11 +3,10 @@
 #include "TotoEngine/Graphics/ShaderFile.hpp"
 #include "TotoEngine/Graphics/ShaderProgram.hpp"
 #include "TotoEngine/Graphics/Shapes.hpp"
+#include "TotoEngine/Graphics/Texture.hpp"
 #include <GL/gl.h>
 #include <TotoEngine/TotoEngine.hpp>
 
-#include <algorithm>
-#include <chrono>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -17,6 +16,8 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include <vector>
+#include <algorithm>
+#include <chrono>
 
 void imguiInit(TotoEngine::Window& window);
 
@@ -31,10 +32,17 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto window = Window(800, 600, "TotoEngine");
     glewInit();
 
+    auto frame_buffer = FrameBuffer(320, 240);
+    Texture2D::bind(frame_buffer.texture());
+    Texture2D::parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    Texture2D::parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    Texture2D::parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    Texture2D::parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     imguiInit(window);
     auto [width, height] = window.size();
 
-    auto camera = Camera(glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f));
+    auto camera = Camera(glm::perspective(glm::radians(70.0f), 320.0f / 240.0f, 0.1f, 100.0f));
 
     auto hdri_texture = Texture2DManager::create(loadTexture2D("tests_assets/hdri.jpg"));
     auto hdri_model = GeometryBuffer(
@@ -53,10 +61,9 @@ int main(int /* argc */, const char* /* argv */[]) {
         VertexShaderFile(std::ifstream("tests_assets/hdri.vert")),
         FragmentShaderFile(std::ifstream("tests_assets/hdri.frag"))
     );
-
-    auto normal_shader = ShaderProgram(
-        VertexShaderFile(std::ifstream("tests_assets/basic.vert")),
-        FragmentShaderFile(std::ifstream("tests_assets/normal.frag"))
+    auto screen_shader = ShaderProgram(
+        VertexShaderFile(std::ifstream("tests_assets/screen.vert")),
+        FragmentShaderFile(std::ifstream("tests_assets/screen.frag"))
     );
 
     auto material = PhongMaterial();
@@ -101,6 +108,8 @@ int main(int /* argc */, const char* /* argv */[]) {
         // auto delta_time = std::chrono::duration<float>(current_time - last_time).count();
 
         Window::makeContextCurrent(window);
+        
+        Renderer::bindRenderTarget(frame_buffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         GeometryBuffer::bind(hdri_model);
@@ -125,6 +134,16 @@ int main(int /* argc */, const char* /* argv */[]) {
         GeometryBuffer::bind(plane_model);
         Renderer::apply(material.shader(), plane_transform, camera);
         Renderer::draw(plane_model);
+
+        Renderer::bindRenderTarget(window);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        GeometryBuffer::bind(hdri_model);
+        ShaderProgram::use(screen_shader);
+        glActiveTexture(GL_TEXTURE0);
+        Texture2D::bind(frame_buffer.texture());
+        screen_shader.uniform("u_map", 0);
+        Renderer::draw(hdri_model);
 
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();

@@ -1,11 +1,13 @@
 #pragma once
 
-#include "TotoEngine/Graphics/Camera.hpp"
-#include "TotoEngine/Graphics/GeometryBuffer.hpp"
-#include "TotoEngine/Graphics/Light.hpp"
-#include "TotoEngine/Graphics/ShaderProgram.hpp"
-#include "TotoEngine/Primitives.hpp"
-#include "TotoEngine/Transform.hpp"
+#include <TotoEngine/Graphics/Camera.hpp>
+#include <TotoEngine/Graphics/GeometryBuffer.hpp>
+#include <TotoEngine/Graphics/Light.hpp>
+#include <TotoEngine/Graphics/ShaderProgram.hpp>
+#include <TotoEngine/Graphics/FrameBuffer.hpp>
+#include <TotoEngine/Primitives.hpp>
+#include <TotoEngine/Transform.hpp>
+#include "TotoEngine/Window.hpp"
 #include <vector>
 
 namespace TotoEngine {
@@ -22,6 +24,16 @@ public:
     ) {
         GeometryBuffer::bind(geometry_buffer);
         ShaderProgram::use(shader);
+    }
+
+    static void bindRenderTarget(const FrameBuffer& target) {
+        glBindFramebuffer(GL_FRAMEBUFFER, target.framebuffer());
+        glViewport(0, 0, target.width(), target.height());
+    }
+    static void bindRenderTarget(const Window& window) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        auto [width, height] = window.size();
+        glViewport(0, 0, width, height);
     }
 
     static void apply(ShaderProgram& program, const std::vector<Light>& lights, const Camera& camera) {
