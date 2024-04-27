@@ -1,6 +1,6 @@
 #pragma once
 
-const char* vertex = R"glsl(
+const char* basic_vert = R"vert(
 #version 460
 
 layout(location = 0) in vec3 a_position;
@@ -28,4 +28,4 @@ void main() {
     gl_Position = u_projection * position;
 }
 
-)glsl";
+)vert";

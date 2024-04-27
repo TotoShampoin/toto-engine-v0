@@ -42,4 +42,8 @@ if not can_embed:
     
 # input("Agree? (Enter to continue, Ctrl+C to cancel)")
 
+for dirpath, dirnames, filenames in os.walk(os.path.join(root, "sources/impl")):
+    for filename in filenames:
+        os.remove(os.path.join(dirpath, filename))
+
 embedder_bulk(os.path.join(root, "impl"), os.path.join(root, "sources/impl"))

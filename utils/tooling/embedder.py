@@ -15,7 +15,7 @@ def embedder(input_file, output_file):
 
     with open(output_file, 'w') as f:
         f.write('#pragma once\n\n')
-        f.write('const char* ' + name + ' = ' + file_as_raw_string + ';\n')
+        f.write(f'const char* {name}_{extension} = {file_as_raw_string};\n')
 
 def embedder_bulk(input_dir, output_dir):
     if not os.path.exists(output_dir):

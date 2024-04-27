@@ -1,6 +1,6 @@
 #pragma once
 
-const char* phong_fragment = R"glsl(
+const char* phong_frag = R"frag(
 #version 460
 
 const int LIGHT_MAX = 16;
@@ -104,4 +104,4 @@ void main() {
     f_frag_color = vec4(color, opacity);
 }
 
-)glsl";
+)frag";

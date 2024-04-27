@@ -1,15 +1,15 @@
 #include "TotoEngine/Graphics/Materials.hpp"
 
-#include "../impl/shaders/vertex.glsl.hpp"
-#include "../impl/shaders/basic_fragment.glsl.hpp"
-#include "../impl/shaders/phong_fragment.glsl.hpp"
+#include "../impl/shaders/basic.vert.hpp"
+#include "../impl/shaders/basic.frag.hpp"
+#include "../impl/shaders/phong.frag.hpp"
 
 namespace TotoEngine {
 
 ShaderProgram& BasicMaterial::shader() const {
     static auto shader = ShaderProgram(
-        VertexShaderFile(vertex),
-        FragmentShaderFile(basic_fragment)
+        VertexShaderFile(basic_vert),
+        FragmentShaderFile(basic_frag)
     );
     return shader;
 }
@@ -27,8 +27,8 @@ void BasicMaterial::apply() const {
 
 ShaderProgram& PhongMaterial::shader() const {
     static auto shader = ShaderProgram(
-        VertexShaderFile(vertex),
-        FragmentShaderFile(phong_fragment)
+        VertexShaderFile(basic_vert),
+        FragmentShaderFile(phong_frag)
     );
     return shader;
 }

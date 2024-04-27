@@ -1,6 +1,6 @@
 #pragma once
 
-const char* basic_fragment = R"glsl(
+const char* basic_frag = R"frag(
 #version 460
 
 in vec3 v_position;
@@ -19,4 +19,4 @@ void main() {
     f_frag_color = map * vec4(u_color, u_opacity);
 }
 
-)glsl";
+)frag";
