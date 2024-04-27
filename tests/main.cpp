@@ -1,4 +1,5 @@
 #include "TotoEngine/Graphics/GeometryBuffer.hpp"
+#include "TotoEngine/Graphics/Renderer.hpp"
 #include "TotoEngine/Graphics/ShaderFile.hpp"
 #include "TotoEngine/Graphics/ShaderProgram.hpp"
 #include "TotoEngine/Graphics/Shapes.hpp"
@@ -18,7 +19,6 @@
 #include <vector>
 
 void imguiInit(TotoEngine::Window& window);
-void imguiRender(TotoEngine::Window&, float render_time, glm::vec3& light_target);
 
 using GLTexture = TotoEngine::GLObject<
     [] { GLuint id; glGenTextures(1, &id); return id; },
@@ -37,7 +37,18 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto camera = Camera(glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.1f, 100.0f));
 
     auto hdri_texture = Texture2DManager::create(loadTexture2D("tests_assets/hdri.jpg"));
-    auto hdri_model = plane(2, 2);
+    auto hdri_model = GeometryBuffer(
+        {
+            {{-width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+            {{width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+            {{width / 2, height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
+            {{-width / 2, height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+        }, {
+            0, 1, 2,
+            0, 2, 3,
+        }
+    
+    );
     auto hdri_shader = ShaderProgram(
         VertexShaderFile(std::ifstream("tests_assets/hdri.vert")),
         FragmentShaderFile(std::ifstream("tests_assets/hdri.frag"))
@@ -50,8 +61,10 @@ int main(int /* argc */, const char* /* argv */[]) {
 
     auto material = PhongMaterial();
 
-    // auto plane_model = plane(1, 1);
-    // auto plane_transform = Transform();
+    auto plane_model = cube(2, 2, 2);
+    auto plane_transform = Transform();
+    plane_transform.position() = {0, -2, -5};
+    // plane_transform.lookAt({0, -1, -4});
 
     auto sphere_model = sphere(1, 32, 16);
     auto sphere_transform = Transform();
@@ -60,7 +73,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto dir_light = Light(LightType::DIRECTIONAL, ColorRGB(1.0f, 1.0f, 1.0f), 1.0f);
     dir_light.position() = {0, 0, 0};
     auto pt_light = Light(LightType::POINT, ColorRGB(1.0f, 1.0f, 1.0f), 2.0f);
-    pt_light.position() = {0, 1, -5};
+    pt_light.position() = {0, 2, -4};
 
     glm::vec3 dir_light_target = {0, 1, 1};
 
@@ -102,7 +115,6 @@ int main(int /* argc */, const char* /* argv */[]) {
         glClear(GL_DEPTH_BUFFER_BIT);
 
         GeometryBuffer::bind(sphere_model);
-
         ShaderProgram::use(material.shader());
         material.apply();
         Renderer::apply(material.shader(), {dir_light, pt_light}, camera);
@@ -110,10 +122,9 @@ int main(int /* argc */, const char* /* argv */[]) {
 
         Renderer::draw(sphere_model);
 
-        ShaderProgram::use(normal_shader);
-        Renderer::apply(normal_shader, light_helper_transform, camera);
-    
-        Renderer::draw(sphere_model);
+        GeometryBuffer::bind(plane_model);
+        Renderer::apply(material.shader(), plane_transform, camera);
+        Renderer::draw(plane_model);
 
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();
@@ -152,9 +163,11 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::swapBuffers(window);
         Window::pollEvents();
 
+        plane_transform.rotation().x = time;
         // transform.rotate(glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
         sphere_transform.position().x = glm::sin(time);
-        sphere_transform.rotation() += Vector3(2,3,5) * glm::radians(.1f);
+        sphere_transform.rotation().y = time;
+        // sphere_transform.rotation() += Vector3(2,3,5) * glm::radians(.1f);
         // camera.position().x = glm::cos(time);
         // camera.position().y = glm::sin(time) + 5;
         camera.lookAt({0, 0, -5});
@@ -172,33 +185,4 @@ void imguiInit(TotoEngine::Window& window) {
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(window.GLFWWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 460");
-}
-void imguiRender(TotoEngine::Window& window, float render_time, glm::vec3& light_target) {
-    auto [width, height] = window.size();
-
-    static std::vector<float> render_times;
-    render_times.push_back(1.f / render_time);
-    if(render_times.size() > 200) {
-        render_times.erase(render_times.begin());
-    }
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImVec2(0, 0));
-    ImGui::Begin("Timing", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
-    ImGui::PlotHistogram("##fps", render_times.data(), render_times.size(), 0, nullptr, 0, std::max_element(render_times.begin(), render_times.end()).operator*(), ImVec2(400, 80));
-    ImGui::Text("Render FPS: %.2f", 1.f / render_time);
-    ImGui::End();
-
-    ImGui::SetNextWindowPos(ImVec2(width, 0), ImGuiCond_Always, ImVec2(1, 0));
-    ImGui::SetNextWindowSize(ImVec2(0, 0));
-    ImGui::Begin("Light", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
-    ImGui::SliderFloat3("Light Target", &light_target.x, -2, 2);
-    ImGui::End();
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

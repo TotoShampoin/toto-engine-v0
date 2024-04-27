@@ -3,6 +3,8 @@
 #include <glm/gtc/constants.hpp>
 #include <vector>
 
+// TODO: Figure out UV for plane and cube
+
 namespace TotoEngine {
 
 constexpr auto PI = glm::pi<float>();
@@ -11,13 +13,13 @@ constexpr auto TAU = glm::tau<float>();
 GeometryBuffer plane(float width, float height) {
     return GeometryBuffer(
         {
-            {{width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-            {{width / 2, height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-            {{-width / 2, height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-            {{-width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+            {{-width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+            {{-width / 2, height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
+            {{width / 2, height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+            {{width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
         }, {
             0, 1, 2,
-            2, 3, 0
+            0, 2, 3,
         }
     );
 }
@@ -26,20 +28,20 @@ GeometryBuffer cube(float width, float height, float depth) {
     return GeometryBuffer(
         {
             // Front
-            {{width / 2, -height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-            {{width / 2, height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-            {{-width / 2, height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-            {{-width / 2, -height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+            {{width / 2, -height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+            {{width / 2, height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-width / 2, height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+            {{-width / 2, -height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
             // Back
             {{width / 2, -height / 2, -depth / 2}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
             {{-width / 2, -height / 2, -depth / 2}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
             {{-width / 2, height / 2, -depth / 2}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
             {{width / 2, height / 2, -depth / 2}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
             // Right
-            {{width / 2, -height / 2, -depth / 2}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-            {{width / 2, height / 2, -depth / 2}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
-            {{width / 2, height / 2, depth / 2}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
-            {{width / 2, -height / 2, depth / 2}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{width / 2, -height / 2, -depth / 2}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{width / 2, height / 2, -depth / 2}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+            {{width / 2, height / 2, depth / 2}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+            {{width / 2, -height / 2, depth / 2}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
             // Left
             {{-width / 2, -height / 2, -depth / 2}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
             {{-width / 2, -height / 2, depth / 2}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
