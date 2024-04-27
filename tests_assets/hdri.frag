@@ -1,6 +1,3 @@
-#pragma once
-
-const char* hdri_frag = R"frag(
 #version 460
 #define PI 3.14159265359
 
@@ -32,5 +29,3 @@ void main() {
 
     f_frag_color = vec4(color, 1.0);
 }
-
-)frag";

@@ -15,6 +15,9 @@ public:
     Matrix4 viewMatrix() const {
         return glm::inverse(matrix());
     }
+    Matrix3 viewNormalMatrix() const {
+        return Matrix3(glm::transpose(matrix()));
+    }
 
     Matrix4& projectionMatrix() { return _projection_matrix; }
     const Matrix4& projectionMatrix() const { return _projection_matrix; }

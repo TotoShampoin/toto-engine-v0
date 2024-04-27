@@ -1,6 +1,3 @@
-#pragma once
-
-const char* hdri_vert = R"vert(
 #version 460
 
 layout(location = 0) in vec3 a_position;
@@ -11,5 +8,3 @@ void main() {
     v_position = a_position;
     gl_Position = vec4(a_position, 1.0);
 }
-
-)vert";

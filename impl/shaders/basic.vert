@@ -13,7 +13,7 @@ uniform mat4 u_view;
 uniform mat4 u_model;
 
 void main() {
-    mat3 normal_matrix = transpose(inverse(mat3(u_model)));
+    mat3 normal_matrix = mat3(transpose(inverse(u_view * u_model)));
     
     vec4 position = u_view * u_model * vec4(a_position, 1.);
     vec3 normal = normal_matrix * a_normal;

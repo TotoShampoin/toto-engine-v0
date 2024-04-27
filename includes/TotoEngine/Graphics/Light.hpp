@@ -1,6 +1,5 @@
 #pragma once
 
-#include "TotoEngine/Graphics/ShaderProgram.hpp"
 #include "TotoEngine/Transform.hpp"
 #include <TotoEngine/Primitives.hpp>
 
@@ -21,8 +20,6 @@ public:
         const ColorRGB& color = ColorRGB(1.0f, 1.0f, 1.0f),
         const float& intensity = 1.0f
     ) : _type(type), _color(color), _intensity(intensity) {}
-
-    void apply(ShaderProgram& program, const size_t& index = 0) const;
 
     [[nodiscard]] LightType& type() { return _type; }
     [[nodiscard]] ColorRGB& color() { return _color; }
