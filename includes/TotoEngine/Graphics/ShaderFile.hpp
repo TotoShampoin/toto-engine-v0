@@ -3,7 +3,6 @@
 #include <TotoEngine/Graphics/GLObject.hpp>
 #include <GL/glew.h>
 
-#include <filesystem>
 #include <format>
 #include <fstream>
 #include <stdexcept>
