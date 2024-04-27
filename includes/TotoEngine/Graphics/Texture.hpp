@@ -22,6 +22,14 @@ enum class TextureTarget {
 template <TextureTarget TARGET>
 class Texture {
 public:
+    Texture() {
+        bind(*this);
+        parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    }
+
     constexpr static auto NONE = std::nullopt;
     static void bind(const optional_ref<const Texture<TARGET>>& texture) {
         if(!texture.has_value()) {
