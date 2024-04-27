@@ -13,10 +13,10 @@ constexpr auto TAU = glm::tau<float>();
 GeometryBuffer plane(float width, float height) {
     return GeometryBuffer(
         {
-            {{-width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
-            {{-width / 2, height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
-            {{width / 2, height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
-            {{width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+            {{ -width / 2.f, height / 2.f, 0 }, { 0, 0, 1 }, { 0, 0 }},
+            {{ width / 2.f, height / 2.f, 0 }, { 0, 0, 1 }, { 1, 0 }},
+            {{ width / 2.f, -height / 2.f, 0 }, { 0, 0, 1 }, { 1, 1 }},
+            {{ -width / 2.f, -height / 2.f, 0 }, { 0, 0, 1 }, { 0, 1 }},
         }, {
             0, 1, 2,
             0, 2, 3,
@@ -27,43 +27,43 @@ GeometryBuffer plane(float width, float height) {
 GeometryBuffer cube(float width, float height, float depth) {
     return GeometryBuffer(
         {
-            // Front
-            {{width / 2, -height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
-            {{width / 2, height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-            {{-width / 2, height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-            {{-width / 2, -height / 2, depth / 2}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-            // Back
-            {{width / 2, -height / 2, -depth / 2}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
-            {{-width / 2, -height / 2, -depth / 2}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
-            {{-width / 2, height / 2, -depth / 2}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
-            {{width / 2, height / 2, -depth / 2}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
-            // Right
-            {{width / 2, -height / 2, -depth / 2}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-            {{width / 2, height / 2, -depth / 2}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
-            {{width / 2, height / 2, depth / 2}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
-            {{width / 2, -height / 2, depth / 2}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-            // Left
-            {{-width / 2, -height / 2, -depth / 2}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-            {{-width / 2, -height / 2, depth / 2}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-            {{-width / 2, height / 2, depth / 2}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
-            {{-width / 2, height / 2, -depth / 2}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
-            // Top
-            {{width / 2, height / 2, -depth / 2}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-            {{-width / 2, height / 2, -depth / 2}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-            {{-width / 2, height / 2, depth / 2}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
-            {{width / 2, height / 2, depth / 2}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
-            // Bottom
-            {{width / 2, -height / 2, depth / 2}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
-            {{-width / 2, -height / 2, depth / 2}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}},
-            {{-width / 2, -height / 2, -depth / 2}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}},
-            {{width / 2, -height / 2, -depth / 2}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}},
+            // front
+            { { -width / 2.f, height / 2.f, depth / 2.f }, { 0, 0, 1 }, { 0, 0 } },
+            { { width / 2.f, height / 2.f, depth / 2.f }, { 0, 0, 1 }, { 1, 0 } },
+            { { width / 2.f, -height / 2.f, depth / 2.f }, { 0, 0, 1 }, { 1, 1 } },
+            { { -width / 2.f, -height / 2.f, depth / 2.f }, { 0, 0, 1 }, { 0, 1 } },
+            // back
+            { { -width / 2.f, height / 2.f, -depth / 2.f }, { 0, 0, -1 }, { 1, 0 } },
+            { { width / 2.f, height / 2.f, -depth / 2.f }, { 0, 0, -1 }, { 0, 0 } },
+            { { width / 2.f, -height / 2.f, -depth / 2.f }, { 0, 0, -1 }, { 0, 1 } },
+            { { -width / 2.f, -height / 2.f, -depth / 2.f }, { 0, 0, -1 }, { 1, 1 } },
+            // left
+            { { -width / 2.f, height / 2.f, -depth / 2.f }, { -1, 0, 0 }, { 0, 0 } },
+            { { -width / 2.f, height / 2.f, depth / 2.f }, { -1, 0, 0 }, { 1, 0 } },
+            { { -width / 2.f, -height / 2.f, depth / 2.f }, { -1, 0, 0 }, { 1, 1 } },
+            { { -width / 2.f, -height / 2.f, -depth / 2.f }, { -1, 0, 0 }, { 0, 1 } },
+            // right
+            { { width / 2.f, height / 2.f, -depth / 2.f }, { 1, 0, 0 }, { 1, 0 } },
+            { { width / 2.f, height / 2.f, depth / 2.f }, { 1, 0, 0 }, { 0, 0 } },
+            { { width / 2.f, -height / 2.f, depth / 2.f }, { 1, 0, 0 }, { 0, 1 } },
+            { { width / 2.f, -height / 2.f, -depth / 2.f }, { 1, 0, 0 }, { 1, 1 } },
+            // top
+            { { -width / 2.f, height / 2.f, -depth / 2.f }, { 0, 1, 0 }, { 0, 0 } },
+            { { width / 2.f, height / 2.f, -depth / 2.f }, { 0, 1, 0 }, { 1, 0 } },
+            { { width / 2.f, height / 2.f, depth / 2.f }, { 0, 1, 0 }, { 1, 1 } },
+            { { -width / 2.f, height / 2.f, depth / 2.f }, { 0, 1, 0 }, { 0, 1 } },
+            // bottom
+            { { -width / 2.f, -height / 2.f, -depth / 2.f }, { 0, -1, 0 }, { 1, 0 } },
+            { { width / 2.f, -height / 2.f, -depth / 2.f }, { 0, -1, 0 }, { 0, 0 } },
+            { { width / 2.f, -height / 2.f, depth / 2.f }, { 0, -1, 0 }, { 0, 1 } },
+            { { -width / 2.f, -height / 2.f, depth / 2.f }, { 0, -1, 0 }, { 1, 1 } },
         }, {
-            0, 1, 2,  2, 3, 0,
-            4, 5, 6,  6, 7, 4,
-            8, 9, 10,  10, 11, 8,
-            12, 13, 14,  14, 15, 12,
-            16, 17, 18,  18, 19, 16,
-            20, 21, 22,  22, 23, 20,
+            2, 1, 0, 3, 2, 0, // front
+            5, 6, 4, 6, 7, 4, // back
+            10, 9, 8, 11, 10, 8, // left
+            13, 14, 12, 14, 15, 12, // right
+            18, 17, 16, 19, 18, 16, // top
+            21, 22, 20, 22, 23, 20, // bottom
         }
     );
 }
