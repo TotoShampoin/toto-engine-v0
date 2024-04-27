@@ -1,10 +1,10 @@
 #pragma once
 
-#include <optional>
+#include <TotoEngine/Primitives.hpp>
+#include <TotoEngine/Graphics/ShaderProgram.hpp>
+#include <TotoEngine/Graphics/Texture.hpp>
 
-#include "../Primitives.hpp"
-#include "ShaderProgram.hpp"
-#include "Texture.hpp"
+#include <optional>
 
 namespace TotoEngine {
 

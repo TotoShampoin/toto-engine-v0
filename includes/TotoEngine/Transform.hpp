@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Primitives.hpp"
+#include <TotoEngine/Primitives.hpp>
 
 namespace TotoEngine {
 

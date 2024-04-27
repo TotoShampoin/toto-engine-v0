@@ -2,13 +2,13 @@
 
 #include <GL/glew.h>
 
-#include "GLObject.hpp"
+#include <TotoEngine/Graphics/GLObject.hpp>
 #include <optional>
 
-#include "ShaderFile.hpp"
-#include "../Aliases.hpp"
+#include <TotoEngine/Graphics/ShaderFile.hpp>
+#include <TotoEngine/Aliases.hpp>
 #include <TotoEngine/Instantiation.hpp>
-#include "Uniforms.hpp"
+#include <TotoEngine/Graphics/Uniforms.hpp>
 
 namespace TotoEngine {
 

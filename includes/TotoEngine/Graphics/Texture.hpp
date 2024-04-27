@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLObject.hpp"
+#include <TotoEngine/Graphics/GLObject.hpp>
 #include <TotoEngine/Aliases.hpp>
 #include <TotoEngine/Instantiation.hpp>
 #include <GL/gl.h>

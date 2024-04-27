@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "GLObject.hpp"
+#include <TotoEngine/Graphics/GLObject.hpp>
 #include <TotoEngine/Aliases.hpp>
 #include <TotoEngine/Primitives.hpp>
 #include <TotoEngine/Instantiation.hpp>

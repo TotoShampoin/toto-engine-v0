@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include <variant>
-#include "../Primitives.hpp"
+#include <TotoEngine/Primitives.hpp>
 
 namespace TotoEngine {
 
