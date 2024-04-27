@@ -3,7 +3,9 @@
 #include <TotoEngine/Graphics/GLObject.hpp>
 #include <GL/glew.h>
 
+#include <filesystem>
 #include <format>
+#include <fstream>
 #include <stdexcept>
 #include <string>
 
@@ -39,6 +41,24 @@ template <ShaderType TYPE>
 class ShaderFile {
 public:
     ShaderFile(const std::string& shader_source) {
+        loadAndCompile(shader_source);
+    }
+
+    ShaderFile(std::istream& file) {
+        std::string shader_source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        loadAndCompile(shader_source);
+    }
+    ShaderFile(std::ifstream&& file):
+        ShaderFile(file)
+    {}
+
+    ~ShaderFile() = default;
+
+    [[nodiscard]] GLuint shader() const { return _shader; }
+private:
+    GLShader<TYPE> _shader;
+
+    void loadAndCompile(const std::string& shader_source) {
         const char* source = shader_source.c_str();
         glShaderSource(_shader, 1, &source, nullptr);
         glCompileShader(_shader);
@@ -50,11 +70,6 @@ public:
             throw std::runtime_error(std::format("ERROR::SHADER::{}::COMPILATION_FAILED\n{}", shaderTypeToString(TYPE), info_log));
         }
     }
-    ~ShaderFile() = default;
-
-    [[nodiscard]] GLuint shader() const { return _shader; }
-private:
-    GLShader<TYPE> _shader;
 };
 
 using VertexShaderFile = ShaderFile<ShaderType::VERTEX>;

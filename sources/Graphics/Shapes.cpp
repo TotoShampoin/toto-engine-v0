@@ -12,9 +12,9 @@ GeometryBuffer plane(float width, float height) {
     return GeometryBuffer(
         {
             {{width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-            {{-width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+            {{width / 2, height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
             {{-width / 2, height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-            {{width / 2, height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}
+            {{-width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
         }, {
             0, 1, 2,
             2, 3, 0
