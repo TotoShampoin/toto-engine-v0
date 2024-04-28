@@ -14,6 +14,7 @@ using GLRenderBuffer = GLObject<
     [](GLuint& b) { glDeleteRenderbuffers(1, &b); }
 >;
 
+// TODO: Add support for multiple color attachments
 class FrameBuffer {
 public:
     FrameBuffer(int width = 256, int height = 256, TextureFormat = TextureFormat::RGBA);
