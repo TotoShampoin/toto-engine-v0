@@ -57,7 +57,7 @@ int main(int /* argc */, const char* /* argv */[]) {
 
     auto material = PhongMaterial();
         material.diffuse_map = uv_texture;
-        material.specular = ColorRGB(.5f);
+        material.specular = ColorRGB(1.0f);
         material.shininess = 64.f;
         material.ambient_map = uv_texture;
     
@@ -96,12 +96,10 @@ int main(int /* argc */, const char* /* argv */[]) {
     glCullFace(GL_BACK);
 
     auto render = [&](const Material& M) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         GeometryBuffer::bind(plane_model);
         ShaderProgram::use(M.shader());
         M.apply();
-        // Renderer::apply(M.shader(), {dir_light, pt_light}, camera);
+        Renderer::apply(M.shader(), {dir_light, pt_light}, camera);
         Renderer::apply(M.shader(), plane_transform, camera);
         Renderer::draw(plane_model);
 
@@ -120,36 +118,48 @@ int main(int /* argc */, const char* /* argv */[]) {
 
         Window::makeContextCurrent(window);
     
-        Renderer::bindRenderTarget(albedo_buffer);
-        render(Material(albedo_material));
-        Renderer::bindRenderTarget(position_buffer);
-        render(Material(position_material));
-        Renderer::bindRenderTarget(normal_buffer);
-        render(Material(normal_material));
+        // { // Deferred rendering
+        //     Renderer::bindRenderTarget(albedo_buffer);
+        //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //     render(Material(albedo_material));
+        //     Renderer::bindRenderTarget(position_buffer);
+        //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //     render(Material(position_material));
+        //     Renderer::bindRenderTarget(normal_buffer);
+        //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //     render(Material(normal_material));
 
-        Renderer::bindRenderTarget(render_target);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        ShaderProgram::use(defer_shader);
-        Texture2D::bindAs(hdri_texture, 0);
-        defer_shader.uniform("u_hdri", 0);
-        Texture2D::bindAs(albedo_buffer.texture(), 1);
-        defer_shader.uniform("u_albedo", 1);
-        Texture2D::bindAs(position_buffer.texture(), 2);
-        defer_shader.uniform("u_position", 2);
-        Texture2D::bindAs(normal_buffer.texture(), 3);
-        defer_shader.uniform("u_normal", 3);
-        Renderer::apply(defer_shader, camera);
-        Renderer::apply(defer_shader, {dir_light, pt_light}, camera);
-        GeometryBuffer::bind(screen_geometry);
-        Renderer::draw(screen_geometry);
+        //     Renderer::bindRenderTarget(render_target);
+        //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //     ShaderProgram::use(defer_shader);
+        //     Texture2D::bindAs(hdri_texture, 0);
+        //     defer_shader.uniform("u_hdri", 0);
+        //     Texture2D::bindAs(albedo_buffer.texture(), 1);
+        //     defer_shader.uniform("u_albedo", 1);
+        //     Texture2D::bindAs(position_buffer.texture(), 2);
+        //     defer_shader.uniform("u_position", 2);
+        //     Texture2D::bindAs(normal_buffer.texture(), 3);
+        //     defer_shader.uniform("u_normal", 3);
+        //     Renderer::apply(defer_shader, camera);
+        //     Renderer::apply(defer_shader, {dir_light, pt_light}, camera);
+        //     GeometryBuffer::bind(screen_geometry);
+        //     Renderer::draw(screen_geometry);
 
-        Renderer::bindRenderTarget(window);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        ShaderProgram::use(screen_shader);
-        Texture2D::bindAs(render_target.texture(), 0);
-        screen_shader.uniform("u_map", 0);
-        GeometryBuffer::bind(screen_geometry);
-        Renderer::draw(screen_geometry);
+        //     Renderer::bindRenderTarget(window);
+        //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //     ShaderProgram::use(screen_shader);
+        //     Texture2D::bindAs(render_target.texture(), 0);
+        //     screen_shader.uniform("u_map", 0);
+        //     GeometryBuffer::bind(screen_geometry);
+        //     Renderer::draw(screen_geometry);
+        // }
+
+        { // Forward rendering
+            Renderer::bindRenderTarget(window);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            Renderer::drawHDRi(hdri_texture, camera);
+            render(Material(material));
+        }
 
 
         auto time_after_render = std::chrono::high_resolution_clock::now();
@@ -188,7 +198,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::swapBuffers(window);
         Window::pollEvents();
 
-        plane_transform.rotation().x = time;
+        plane_transform.rotation() = glm::vec3(time);
         sphere_transform.position().x = glm::sin(time);
         sphere_transform.rotation().y = time;
         camera.lookAt({0, 0, -5});
