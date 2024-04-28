@@ -60,17 +60,17 @@ public:
         glGenerateMipmap(static_cast<GLenum>(TARGET));
     }
 
-    template<TextureTarget T = TARGET>
-    typename std::enable_if<T == TextureTarget::TEXTURE_2D || T == TextureTarget::TEXTURE_CUBE_MAP>::type
-    static image(const int& width, const int& height, const int& channels, const unsigned char* data) {
+    template<typename T = uint8_t, TextureTarget TARGET_T = TARGET>
+    typename std::enable_if<TARGET_T == TextureTarget::TEXTURE_2D || TARGET_T == TextureTarget::TEXTURE_CUBE_MAP>::type
+    static image(const int& width, const int& height, const int& channels, const T* data) {
         GLuint format = getFormat(channels);
-        glTexImage2D(static_cast<GLenum>(T), 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(static_cast<GLenum>(TARGET_T), 0, format, width, height, 0, format, getType<T>(), data);
     }
-    template<TextureTarget T = TARGET>
-    typename std::enable_if<T == TextureTarget::TEXTURE_2D_ARRAY || T == TextureTarget::TEXTURE_CUBE_MAP>::type
-    static image(const int& width, const int& height, const int& depth, const int& channels, const unsigned char* data) {
+    template<typename T = uint8_t, TextureTarget TARGET_T = TARGET>
+    typename std::enable_if<TARGET_T == TextureTarget::TEXTURE_2D_ARRAY || TARGET_T == TextureTarget::TEXTURE_CUBE_MAP>::type
+    static image(const int& width, const int& height, const int& depth, const int& channels, const T* data) {
         GLuint format = getFormat(channels);
-        glTexImage3D(static_cast<GLenum>(T), 0, format, width, height, depth, 0, format, GL_UNSIGNED_BYTE, data);
+        glTexImage3D(static_cast<GLenum>(TARGET_T), 0, format, width, height, depth, 0, format, getType<T>(), data);
     }
 
     [[nodiscard]] GLuint texture() const { return _texture; }
@@ -86,6 +86,13 @@ private:
             case 4: return GL_RGBA;
             default: return GL_RGBA;
         }
+    }
+    template<typename T>
+    static GLuint getType() {
+        if constexpr(std::is_same_v<T, uint8_t>) return GL_UNSIGNED_BYTE;
+        if constexpr(std::is_same_v<T, uint16_t>) return GL_UNSIGNED_SHORT;
+        if constexpr(std::is_same_v<T, uint32_t>) return GL_UNSIGNED_INT;
+        if constexpr(std::is_same_v<T, float>) return GL_FLOAT;
     }
 };
 
