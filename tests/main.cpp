@@ -31,68 +31,44 @@ int main(int /* argc */, const char* /* argv */[]) {
     using TotoEngine::TextureTarget::TEXTURE_2D;
     auto window = Window(800, 600, "TotoEngine");
     glewInit();
-
-    auto frame_buffer = FrameBuffer(320, 240);
-    Texture2D::bind(frame_buffer.texture());
-    Texture2D::parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    Texture2D::parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    Texture2D::parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    Texture2D::parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     imguiInit(window);
     auto [width, height] = window.size();
+
+    auto frame_buffer = FrameBuffer(width, height);
 
     auto camera = Camera(glm::perspective(glm::radians(70.0f), 320.0f / 240.0f, 0.1f, 100.0f));
 
     auto hdri_texture = Texture2DManager::create(loadTexture2D("tests_assets/hdri.jpg"));
-    auto hdri_model = GeometryBuffer(
-        {
-            {{-width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
-            {{width / 2, -height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
-            {{width / 2, height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
-            {{-width / 2, height / 2, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
-        }, {
-            0, 1, 2,
-            0, 2, 3,
-        }
-    
-    );
-    auto hdri_shader = ShaderProgram(
-        VertexShaderFile(std::ifstream("tests_assets/hdri.vert")),
-        FragmentShaderFile(std::ifstream("tests_assets/hdri.frag"))
-    );
+
     auto screen_shader = ShaderProgram(
         VertexShaderFile(std::ifstream("tests_assets/screen.vert")),
         FragmentShaderFile(std::ifstream("tests_assets/screen.frag"))
     );
 
     auto material = PhongMaterial();
+        material.diffuse_map = Texture2DManager::create(loadTexture2D("tests_assets/uv.png"));
+        material.specular = ColorRGB(.5f);
+        material.shininess = 64.f;
+        material.ambient_map = Texture2DManager::create(loadTexture2D("tests_assets/uv.png"));
 
     auto plane_model = cube(2, 2, 2);
     auto plane_transform = Transform();
-    plane_transform.position() = {0, -2, -5};
-    // plane_transform.lookAt({0, -1, -4});
+        plane_transform.position() = {0, -2, -5};
 
     auto sphere_model = sphere(1, 32, 16);
     auto sphere_transform = Transform();
+        sphere_transform.translate({0.0f, 0.0f, -5.0f});
 
     auto amb_light = Light(LightType::AMBIENT, ColorRGB(1.0f, 1.0f, 1.0f), 0.33333f);
     auto dir_light = Light(LightType::DIRECTIONAL, ColorRGB(1.0f, 1.0f, 1.0f), 1.0f);
-    dir_light.position() = {0, 0, 0};
+        dir_light.position() = {0, 0, 0};
     auto pt_light = Light(LightType::POINT, ColorRGB(1.0f, 1.0f, 1.0f), 2.0f);
-    pt_light.position() = {0, 2, -4};
+        pt_light.position() = {0, 2, -4};
 
     glm::vec3 dir_light_target = {0, 1, 1};
 
     auto light_helper_transform = Transform();
-    light_helper_transform.scale() *= .1;
-
-    material.diffuse_map = Texture2DManager::create(loadTexture2D("tests_assets/uv.png"));
-    material.specular = ColorRGB(.5f);
-    material.shininess = 64.f;
-    material.ambient_map = Texture2DManager::create(loadTexture2D("tests_assets/uv.png"));
-
-    sphere_transform.translate({0.0f, 0.0f, -5.0f});
+        light_helper_transform.scale() *= .1;
 
     auto start_time = std::chrono::high_resolution_clock::now();
     auto last_time = start_time;
@@ -108,19 +84,10 @@ int main(int /* argc */, const char* /* argv */[]) {
         // auto delta_time = std::chrono::duration<float>(current_time - last_time).count();
 
         Window::makeContextCurrent(window);
-        
-        Renderer::bindRenderTarget(frame_buffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        Renderer::bindRenderTarget(window);
 
-        GeometryBuffer::bind(hdri_model);
-        ShaderProgram::use(hdri_shader);
-        Texture2D::bindAs(hdri_texture, 0);
-        hdri_shader.uniform("u_map", 0);
-        hdri_shader.uniform("u_view", camera.viewMatrix());
-        hdri_shader.uniform("u_projection", camera.projectionMatrix());
-        Renderer::draw(hdri_model);
-
-        glClear(GL_DEPTH_BUFFER_BIT);
+        Renderer::drawHDRi(hdri_texture, camera);
 
         GeometryBuffer::bind(sphere_model);
         ShaderProgram::use(material.shader());
@@ -133,16 +100,6 @@ int main(int /* argc */, const char* /* argv */[]) {
         GeometryBuffer::bind(plane_model);
         Renderer::apply(material.shader(), plane_transform, camera);
         Renderer::draw(plane_model);
-
-        Renderer::bindRenderTarget(window);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        GeometryBuffer::bind(hdri_model);
-        ShaderProgram::use(screen_shader);
-        glActiveTexture(GL_TEXTURE0);
-        Texture2D::bind(frame_buffer.texture());
-        screen_shader.uniform("u_map", 0);
-        Renderer::draw(hdri_model);
 
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();

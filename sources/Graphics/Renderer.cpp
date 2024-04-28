@@ -1,6 +1,21 @@
 #include "TotoEngine/Graphics/Renderer.hpp"
 
+#include "TotoEngine/Graphics/ShaderFile.hpp"
+#include "TotoEngine/Graphics/ShaderProgram.hpp"
+#include "impl/shaders/hdri.vert.hpp"
+#include "impl/shaders/hdri.frag.hpp"
+
 namespace TotoEngine {
+
+void Renderer::drawHDRi(const Texture2D& hdri_texture, const Camera& camera) {
+    const auto& [hdri_model, hdri_shader] = HDRImodel();
+    bind(hdri_model, hdri_shader);
+    Texture2D::bindAs(hdri_texture, 0);
+    hdri_shader.uniform("u_map", 0);
+    apply(hdri_shader, camera);
+    draw(hdri_model);
+    glClear(GL_DEPTH_BUFFER_BIT);
+}
 
 void Renderer::draw(const GeometryBuffer &geometry_buffer) {
     glDrawElements(GL_TRIANGLES, geometry_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
@@ -49,6 +64,26 @@ void Renderer::apply(ShaderProgram& program, const Camera& camera) {
 }
 void Renderer::apply(ShaderProgram& program, const Transform& transform) {
     program.uniform("u_model", transform.matrix());
+}
+
+
+std::pair<GeometryBuffer&, ShaderProgram&> Renderer::HDRImodel() {
+    static GeometryBuffer hdri_model = GeometryBuffer(
+        {
+            {{-1, -1, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+            {{1, -1, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+            {{1, 1, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
+            {{-1, 1, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+        }, {
+            0, 1, 2,
+            0, 2, 3,
+        }
+    );
+    static ShaderProgram hdri_shader = ShaderProgram(
+        VertexShaderFile(hdri_vert),
+        FragmentShaderFile(hdri_frag)
+    );
+    return {hdri_model, hdri_shader};
 }
 
 }
