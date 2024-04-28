@@ -10,7 +10,7 @@ FrameBuffer::FrameBuffer(int width, int height):
     _texture(), _width(width), _height(height)
 {
     glBindTexture(GL_TEXTURE_2D, _texture.texture());
-    Texture2D::image(_width, _height, 4, nullptr);
+    Texture2D::image<float>(_width, _height, 4, nullptr);
     glBindFramebuffer(GL_FRAMEBUFFER, _frame_buffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _render_buffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, _width, _height);
