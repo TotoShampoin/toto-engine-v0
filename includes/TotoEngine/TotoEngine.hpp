@@ -16,6 +16,7 @@
 #include <TotoEngine/Graphics/Light.hpp>
 #include <TotoEngine/Graphics/Camera.hpp>
 #include <TotoEngine/Graphics/Renderer.hpp>
+#include <TotoEngine/Graphics/FrameBuffer.hpp>
 
 #define __TOTO_ENGINE_MAJOR__ 0
 #define __TOTO_ENGINE_MINOR__ 0
