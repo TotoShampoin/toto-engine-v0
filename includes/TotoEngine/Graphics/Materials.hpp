@@ -4,6 +4,7 @@
 #include <TotoEngine/Graphics/ShaderProgram.hpp>
 #include <TotoEngine/Graphics/Texture.hpp>
 
+#include <functional>
 #include <optional>
 
 namespace TotoEngine {
@@ -14,6 +15,30 @@ public:
 
     ColorRGB color { 1.0f, 1.0f, 1.0f };
     float opacity { 1.0f };
+    optional_ref<Texture2D> map { std::nullopt };
+
+    void apply() const;
+    ShaderProgram& shader() const;
+};
+
+class PositionMaterial {
+public:
+    PositionMaterial() { (void)shader(); }
+
+    void apply() const;
+    ShaderProgram& shader() const;
+};
+class DepthMaterial {
+public:
+    DepthMaterial() { (void)shader(); }
+
+    void apply() const;
+    ShaderProgram& shader() const;
+};
+class NormalMaterial {
+public:
+    NormalMaterial() { (void)shader(); }
+
     optional_ref<Texture2D> map { std::nullopt };
 
     void apply() const;
@@ -61,6 +86,23 @@ public:
 
     void apply() const;
     ShaderProgram& shader() const;
+};
+
+struct Material {
+    std::variant<
+        std::reference_wrapper<BasicMaterial>,
+        std::reference_wrapper<PositionMaterial>,
+        std::reference_wrapper<DepthMaterial>,
+        std::reference_wrapper<NormalMaterial>,
+        std::reference_wrapper<PhongMaterial>
+    > data;
+
+    void apply() const {
+        std::visit([](auto&& material) { material.get().apply(); }, data);
+    }
+    ShaderProgram& shader() const {
+        return std::visit([](auto&& material) -> ShaderProgram& { return material.get().shader(); }, data);
+    }
 };
 
 }

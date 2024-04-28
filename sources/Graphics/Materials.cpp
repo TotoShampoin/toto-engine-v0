@@ -1,9 +1,14 @@
 #include "TotoEngine/Graphics/Materials.hpp"
 
+#include "TotoEngine/Graphics/ShaderProgram.hpp"
+#include "TotoEngine/Graphics/Texture.hpp"
+
 #include "../impl/shaders/basic.vert.hpp"
 #include "../impl/shaders/basic.frag.hpp"
+#include "../impl/shaders/position.frag.hpp"
+#include "../impl/shaders/depth.frag.hpp"
+#include "../impl/shaders/normal.frag.hpp"
 #include "../impl/shaders/phong.frag.hpp"
-#include "TotoEngine/Graphics/Texture.hpp"
 
 namespace TotoEngine {
 
@@ -11,6 +16,34 @@ ShaderProgram& BasicMaterial::shader() const {
     static auto shader = ShaderProgram(
         VertexShaderFile(basic_vert),
         FragmentShaderFile(basic_frag)
+    );
+    return shader;
+}
+ShaderProgram& PositionMaterial::shader() const {
+    static auto shader = ShaderProgram(
+        VertexShaderFile(basic_vert),
+        FragmentShaderFile(position_frag)
+    );
+    return shader;
+}
+ShaderProgram& DepthMaterial::shader() const {
+    static auto shader = ShaderProgram(
+        VertexShaderFile(basic_vert),
+        FragmentShaderFile(depth_frag)
+    );
+    return shader;
+}
+ShaderProgram& NormalMaterial::shader() const {
+    static auto shader = ShaderProgram(
+        VertexShaderFile(basic_vert),
+        FragmentShaderFile(normal_frag)
+    );
+    return shader;
+}
+ShaderProgram& PhongMaterial::shader() const {
+    static auto shader = ShaderProgram(
+        VertexShaderFile(basic_vert),
+        FragmentShaderFile(phong_frag)
     );
     return shader;
 }
@@ -24,13 +57,14 @@ void BasicMaterial::apply() const {
     }
     shader().uniform("u_use_map", map.has_value());
 }
-
-ShaderProgram& PhongMaterial::shader() const {
-    static auto shader = ShaderProgram(
-        VertexShaderFile(basic_vert),
-        FragmentShaderFile(phong_frag)
-    );
-    return shader;
+void PositionMaterial::apply() const { }
+void DepthMaterial::apply() const { }
+void NormalMaterial::apply() const {
+    if(map.has_value()) {
+        Texture2D::bindAs(map, 0);
+        shader().uniform("u_map", 0);
+    }
+    shader().uniform("u_use_map", map.has_value());
 }
 
 void PhongMaterial::apply() const {
