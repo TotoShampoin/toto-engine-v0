@@ -30,6 +30,10 @@ public:
         parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }
 
+    static void activeTexture(uint id) {
+        glActiveTexture(GL_TEXTURE0 + id);
+    }
+
     constexpr static auto NONE = std::nullopt;
     static void bind(const optional_ref<const Texture<TARGET>>& texture) {
         if(!texture.has_value()) {
@@ -38,6 +42,11 @@ public:
         }
         auto& texture_ref = texture.value().get();
         glBindTexture(static_cast<GLenum>(TARGET), texture_ref.texture());
+    }
+
+    static void bindAs(const optional_ref<const Texture<TARGET>>& texture, const uint& id) {
+        activeTexture(id);
+        bind(texture);
     }
 
     static void parameter(const GLenum& pname, const GLint& param) {

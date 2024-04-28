@@ -114,8 +114,7 @@ int main(int /* argc */, const char* /* argv */[]) {
 
         GeometryBuffer::bind(hdri_model);
         ShaderProgram::use(hdri_shader);
-        glActiveTexture(GL_TEXTURE0);
-        Texture2D::bind(hdri_texture);
+        Texture2D::bindAs(hdri_texture, 0);
         hdri_shader.uniform("u_map", 0);
         hdri_shader.uniform("u_view", camera.viewMatrix());
         hdri_shader.uniform("u_projection", camera.projectionMatrix());
