@@ -16,7 +16,7 @@ using GLRenderBuffer = GLObject<
 
 class FrameBuffer {
 public:
-    FrameBuffer(int width = 256, int height = 256);
+    FrameBuffer(int width = 256, int height = 256, TextureFormat = TextureFormat::RGBA);
 
     void copyFrom(const FrameBuffer& other);
 

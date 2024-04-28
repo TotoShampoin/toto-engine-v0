@@ -17,7 +17,15 @@ Texture2D loadTexture2D(const std::filesystem::path& path, const bool& flip, con
         stbi_set_flip_vertically_on_load(true);
     int width, height, channels;
     auto data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
-    Texture2D::image(width, height, channels, data);
+    TextureFormat format;
+    switch(channels) {
+        case 1: format = TextureFormat::RED; break;
+        case 2: format = TextureFormat::RG; break;
+        case 3: format = TextureFormat::RGB; break;
+        case 4: format = TextureFormat::RGBA; break;
+        default: throw std::runtime_error("Unsupported number of channels");
+    }
+    Texture2D::image(width, height, format, format, data);
     stbi_image_free(data);
     if(generate_mipmap)
         Texture2D::generateMipmap();

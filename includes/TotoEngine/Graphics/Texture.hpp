@@ -4,6 +4,7 @@
 #include <TotoEngine/Aliases.hpp>
 #include <TotoEngine/Instantiation.hpp>
 #include <GL/gl.h>
+#include <format>
 
 namespace TotoEngine {
 
@@ -17,6 +18,31 @@ enum class TextureTarget {
     TEXTURE_2D_ARRAY = GL_TEXTURE_2D_ARRAY,
     TEXTURE_3D = GL_TEXTURE_3D,
     TEXTURE_CUBE_MAP = GL_TEXTURE_CUBE_MAP
+};
+
+enum class TextureFormat {
+    RED = GL_RED,
+    RG = GL_RG,
+    RGB = GL_RGB,
+    RGBA = GL_RGBA,
+    DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
+    DEPTH_STENCIL = GL_DEPTH_STENCIL,
+    R8 = GL_R8,
+    R16 = GL_R16,
+    R16F = GL_R16F,
+    R32F = GL_R32F,
+    RG8 = GL_RG8,
+    RG16 = GL_RG16,
+    RG16F = GL_RG16F,
+    RG32F = GL_RG32F,
+    RGB8 = GL_RGB8,
+    RGB16 = GL_RGB16,
+    RGB16F = GL_RGB16F,
+    RGB32F = GL_RGB32F,
+    RGBA8 = GL_RGBA8,
+    RGBA16 = GL_RGBA16,
+    RGBA16F = GL_RGBA16F,
+    RGBA32F = GL_RGBA32F
 };
 
 template <TextureTarget TARGET>
@@ -62,15 +88,21 @@ public:
 
     template<typename T = uint8_t, TextureTarget TARGET_T = TARGET>
     typename std::enable_if<TARGET_T == TextureTarget::TEXTURE_2D || TARGET_T == TextureTarget::TEXTURE_CUBE_MAP>::type
-    static image(const int& width, const int& height, const int& channels, const T* data) {
-        GLuint format = getFormat(channels);
-        glTexImage2D(static_cast<GLenum>(TARGET_T), 0, format, width, height, 0, format, getType<T>(), data);
+    static image(const int& width, const int& height, const TextureFormat& in_format, const TextureFormat& out_format, const T* data) {
+        glTexImage2D(static_cast<GLenum>(TARGET_T), 0, static_cast<GLenum>(in_format), width, height, 0, static_cast<GLenum>(out_format), getType<T>(), data);
+        GLenum error = glGetError();
+        if(error != GL_NO_ERROR) {
+            throw std::runtime_error(std::format("Failed to create texture image: {}", (const char*)glewGetErrorString(error)));
+        }
     }
     template<typename T = uint8_t, TextureTarget TARGET_T = TARGET>
     typename std::enable_if<TARGET_T == TextureTarget::TEXTURE_2D_ARRAY || TARGET_T == TextureTarget::TEXTURE_CUBE_MAP>::type
-    static image(const int& width, const int& height, const int& depth, const int& channels, const T* data) {
-        GLuint format = getFormat(channels);
-        glTexImage3D(static_cast<GLenum>(TARGET_T), 0, format, width, height, depth, 0, format, getType<T>(), data);
+    static image(const int& width, const int& height, const int& depth, const TextureFormat& in_format, const TextureFormat& out_format, const T* data) {
+        glTexImage3D(static_cast<GLenum>(TARGET_T), 0, in_format, width, height, depth, 0, out_format, getType<T>(), data);
+        GLenum error = glGetError();
+        if(error != GL_NO_ERROR) {
+            throw std::runtime_error(std::format("Failed to create texture image: {}", (const char*)glewGetErrorString(error)));
+        }
     }
 
     [[nodiscard]] GLuint texture() const { return _texture; }
@@ -78,15 +110,6 @@ public:
 private:
     GLTexture _texture;
 
-    static GLuint getFormat(const int& channels) {
-        switch (channels) {
-            case 1: return GL_RED;
-            case 2: return GL_RG;
-            case 3: return GL_RGB;
-            case 4: return GL_RGBA;
-            default: return GL_RGBA;
-        }
-    }
     template<typename T>
     static GLuint getType() {
         if constexpr(std::is_same_v<T, uint8_t>) return GL_UNSIGNED_BYTE;

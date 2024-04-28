@@ -5,15 +5,24 @@
 
 namespace TotoEngine {
 
-FrameBuffer::FrameBuffer(int width, int height):
+TextureFormat getNonFloatFormat(TextureFormat format) {
+    switch (format) {
+        case TextureFormat::RGB32F: return TextureFormat::RGB;
+        case TextureFormat::RGBA32F: return TextureFormat::RGBA;
+        default: return format;
+    }
+}
+
+FrameBuffer::FrameBuffer(int width, int height, TextureFormat format):
     _frame_buffer(), _render_buffer(),
     _texture(), _width(width), _height(height)
 {
     glBindTexture(GL_TEXTURE_2D, _texture.texture());
-    Texture2D::image<float>(_width, _height, 4, nullptr);
+    Texture2D::image<float>(_width, _height, format, getNonFloatFormat(format), nullptr);
+    // Texture2D::storage(_width, _height, 5);
     glBindFramebuffer(GL_FRAMEBUFFER, _frame_buffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _render_buffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, _width, _height);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, _width, _height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _render_buffer);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _texture.texture(), 0);
