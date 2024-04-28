@@ -1,30 +1,21 @@
-#include "TotoEngine/Graphics/GeometryBuffer.hpp"
+#include "TotoEngine/Graphics/FrameBuffer.hpp"
 #include "TotoEngine/Graphics/Renderer.hpp"
-#include "TotoEngine/Graphics/ShaderFile.hpp"
-#include "TotoEngine/Graphics/ShaderProgram.hpp"
-#include "TotoEngine/Graphics/Shapes.hpp"
 #include "TotoEngine/Graphics/Texture.hpp"
-#include <GL/gl.h>
 #include <TotoEngine/TotoEngine.hpp>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <glm/trigonometric.hpp>
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 
 #include <vector>
 #include <algorithm>
 #include <chrono>
 
 void imguiInit(TotoEngine::Window& window);
-
-using GLTexture = TotoEngine::GLObject<
-    [] { GLuint id; glGenTextures(1, &id); return id; },
-    [](GLuint& id) { glDeleteTextures(1, &id); }
->;
 
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
@@ -34,22 +25,48 @@ int main(int /* argc */, const char* /* argv */[]) {
     imguiInit(window);
     auto [width, height] = window.size();
 
-    auto frame_buffer = FrameBuffer(width, height);
+    auto albedo_buffer = FrameBuffer(width, height, TextureFormat::RGBA);
+    auto position_buffer = FrameBuffer(width, height, TextureFormat::RGB32F);
+    auto normal_buffer = FrameBuffer(width, height, TextureFormat::RGB32F);
+    auto render_target = FrameBuffer(width, height, TextureFormat::RGBA);
 
     auto camera = Camera(glm::perspective(glm::radians(70.0f), 320.0f / 240.0f, 0.1f, 100.0f));
 
-    auto hdri_texture = Texture2DManager::create(loadTexture2D("tests_assets/hdri.jpg"));
+    auto hdri_texture = loadTexture2D("tests_assets/hdri.jpg");
+    auto uv_texture = loadTexture2D("tests_assets/uv.png");
 
+    auto screen_geometry = GeometryBuffer(
+        {
+            {{-1, -1, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+            {{1, -1, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+            {{1, 1, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
+            {{-1, 1, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+        }, {
+            0, 1, 2,
+            0, 2, 3,
+        }
+    );
+    auto defer_shader = ShaderProgram(
+        VertexShaderFile(std::ifstream("tests_assets/screen.vert")),
+        FragmentShaderFile(std::ifstream("tests_assets/deferred.frag"))
+    );
     auto screen_shader = ShaderProgram(
         VertexShaderFile(std::ifstream("tests_assets/screen.vert")),
         FragmentShaderFile(std::ifstream("tests_assets/screen.frag"))
     );
 
     auto material = PhongMaterial();
-        material.diffuse_map = Texture2DManager::create(loadTexture2D("tests_assets/uv.png"));
+        material.diffuse_map = uv_texture;
         material.specular = ColorRGB(.5f);
         material.shininess = 64.f;
-        material.ambient_map = Texture2DManager::create(loadTexture2D("tests_assets/uv.png"));
+        material.ambient_map = uv_texture;
+    
+    // auto ambient_material = BasicMaterial();
+    //     ambient_material.map = uv_texture;
+    auto albedo_material = BasicMaterial();
+        albedo_material.map = uv_texture;
+    auto position_material = PositionMaterial();
+    auto normal_material = NormalMaterial();
 
     auto plane_model = cube(2, 2, 2);
     auto plane_transform = Transform();
@@ -73,37 +90,70 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto start_time = std::chrono::high_resolution_clock::now();
     auto last_time = start_time;
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+
+    auto render = [&](const Material& M) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        GeometryBuffer::bind(plane_model);
+        ShaderProgram::use(M.shader());
+        M.apply();
+        // Renderer::apply(M.shader(), {dir_light, pt_light}, camera);
+        Renderer::apply(M.shader(), plane_transform, camera);
+        Renderer::draw(plane_model);
+
+        GeometryBuffer::bind(sphere_model);
+        Renderer::apply(M.shader(), sphere_transform, camera);
+        Renderer::draw(sphere_model);
+    };
 
     while(!window.shouldClose()) {
         auto current_time = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration<float>(current_time - start_time).count();
         // auto delta_time = std::chrono::duration<float>(current_time - last_time).count();
 
+        auto [width, height] = window.size();
+        camera.projectionMatrix() = glm::perspective(glm::radians(70.0f), (float)width / height, 0.1f, 100.0f);
+
         Window::makeContextCurrent(window);
+    
+        Renderer::bindRenderTarget(albedo_buffer);
+        render(Material(albedo_material));
+        Renderer::bindRenderTarget(position_buffer);
+        render(Material(position_material));
+        Renderer::bindRenderTarget(normal_buffer);
+        render(Material(normal_material));
+
+        Renderer::bindRenderTarget(render_target);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ShaderProgram::use(defer_shader);
+        Texture2D::bindAs(hdri_texture, 0);
+        defer_shader.uniform("u_hdri", 0);
+        Texture2D::bindAs(albedo_buffer.texture(), 1);
+        defer_shader.uniform("u_albedo", 1);
+        Texture2D::bindAs(position_buffer.texture(), 2);
+        defer_shader.uniform("u_position", 2);
+        Texture2D::bindAs(normal_buffer.texture(), 3);
+        defer_shader.uniform("u_normal", 3);
+        Renderer::apply(defer_shader, camera);
+        Renderer::apply(defer_shader, {dir_light, pt_light}, camera);
+        GeometryBuffer::bind(screen_geometry);
+        Renderer::draw(screen_geometry);
+
         Renderer::bindRenderTarget(window);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ShaderProgram::use(screen_shader);
+        Texture2D::bindAs(render_target.texture(), 0);
+        screen_shader.uniform("u_map", 0);
+        GeometryBuffer::bind(screen_geometry);
+        Renderer::draw(screen_geometry);
 
-        Renderer::drawHDRi(hdri_texture, camera);
-
-        GeometryBuffer::bind(sphere_model);
-        ShaderProgram::use(material.shader());
-        material.apply();
-        Renderer::apply(material.shader(), {dir_light, pt_light}, camera);
-        Renderer::apply(material.shader(), sphere_transform, camera);
-
-        Renderer::draw(sphere_model);
-
-        GeometryBuffer::bind(plane_model);
-        Renderer::apply(material.shader(), plane_transform, camera);
-        Renderer::draw(plane_model);
 
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();
-
 
         {// imgui
             static std::vector<float> render_times;
@@ -139,12 +189,8 @@ int main(int /* argc */, const char* /* argv */[]) {
         Window::pollEvents();
 
         plane_transform.rotation().x = time;
-        // transform.rotate(glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
         sphere_transform.position().x = glm::sin(time);
         sphere_transform.rotation().y = time;
-        // sphere_transform.rotation() += Vector3(2,3,5) * glm::radians(.1f);
-        // camera.position().x = glm::cos(time);
-        // camera.position().y = glm::sin(time) + 5;
         camera.lookAt({0, 0, -5});
         dir_light.lookAt(dir_light_target);
         light_helper_transform.position() = pt_light.position();
