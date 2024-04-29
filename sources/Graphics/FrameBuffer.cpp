@@ -2,7 +2,6 @@
 #include "TotoEngine/Graphics/Texture.hpp"
 #include <GL/gl.h>
 #include <format>
-#include <iostream>
 
 namespace TotoEngine {
 
@@ -18,14 +17,6 @@ FrameBuffer::FrameBuffer(int width, int height, std::vector<TextureFormat> forma
     _frame_buffer(), _render_buffers(),
     _textures(), _width(width), _height(height)
 {
-    // glBindTexture(GL_TEXTURE_2D, _textures.texture());
-    // Texture2D::image<float>(_width, _height, format, getNonFloatFormat(format), nullptr);
-    // glBindFramebuffer(GL_FRAMEBUFFER, _frame_buffer);
-    // glBindRenderbuffer(GL_RENDERBUFFER, _render_buffers);
-    // glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, _width, _height);
-    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _render_buffers);
-    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _textures.texture(), 0);
-    // GLenum draw_buffers[1] = { GL_COLOR_ATTACHMENT0 };
     glBindFramebuffer(GL_FRAMEBUFFER, _frame_buffer);
     GLenum draw_buffers[format.size()];
     for (int i = 0; i < format.size(); i++) {
