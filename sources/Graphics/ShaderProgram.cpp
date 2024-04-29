@@ -29,7 +29,7 @@ void ShaderProgram::linkProgram() {
 }
 
 void ShaderProgram::uniform(const std::string& name, const UniformVariant& value) {
-    use(*this);
+    // use(*this);
     _uniform(name, value);
 }
 
