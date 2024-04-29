@@ -2,6 +2,7 @@
 
 #include <TotoEngine/Graphics/GLObject.hpp>
 #include <TotoEngine/Graphics/Texture.hpp>
+#include <vector>
 
 namespace TotoEngine {
 
@@ -17,19 +18,19 @@ using GLRenderBuffer = GLObject<
 // TODO: Add support for multiple color attachments
 class FrameBuffer {
 public:
-    FrameBuffer(int width = 256, int height = 256, TextureFormat = TextureFormat::RGBA);
+    FrameBuffer(int width = 256, int height = 256, std::vector<TextureFormat> = {TextureFormat::RGBA});
 
     void copyFrom(const FrameBuffer& other);
 
     [[nodiscard]] GLuint framebuffer() const { return _frame_buffer; }
-    [[nodiscard]] GLuint renderbuffer() const { return _render_buffer; }
-    [[nodiscard]] const Texture2D& texture() const { return _texture; }
+    [[nodiscard]] GLuint renderbuffer(int i = 0) const { return _render_buffers[i]; }
+    [[nodiscard]] const Texture2D& texture(int i = 0) const { return _textures[i]; }
     [[nodiscard]] int width() const { return _width; }
     [[nodiscard]] int height() const { return _height; }
 private:
     GLFrameBuffer _frame_buffer;
-    GLRenderBuffer _render_buffer;
-    Texture2D _texture;
+    std::vector<GLRenderBuffer> _render_buffers;
+    std::vector<Texture2D> _textures;
 
     int _width, _height;
 };

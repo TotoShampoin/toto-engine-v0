@@ -2,6 +2,7 @@
 #include "TotoEngine/Graphics/Texture.hpp"
 #include <GL/gl.h>
 #include <format>
+#include <iostream>
 
 namespace TotoEngine {
 
@@ -13,21 +14,32 @@ TextureFormat getNonFloatFormat(TextureFormat format) {
     }
 }
 
-FrameBuffer::FrameBuffer(int width, int height, TextureFormat format):
-    _frame_buffer(), _render_buffer(),
-    _texture(), _width(width), _height(height)
+FrameBuffer::FrameBuffer(int width, int height, std::vector<TextureFormat> format):
+    _frame_buffer(), _render_buffers(),
+    _textures(), _width(width), _height(height)
 {
-    glBindTexture(GL_TEXTURE_2D, _texture.texture());
-    Texture2D::image<float>(_width, _height, format, getNonFloatFormat(format), nullptr);
-    // Texture2D::storage(_width, _height, 5);
+    // glBindTexture(GL_TEXTURE_2D, _textures.texture());
+    // Texture2D::image<float>(_width, _height, format, getNonFloatFormat(format), nullptr);
+    // glBindFramebuffer(GL_FRAMEBUFFER, _frame_buffer);
+    // glBindRenderbuffer(GL_RENDERBUFFER, _render_buffers);
+    // glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, _width, _height);
+    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _render_buffers);
+    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _textures.texture(), 0);
+    // GLenum draw_buffers[1] = { GL_COLOR_ATTACHMENT0 };
     glBindFramebuffer(GL_FRAMEBUFFER, _frame_buffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, _render_buffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, _width, _height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _render_buffer);
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _texture.texture(), 0);
-    GLenum draw_buffers[1] = { GL_COLOR_ATTACHMENT0 };
-    glDrawBuffers(1, draw_buffers);
+    GLenum draw_buffers[format.size()];
+    for (int i = 0; i < format.size(); i++) {
+        _textures.emplace_back();
+        _render_buffers.emplace_back();
+        glBindTexture(GL_TEXTURE_2D, _textures[i].texture());
+        Texture2D::image<float>(_width, _height, format[i], getNonFloatFormat(format[i]), nullptr);
+        glBindRenderbuffer(GL_RENDERBUFFER, _render_buffers[i]);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, _width, _height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _render_buffers[i]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, _textures[i].texture(), 0);
+        draw_buffers[i] = GL_COLOR_ATTACHMENT0 + i;
+    }
+    glDrawBuffers(format.size(), draw_buffers);
 
     auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
