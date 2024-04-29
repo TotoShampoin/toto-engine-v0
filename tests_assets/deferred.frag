@@ -18,9 +18,13 @@ in vec3 v_position;
 out vec4 f_frag_color;
 
 uniform sampler2D u_hdri;
-uniform sampler2D u_albedo;
 uniform sampler2D u_position;
 uniform sampler2D u_normal;
+uniform sampler2D u_diffuse;
+uniform sampler2D u_specular;
+uniform sampler2D u_emissive;
+uniform sampler2D u_shininess;
+uniform sampler2D u_alpha;
 
 uniform mat4 u_view;
 uniform mat4 u_projection;
@@ -74,15 +78,19 @@ vec4 hdri() {
 }
 
 void main() {
-    vec3 albedo = texture(u_albedo, v_position.xy).xyz;
-    vec3 position = texture(u_position, v_position.xy).xyz * 2.0 - 1.0;
-    vec3 normal = texture(u_normal, v_position.xy).xyz * 2.0 - 1.0;
-    float alpha = texture(u_albedo, v_position.xy).a;
+    vec3 position = texture(u_position, v_position.xy).xyz;
+    vec3 normal = texture(u_normal, v_position.xy).xyz;
+    vec3 diffuse = texture(u_diffuse, v_position.xy).xyz;
+    vec3 specular = texture(u_specular, v_position.xy).xyz;
+    vec3 emissive = texture(u_emissive, v_position.xy).xyz;
+    float shininess = texture(u_shininess, v_position.xy).r;
+    float alpha = texture(u_alpha, v_position.xy).r;
 
-    vec3 result = vec3(0);
+    vec3 result = emissive;
     for (int i = 0; i < u_lights_count; i++) {
-        result += calculateLight(u_lights[i], albedo, albedo, vec3(1), position, normal, 64.0);
+        result += calculateLight(u_lights[i], diffuse, diffuse, specular, position, normal, shininess);
     }
+    result = clamp(result, 0, 1);
 
-    f_frag_color = hdri() * (1 - alpha) + vec4(result, 1);
+    f_frag_color = hdri() * (1 - alpha) + vec4(result, alpha) * alpha;
 }
