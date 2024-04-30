@@ -16,14 +16,15 @@
 #include <algorithm>
 #include <chrono>
 
-void imguiInit(TotoEngine::Window& window);
-
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
     using TotoEngine::TextureTarget::TEXTURE_2D;
     auto window = Window(800, 600, "TotoEngine");
     glewInit();
-    imguiInit(window);
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(window.GLFWWindow(), true);
+    ImGui_ImplOpenGL3_Init("#version 460");
 
     auto deferred_buffer = FrameBuffer(800, 600, {
         TextureFormat::RGB32F, // Position
@@ -151,8 +152,6 @@ int main(int /* argc */, const char* /* argv */[]) {
             Renderer::draw(screen_geometry);
         }
         
-
-
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();
 
@@ -200,11 +199,4 @@ int main(int /* argc */, const char* /* argv */[]) {
     }
 
     return 0;
-}
-
-void imguiInit(TotoEngine::Window& window) {
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window.GLFWWindow(), true);
-    ImGui_ImplOpenGL3_Init("#version 460");
 }
