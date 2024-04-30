@@ -1,4 +1,6 @@
 #include "TotoEngine/Graphics/FrameBuffer.hpp"
+#include "TotoEngine/Graphics/Renderer.hpp"
+#include "TotoEngine/Graphics/ShaderProgram.hpp"
 #include "TotoEngine/Graphics/Texture.hpp"
 #include <TotoEngine/TotoEngine.hpp>
 
@@ -26,6 +28,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto deferred_buffer = FrameBuffer(800, 600, {
         TextureFormat::RGB32F, // Position
         TextureFormat::RGB32F, // Normal
+        TextureFormat::RGB32F, // Ambient
         TextureFormat::RGB32F, // Diffuse
         TextureFormat::RGB32F, // Specular
         TextureFormat::RGB32F, // Emissive
@@ -34,50 +37,60 @@ int main(int /* argc */, const char* /* argv */[]) {
     });
     constexpr auto POSITION = 0;
     constexpr auto NORMAL = 1;
-    constexpr auto DIFFUSE = 2;
-    constexpr auto SPECULAR = 3;
-    constexpr auto EMISSIVE = 4;
-    constexpr auto SHININESS = 5;
-    constexpr auto ALPHA = 6;
+    constexpr auto AMBIENT = 2;
+    constexpr auto DIFFUSE = 3;
+    constexpr auto SPECULAR = 4;
+    constexpr auto EMISSIVE = 5;
+    constexpr auto SHININESS = 6;
+    constexpr auto ALPHA = 7;
 
     auto deferred_shader = ShaderProgram(
         VertexShaderFile(std::ifstream("tests_assets/screen.vert")),
         FragmentShaderFile(std::ifstream("tests_assets/deferred.frag"))
     );
+    auto hdri_texture = loadTexture2D("tests_assets/hdri.jpg");
+    auto apply_deferred = [&deferred_buffer, &hdri_texture](ShaderProgram& deferred_shader) {
+        Texture2D::bindAs(hdri_texture, 0);
+        Texture2D::bindAs(deferred_buffer.texture(POSITION), POSITION + 1);
+        Texture2D::bindAs(deferred_buffer.texture(NORMAL), NORMAL + 1);
+        Texture2D::bindAs(deferred_buffer.texture(AMBIENT), AMBIENT + 1);
+        Texture2D::bindAs(deferred_buffer.texture(DIFFUSE), DIFFUSE + 1);
+        Texture2D::bindAs(deferred_buffer.texture(SPECULAR), SPECULAR + 1);
+        Texture2D::bindAs(deferred_buffer.texture(EMISSIVE), EMISSIVE + 1);
+        Texture2D::bindAs(deferred_buffer.texture(SHININESS), SHININESS + 1);
+        Texture2D::bindAs(deferred_buffer.texture(ALPHA), ALPHA + 1);
+        deferred_shader.uniform("u_hdri", 0);
+        deferred_shader.uniform("u_position", POSITION + 1);
+        deferred_shader.uniform("u_normal", NORMAL + 1);
+        deferred_shader.uniform("u_ambient", AMBIENT + 1);
+        deferred_shader.uniform("u_diffuse", DIFFUSE + 1);
+        deferred_shader.uniform("u_specular", SPECULAR + 1);
+        deferred_shader.uniform("u_emissive", EMISSIVE + 1);
+        deferred_shader.uniform("u_shininess", SHININESS + 1);
+        deferred_shader.uniform("u_alpha", ALPHA + 1);
+    };
 
     auto camera = Camera(glm::perspective(glm::radians(70.0f), 320.0f / 240.0f, 0.1f, 100.0f));
 
-    auto hdri_texture = loadTexture2D("tests_assets/hdri.jpg");
     auto uv_texture = loadTexture2D("tests_assets/uv.png");
-
-    // auto material = PhongMaterial();
-    //     material.diffuse_map = uv_texture;
-    //     material.specular = ColorRGB(1.0f);
-    //     material.shininess = 64.f;
-    //     material.ambient_map = uv_texture;
-    // auto& shader = material.shader();
-
-    auto screen_geometry = plane(2, 2);
-    auto screen_transform = Transform();
-        screen_transform.position() = {0, 0, -1};
 
     auto shader = ShaderProgram(
         VertexShaderFile(std::ifstream("tests_assets/basic.vert")),
         FragmentShaderFile(std::ifstream("tests_assets/phong_pass.frag"))
     );
+    auto material = PhongMaterial();
+        material.diffuse_map = uv_texture;
+        material.specular = ColorRGB(1.0f);
+        material.shininess = 64.f;
+        material.ambient_map = uv_texture;
     ShaderProgram::use(shader);
-    Texture2D::bindAs(uv_texture, 0);
-    shader.uniform("u_diffuse", ColorRGB(1));
-    shader.uniform("u_specular", ColorRGB(1));
-    shader.uniform("u_emissive", ColorRGB(0));
-    shader.uniform("u_shininess", 64.f);
-    shader.uniform("u_opacity", 1.f);
-    shader.uniform("u_use_diffuse_map", true);
-    shader.uniform("u_use_specular_map", false);
-    shader.uniform("u_use_emissive_map", false);
-    shader.uniform("u_use_shininess_map", false);
-    shader.uniform("u_use_opacity_map", false);
-    shader.uniform("u_diffuse_map", 0);
+    auto apply_material = [&material](ShaderProgram& shader) {
+        material.apply(shader);
+    };
+
+    auto screen_geometry = plane(2, 2);
+    auto screen_transform = Transform();
+        screen_transform.position() = {0, 0, -1};
 
     auto plane_model = cube(2, 2, 2);
     auto plane_transform = Transform();
@@ -115,54 +128,28 @@ int main(int /* argc */, const char* /* argv */[]) {
         camera.projectionMatrix() = glm::perspective(glm::radians(70.0f), (float)width / height, 0.1f, 100.0f);
 
         Window::makeContextCurrent(window);
-    
-        // Renderer::bindRenderTarget(window);
-        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // Renderer::drawHDRi(hdri_texture, camera);
-        // GeometryBuffer::bind(plane_model);
-        // ShaderProgram::use(shader);
-        // material.apply();
-        // Renderer::apply(shader, {dir_light, pt_light}, camera);
-        // Renderer::apply(shader, plane_transform, camera);
-        // Renderer::draw(plane_model);
-        // GeometryBuffer::bind(sphere_model);
-        // Renderer::apply(shader, sphere_transform, camera);
-        // Renderer::draw(sphere_model);
 
-        Renderer::bindRenderTarget(deferred_buffer);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        Texture2D::bindAs(uv_texture, 0);
-        ShaderProgram::use(shader);
-        GeometryBuffer::bind(plane_model);
-        Renderer::apply(shader, plane_transform, camera);
-        Renderer::draw(plane_model);
-        GeometryBuffer::bind(sphere_model);
-        Renderer::apply(shader, sphere_transform, camera);
-        Renderer::draw(sphere_model);
+        { // Deferred shading
+            Renderer::bindRenderTarget(deferred_buffer);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            ShaderProgram::use(shader);
+            Renderer::apply(shader, apply_material);
+            GeometryBuffer::bind(plane_model);
+            Renderer::apply(shader, camera, plane_transform);
+            Renderer::draw(plane_model);
+            GeometryBuffer::bind(sphere_model);
+            Renderer::apply(shader, camera, sphere_transform);
+            Renderer::draw(sphere_model);
 
-        Renderer::bindRenderTarget(window);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        ShaderProgram::use(deferred_shader);
-        GeometryBuffer::bind(screen_geometry);
-        Texture2D::bindAs(hdri_texture, 0);
-        Texture2D::bindAs(deferred_buffer.texture(POSITION), 1);
-        Texture2D::bindAs(deferred_buffer.texture(NORMAL), 2);
-        Texture2D::bindAs(deferred_buffer.texture(DIFFUSE), 3);
-        Texture2D::bindAs(deferred_buffer.texture(SPECULAR), 4);
-        Texture2D::bindAs(deferred_buffer.texture(EMISSIVE), 5);
-        Texture2D::bindAs(deferred_buffer.texture(SHININESS), 6);
-        Texture2D::bindAs(deferred_buffer.texture(ALPHA), 7);
-        deferred_shader.uniform("u_hdri", 0);
-        deferred_shader.uniform("u_position", 1);
-        deferred_shader.uniform("u_normal", 2);
-        deferred_shader.uniform("u_diffuse", 3);
-        deferred_shader.uniform("u_specular", 4);
-        deferred_shader.uniform("u_emissive", 5);
-        deferred_shader.uniform("u_shininess", 6);
-        deferred_shader.uniform("u_alpha", 7);
-        Renderer::apply(deferred_shader, screen_transform, camera);
-        Renderer::apply(deferred_shader, {dir_light, pt_light}, camera);
-        Renderer::draw(screen_geometry);
+            Renderer::bindRenderTarget(window);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            ShaderProgram::use(deferred_shader);
+            GeometryBuffer::bind(screen_geometry);
+            Renderer::apply(deferred_shader, apply_deferred);
+            Renderer::apply(deferred_shader, camera, screen_transform);
+            Renderer::apply(deferred_shader, camera, {dir_light, pt_light});
+            Renderer::draw(screen_geometry);
+        }
         
 
 

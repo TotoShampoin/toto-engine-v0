@@ -8,6 +8,7 @@
 #include <TotoEngine/Primitives.hpp>
 #include <TotoEngine/Transform.hpp>
 #include "TotoEngine/Window.hpp"
+#include <functional>
 #include <utility>
 #include <vector>
 
@@ -24,10 +25,10 @@ public:
     static void bindRenderTarget(const FrameBuffer& target);
     static void bindRenderTarget(const Window& window);
 
-    static void apply(ShaderProgram& program, const std::vector<Light>& lights, const Camera& camera);
-    static void apply(ShaderProgram& program, const Transform& transform, const Camera& camera);
-    static void apply(ShaderProgram& program, const Camera& camera);
-    static void apply(ShaderProgram& program, const Transform& transform);
+    static void apply(ShaderProgram&, const Camera&);
+    static void apply(ShaderProgram&, const Camera&, const Transform&);
+    static void apply(ShaderProgram&, const Camera&, const std::vector<Light>&);
+    static void apply(ShaderProgram&, const std::function<void(ShaderProgram&)>&);
 private:
     static std::pair<GeometryBuffer&, ShaderProgram&> HDRImodel();
 };

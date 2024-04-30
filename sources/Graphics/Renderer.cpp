@@ -1,5 +1,6 @@
 #include "TotoEngine/Graphics/Renderer.hpp"
 
+#include "TotoEngine/Graphics/Camera.hpp"
 #include "TotoEngine/Graphics/ShaderFile.hpp"
 #include "TotoEngine/Graphics/ShaderProgram.hpp"
 #include "impl/shaders/hdri.vert.hpp"
@@ -36,7 +37,15 @@ void Renderer::bindRenderTarget(const Window &window) {
     glViewport(0, 0, width, height);
 }
 
-void Renderer::apply(ShaderProgram& program, const std::vector<Light>& lights, const Camera& camera) {
+void Renderer::apply(ShaderProgram& program, const Camera& camera) {
+    program.uniform("u_projection", camera.projectionMatrix());
+    program.uniform("u_view", camera.viewMatrix());
+}
+void Renderer::apply(ShaderProgram& program, const Camera& camera, const Transform& transform) {
+    apply(program, camera);
+    program.uniform("u_model", transform.matrix());
+}
+void Renderer::apply(ShaderProgram& program, const Camera& camera, const std::vector<Light>& lights) {
     program.uniform("u_lights_count", static_cast<int>(lights.size()));
     for(size_t index = 0; index < lights.size(); index++) {
         auto& light = lights[index];
@@ -54,16 +63,8 @@ void Renderer::apply(ShaderProgram& program, const std::vector<Light>& lights, c
         }
     }
 }
-void Renderer::apply(ShaderProgram& program, const Transform& transform, const Camera& camera) {
-    apply(program, transform);
-    apply(program, camera);
-}
-void Renderer::apply(ShaderProgram& program, const Camera& camera) {
-    program.uniform("u_projection", camera.projectionMatrix());
-    program.uniform("u_view", camera.viewMatrix());
-}
-void Renderer::apply(ShaderProgram& program, const Transform& transform) {
-    program.uniform("u_model", transform.matrix());
+void Renderer::apply(ShaderProgram& program, const std::function<void(ShaderProgram&)>& callback) {
+    callback(program);
 }
 
 

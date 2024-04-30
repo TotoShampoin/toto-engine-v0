@@ -6,49 +6,40 @@
 
 #include <functional>
 #include <optional>
+#include <variant>
 
 namespace TotoEngine {
 
 class BasicMaterial {
 public:
-    BasicMaterial() { (void)shader(); }
-
     ColorRGB color { 1.0f, 1.0f, 1.0f };
     float opacity { 1.0f };
     optional_ref<Texture2D> map { std::nullopt };
 
-    void apply() const;
-    ShaderProgram& shader() const;
+    void apply(ShaderProgram& = shader()) const;
+    static ShaderProgram& shader();
 };
 
 class PositionMaterial {
 public:
-    PositionMaterial() { (void)shader(); }
-
-    void apply() const;
-    ShaderProgram& shader() const;
+    void apply(ShaderProgram& = shader()) const;
+    static ShaderProgram& shader();
 };
 class DepthMaterial {
 public:
-    DepthMaterial() { (void)shader(); }
-
-    void apply() const;
-    ShaderProgram& shader() const;
+    void apply(ShaderProgram& = shader()) const;
+    static ShaderProgram& shader();
 };
 class NormalMaterial {
 public:
-    NormalMaterial() { (void)shader(); }
-
     optional_ref<Texture2D> map { std::nullopt };
 
-    void apply() const;
-    ShaderProgram& shader() const;
+    void apply(ShaderProgram& = shader()) const;
+    static ShaderProgram& shader();
 };
 
 class PhongMaterial {
 public:
-    PhongMaterial() { (void)shader(); }
-
     ColorRGB ambient { 1.0f, 1.0f, 1.0f };
     ColorRGB diffuse { 1.0f, 1.0f, 1.0f };
     ColorRGB specular { 1.0f, 1.0f, 1.0f };
@@ -63,14 +54,12 @@ public:
     optional_ref<Texture2D> shininess_map { std::nullopt };
     optional_ref<Texture2D> opacity_map { std::nullopt };
 
-    void apply() const;
-    ShaderProgram& shader() const;
+    void apply(ShaderProgram& = shader()) const;
+    static ShaderProgram& shader();
 };
 
 class PBRMaterial {
 public:
-    PBRMaterial() { (void)shader(); }
-
     ColorRGB albedo { 1.0f, 1.0f, 1.0f };
     float metallic { 0.0f };
     float roughness { 1.0f };
@@ -84,8 +73,8 @@ public:
     optional_ref<Texture2D> opacity_map { std::nullopt };
     optional_ref<Texture2D> normal_map { std::nullopt };
 
-    void apply() const;
-    ShaderProgram& shader() const;
+    void apply(ShaderProgram& = shader()) const;
+    static ShaderProgram& shader();
 };
 
 struct Material {
@@ -97,11 +86,15 @@ struct Material {
         std::reference_wrapper<PhongMaterial>
     > data;
 
-    void apply() const {
-        std::visit([](auto&& material) { material.get().apply(); }, data);
+    void apply(ShaderProgram& shader) const {
+        std::visit([&](auto&& material) {
+            material.get().apply(shader);
+        }, data);
     }
-    ShaderProgram& shader() const {
-        return std::visit([](auto&& material) -> ShaderProgram& { return material.get().shader(); }, data);
+    ShaderProgram& shader() {
+        return std::visit([](auto&& material) -> ShaderProgram& {
+            return material.get().shader();
+        }, data);
     }
 };
 

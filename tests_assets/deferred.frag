@@ -20,6 +20,7 @@ out vec4 f_frag_color;
 uniform sampler2D u_hdri;
 uniform sampler2D u_position;
 uniform sampler2D u_normal;
+uniform sampler2D u_ambient;
 uniform sampler2D u_diffuse;
 uniform sampler2D u_specular;
 uniform sampler2D u_emissive;
@@ -80,6 +81,7 @@ vec4 hdri() {
 void main() {
     vec3 position = texture(u_position, v_position.xy).xyz;
     vec3 normal = texture(u_normal, v_position.xy).xyz;
+    vec3 ambient = texture(u_ambient, v_position.xy).xyz;
     vec3 diffuse = texture(u_diffuse, v_position.xy).xyz;
     vec3 specular = texture(u_specular, v_position.xy).xyz;
     vec3 emissive = texture(u_emissive, v_position.xy).xyz;
@@ -88,7 +90,7 @@ void main() {
 
     vec3 result = emissive;
     for (int i = 0; i < u_lights_count; i++) {
-        result += calculateLight(u_lights[i], diffuse, diffuse, specular, position, normal, shininess);
+        result += calculateLight(u_lights[i], ambient, diffuse, specular, position, normal, shininess);
     }
     result = clamp(result, 0, 1);
 
