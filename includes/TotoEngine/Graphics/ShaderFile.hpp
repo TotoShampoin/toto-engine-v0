@@ -4,7 +4,6 @@
 #include <GL/glew.h>
 
 #include <format>
-#include <fstream>
 #include <stdexcept>
 #include <string>
 
@@ -42,14 +41,6 @@ public:
     ShaderFile(const std::string& shader_source) {
         loadAndCompile(shader_source);
     }
-
-    ShaderFile(std::istream& file) {
-        std::string shader_source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-        loadAndCompile(shader_source);
-    }
-    ShaderFile(std::ifstream&& file):
-        ShaderFile(file)
-    {}
 
     ~ShaderFile() = default;
 

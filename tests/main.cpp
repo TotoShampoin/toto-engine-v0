@@ -1,7 +1,3 @@
-#include "TotoEngine/Graphics/FrameBuffer.hpp"
-#include "TotoEngine/Graphics/Renderer.hpp"
-#include "TotoEngine/Graphics/ShaderProgram.hpp"
-#include "TotoEngine/Graphics/Texture.hpp"
 #include <TotoEngine/TotoEngine.hpp>
 
 #include <imgui.h>
@@ -19,6 +15,8 @@
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
     using TotoEngine::TextureTarget::TEXTURE_2D;
+    using TotoEngine::ShaderType::VERTEX;
+    using TotoEngine::ShaderType::FRAGMENT;
     auto window = Window(800, 600, "TotoEngine");
     glewInit();
     IMGUI_CHECKVERSION();
@@ -46,8 +44,8 @@ int main(int /* argc */, const char* /* argv */[]) {
     constexpr auto ALPHA = 7;
 
     auto deferred_shader = ShaderProgram(
-        VertexShaderFile(std::ifstream("tests_assets/screen.vert")),
-        FragmentShaderFile(std::ifstream("tests_assets/deferred.frag"))
+        loadShaderFile<VERTEX>("tests_assets/screen.vert"),
+        loadShaderFile<FRAGMENT>("tests_assets/deferred.frag")
     );
     auto hdri_texture = loadTexture2D("tests_assets/hdri.jpg");
     auto apply_deferred = [&deferred_buffer, &hdri_texture](ShaderProgram& deferred_shader) {
@@ -76,8 +74,8 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto uv_texture = loadTexture2D("tests_assets/uv.png");
 
     auto shader = ShaderProgram(
-        VertexShaderFile(std::ifstream("tests_assets/basic.vert")),
-        FragmentShaderFile(std::ifstream("tests_assets/phong_pass.frag"))
+        loadShaderFile<VERTEX>("tests_assets/basic.vert"),
+        loadShaderFile<FRAGMENT>("tests_assets/phong_pass.frag")
     );
     auto material = PhongMaterial();
         material.diffuse_map = uv_texture;
