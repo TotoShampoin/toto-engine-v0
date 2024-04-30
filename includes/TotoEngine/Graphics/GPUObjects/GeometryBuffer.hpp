@@ -2,10 +2,10 @@
 
 #include <GL/glew.h>
 
-#include <TotoEngine/Graphics/GLObject.hpp>
 #include <TotoEngine/Aliases.hpp>
 #include <TotoEngine/Primitives.hpp>
 #include <TotoEngine/Instantiation.hpp>
+#include <TotoEngine/Graphics/GPUObjects/GLObject.hpp>
 #include <vector>
 
 namespace TotoEngine {

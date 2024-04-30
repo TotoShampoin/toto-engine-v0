@@ -1,7 +1,7 @@
 #pragma once
 
-#include <TotoEngine/Graphics/GLObject.hpp>
-#include <TotoEngine/Graphics/Texture.hpp>
+#include <TotoEngine/Graphics/GPUObjects/GLObject.hpp>
+#include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
 #include <vector>
 
 namespace TotoEngine {

@@ -1,5 +1,5 @@
-#include "TotoEngine/Graphics/Shapes.hpp"
-#include "TotoEngine/Graphics/GeometryBuffer.hpp"
+#include "TotoEngine/Graphics/Loaders/Shapes.hpp"
+#include "TotoEngine/Graphics/GPUObjects/GeometryBuffer.hpp"
 #include <glm/gtc/constants.hpp>
 #include <vector>
 

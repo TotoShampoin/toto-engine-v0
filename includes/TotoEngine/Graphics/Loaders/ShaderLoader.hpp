@@ -1,6 +1,6 @@
 #pragma once
 
-#include <TotoEngine/Graphics/ShaderFile.hpp>
+#include <TotoEngine/Graphics/GPUObjects/ShaderFile.hpp>
 #include <filesystem>
 #include <fstream>
 

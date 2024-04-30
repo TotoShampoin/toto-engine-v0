@@ -1,4 +1,4 @@
-#include "TotoEngine/Graphics/ShaderProgram.hpp"
+#include "TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp"
 #include "TotoEngine/Aliases.hpp"
 #include <format>
 #include <stdexcept>

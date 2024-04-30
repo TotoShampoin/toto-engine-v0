@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TotoEngine/Primitives.hpp"
-#include "TotoEngine/Transform.hpp"
+#include <TotoEngine/Primitives.hpp>
+#include <TotoEngine/Transform.hpp>
 #include <glm/matrix.hpp>
 
 namespace TotoEngine {

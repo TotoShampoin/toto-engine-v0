@@ -1,14 +1,14 @@
-#include "TotoEngine/Graphics/Materials.hpp"
+#include "TotoEngine/Graphics/RenderData/Materials.hpp"
 
-#include "TotoEngine/Graphics/ShaderProgram.hpp"
-#include "TotoEngine/Graphics/Texture.hpp"
+#include "TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp"
+#include "TotoEngine/Graphics/GPUObjects/Texture.hpp"
 
-#include "../impl/shaders/basic.vert.hpp"
-#include "../impl/shaders/basic.frag.hpp"
-#include "../impl/shaders/position.frag.hpp"
-#include "../impl/shaders/depth.frag.hpp"
-#include "../impl/shaders/normal.frag.hpp"
-#include "../impl/shaders/phong.frag.hpp"
+#include "impl/shaders/basic.vert.hpp"
+#include "impl/shaders/basic.frag.hpp"
+#include "impl/shaders/position.frag.hpp"
+#include "impl/shaders/depth.frag.hpp"
+#include "impl/shaders/normal.frag.hpp"
+#include "impl/shaders/phong.frag.hpp"
 
 namespace TotoEngine {
 

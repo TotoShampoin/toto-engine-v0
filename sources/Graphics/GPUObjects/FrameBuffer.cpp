@@ -1,5 +1,5 @@
-#include "TotoEngine/Graphics/FrameBuffer.hpp"
-#include "TotoEngine/Graphics/Texture.hpp"
+#include "TotoEngine/Graphics/GPUObjects/FrameBuffer.hpp"
+#include "TotoEngine/Graphics/GPUObjects/Texture.hpp"
 #include <GL/gl.h>
 #include <format>
 

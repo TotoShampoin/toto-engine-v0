@@ -1,5 +1,5 @@
-#include "TotoEngine/Graphics/TextureLoader.hpp"
-#include "TotoEngine/Graphics/Texture.hpp"
+#include "TotoEngine/Graphics/Loaders/TextureLoader.hpp"
+#include "TotoEngine/Graphics/GPUObjects/Texture.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>

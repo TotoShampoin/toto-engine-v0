@@ -1,6 +1,6 @@
 #pragma once
 
-#include <TotoEngine/Graphics/GeometryBuffer.hpp>
+#include <TotoEngine/Graphics/GPUObjects/GeometryBuffer.hpp>
 
 namespace TotoEngine {
 

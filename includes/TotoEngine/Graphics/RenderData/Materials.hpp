@@ -1,8 +1,8 @@
 #pragma once
 
 #include <TotoEngine/Primitives.hpp>
-#include <TotoEngine/Graphics/ShaderProgram.hpp>
-#include <TotoEngine/Graphics/Texture.hpp>
+#include <TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp>
+#include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
 
 #include <functional>
 #include <optional>

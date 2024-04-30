@@ -1,8 +1,8 @@
 #include "TotoEngine/Graphics/Renderer.hpp"
 
-#include "TotoEngine/Graphics/Camera.hpp"
-#include "TotoEngine/Graphics/ShaderFile.hpp"
-#include "TotoEngine/Graphics/ShaderProgram.hpp"
+#include "TotoEngine/Graphics/RenderData/Camera.hpp"
+#include "TotoEngine/Graphics/GPUObjects/ShaderFile.hpp"
+#include "TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp"
 #include "impl/shaders/hdri.vert.hpp"
 #include "impl/shaders/hdri.frag.hpp"
 
