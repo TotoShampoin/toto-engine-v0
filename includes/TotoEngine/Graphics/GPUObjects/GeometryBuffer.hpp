@@ -5,16 +5,16 @@
 #include <TotoEngine/Aliases.hpp>
 #include <TotoEngine/Primitives.hpp>
 #include <TotoEngine/Instantiation.hpp>
-#include <TotoEngine/Graphics/GPUObjects/GLObject.hpp>
+#include <TotoEngine/LibObject.hpp>
 #include <vector>
 
 namespace TotoEngine {
 
-using GLBuffer = GLObject<
+using GLBuffer = LibObject<
     [] { GLuint id; glGenBuffers(1, &id); return id; },
     [](GLuint& id) { glDeleteBuffers(1, &id); }
 >;
-using GLVertexArray = GLObject<
+using GLVertexArray = LibObject<
     [] { GLuint id; glGenVertexArrays(1, &id); return id; },
     [](GLuint& id) { glDeleteVertexArrays(1, &id); }
 >;

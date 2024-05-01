@@ -1,6 +1,6 @@
 #pragma once
 
-#include <TotoEngine/Graphics/GPUObjects/GLObject.hpp>
+#include <TotoEngine/LibObject.hpp>
 #include <TotoEngine/Aliases.hpp>
 #include <TotoEngine/Instantiation.hpp>
 #include <GL/gl.h>
@@ -8,7 +8,7 @@
 
 namespace TotoEngine {
 
-using GLTexture = TotoEngine::GLObject<
+using GLTexture = TotoEngine::LibObject<
     [] { GLuint id; glGenTextures(1, &id); return id; },
     [](GLuint& id) { glDeleteTextures(1, &id); }
 >;

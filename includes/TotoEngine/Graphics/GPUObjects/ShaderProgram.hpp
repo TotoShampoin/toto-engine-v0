@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include <TotoEngine/Graphics/GPUObjects/GLObject.hpp>
+#include <TotoEngine/LibObject.hpp>
 #include <optional>
 
 #include <TotoEngine/Aliases.hpp>
@@ -12,7 +12,7 @@
 
 namespace TotoEngine {
 
-using GLProgram = GLObject<
+using GLProgram = LibObject<
     [] { return glCreateProgram(); },
     [](GLuint& id) { glDeleteProgram(id); }
 >;
