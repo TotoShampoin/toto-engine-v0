@@ -2,6 +2,9 @@
 
 #include <AL/al.h>
 #include <vector>
+#include <filesystem>
+
+#include <TotoEngine/Audio/Sample.hpp>
 
 namespace TotoEngine {
 
@@ -15,5 +18,9 @@ struct WaveformAudioFile {
     std::vector<char> data;
     size_t size;
 };
+
+WaveformAudioFile loadWavefile(const std::filesystem::path& path);
+
+Sample loadSample(const std::filesystem::path& path);
 
 }

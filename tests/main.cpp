@@ -23,14 +23,9 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto window = Window(800, 600, "TotoEngine");
     glewInit();
 
-    auto wav = loadWavefile("tests_assets/Bass-Drum-1.wav");
-
     auto& device = DeviceManager::open();
 #pragma clang diagnostic ignored "-Wunused-variable"
     auto context = Context(device);
-    auto sample = Sample(wav);
-
-    bool plays = false;
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -53,8 +48,11 @@ int main(int /* argc */, const char* /* argv */[]) {
     dir_light.lookAt({0, 1, 1});
     pt_light.position() = {0, 2, -4};
 
+    auto sample = loadSample("tests_assets/Bass-Drum-1.wav");
+
     auto start_time = std::chrono::high_resolution_clock::now();
     auto last_time = start_time;
+    bool plays = false;
 
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);

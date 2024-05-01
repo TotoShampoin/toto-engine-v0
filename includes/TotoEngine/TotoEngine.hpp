@@ -22,9 +22,8 @@
 
 #include <TotoEngine/Audio/Device.hpp>
 #include <TotoEngine/Audio/Context.hpp>
-#include <TotoEngine/Audio/FileFormats.hpp>
 #include <TotoEngine/Audio/Sample.hpp>
-#include <TotoEngine/Audio/WaveformLoader.hpp>
+#include <TotoEngine/Audio/SampleLoader.hpp>
 
 #define __TOTO_ENGINE_MAJOR__ 0
 #define __TOTO_ENGINE_MINOR__ 0

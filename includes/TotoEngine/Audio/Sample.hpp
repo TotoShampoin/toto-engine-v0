@@ -1,6 +1,5 @@
 #pragma once
 
-#include "TotoEngine/Audio/FileFormats.hpp"
 #include "TotoEngine/Instantiation.hpp"
 
 #include <AL/al.h>
@@ -29,10 +28,11 @@ public:
             throw std::runtime_error(std::format("ERROR::SAMPLE ({})", error));
         }
     }
-    Sample(const WaveformAudioFile& wav):
+
+    Sample(ALenum format, const ALvoid *data, ALsizei size, ALsizei sample_rate):
         Sample()
     {
-        alBufferData(_buffer, wav.header.format, wav.data.data(), wav.size, wav.header.sample_rate);
+        alBufferData(_buffer, format, data, size, sample_rate);
         alSourcei(_source, AL_BUFFER, _buffer);
     }
 
