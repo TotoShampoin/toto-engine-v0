@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TotoEngine/Audio/Sample.hpp"
 #include "TotoEngine/Graphics/GPUObjects/GeometryBuffer.hpp"
 #include "TotoEngine/Graphics/Loaders/TextureLoader.hpp"
 #include "TotoEngine/Graphics/RenderData/Camera.hpp"
@@ -7,6 +8,7 @@
 #include "TotoEngine/Graphics/RenderData/Materials.hpp"
 #include "TotoEngine/Transform.hpp"
 #include "TotoEngine/Window.hpp"
+#include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
@@ -126,12 +128,29 @@ inline void renderDeferred(
 }
 
 inline void imguiRender(
-    float& render_time
+    float& render_time,
+    bool& plays,
+    TotoEngine::Sample& sample
 ) {
-    static std::vector<float> render_times;
+    static std::vector<float> render_times(200);
     render_times.push_back(1.f / render_time);
     if(render_times.size() > 200) {
         render_times.erase(render_times.begin());
+    }
+    std::string state;
+    switch(sample.state()) {
+        case AL_INITIAL:
+            state = "INITIAL";
+            break;
+        case AL_PLAYING:
+            state = "PLAYING";
+            break;
+        case AL_PAUSED:
+            state = "PAUSED";
+            break;
+        case AL_STOPPED:
+            state = "STOPPED";
+            break;
     }
 
     ImGui_ImplOpenGL3_NewFrame();
@@ -140,9 +159,12 @@ inline void imguiRender(
 
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::SetNextWindowSize(ImVec2(0, 0));
-    ImGui::Begin("Timing", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
+    ImGui::Begin("##", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
     ImGui::PlotHistogram("##fps", render_times.data(), render_times.size(), 0, nullptr, 0, std::max_element(render_times.begin(), render_times.end()).operator*(), ImVec2(400, 80));
     ImGui::Text("Render FPS: %.2f", 1 / render_time);
+    plays |= ImGui::Button("Play");
+    ImGui::SameLine();
+    ImGui::Text("State: %s", state.c_str());
     ImGui::End();
 
     ImGui::Render();

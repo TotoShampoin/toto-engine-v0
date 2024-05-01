@@ -3,12 +3,15 @@ project(TotoEngine)
 
 # includes
 include(utils/CMakeUtils/files_and_folders.cmake)
-include(vendors/imgui.cmake)
-include(vendors/stb.cmake)
-find_package(glfw3 REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
-find_package(glm REQUIRED)
+    # graphics
+    find_package(glfw3 REQUIRED)
+    find_package(OpenGL REQUIRED)
+    find_package(GLEW REQUIRED)
+    find_package(glm REQUIRED)
+    include(vendors/imgui.cmake)
+    include(vendors/stb.cmake)
+    # audio
+    find_package(OpenAL REQUIRED)
 
 # variables
 set(CMAKE_CXX_STANDARD 23)
@@ -31,7 +34,7 @@ file(GLOB_RECURSE TESTS ${${PROJECT_NAME}_TESTS_DIR}/*.cpp)
 
 # toto engine
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
-target_link_libraries(${PROJECT_NAME} PUBLIC glfw OpenGL GLEW glm stb)
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw OpenGL GLEW glm stb openal)
 target_include_directories(${PROJECT_NAME} PUBLIC ${${PROJECT_NAME}_INCLUDE_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC ${${PROJECT_NAME}_SOURCE_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC ${${PROJECT_NAME}_VENDORS_DIR})
@@ -42,7 +45,7 @@ Cool__target_copy_folder(${PROJECT_NAME} ${${PROJECT_NAME}_INCLUDE_DIR})
 # tests
 add_executable(${PROJECT_NAME}_tests ${TESTS})
 target_link_libraries(${PROJECT_NAME}_tests PUBLIC ${PROJECT_NAME} imgui stb)
-target_include_directories(${PROJECT_NAME}_tests PUBLIC ${${PROJECT_NAME}_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME}_tests PUBLIC ${${PROJECT_NAME}_INCLUDE_DIR} ${${PROJECT_NAME}_TESTS_DIR})
 set_target_properties(${PROJECT_NAME}_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${${PROJECT_NAME}_OUTPUT_BIN})
 Cool__target_copy_folder(${PROJECT_NAME}_tests ${${PROJECT_NAME}_TESTS_ASSETS_DIR})
 if (MSVC)

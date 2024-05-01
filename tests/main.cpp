@@ -9,6 +9,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 
+#include <AL/al.h>
+#include <AL/alc.h>
+
 #include <vector>
 #include <chrono>
 
@@ -19,6 +22,16 @@ int main(int /* argc */, const char* /* argv */[]) {
     using TotoEngine::ShaderType::FRAGMENT;
     auto window = Window(800, 600, "TotoEngine");
     glewInit();
+
+    auto wav = loadWavefile("tests_assets/Bass-Drum-1.wav");
+
+    auto& device = DeviceManager::open();
+#pragma clang diagnostic ignored "-Wunused-variable"
+    auto context = Context(device);
+    auto sample = Sample(wav);
+
+    bool plays = false;
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(window.GLFWWindow(), true);
@@ -67,7 +80,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();
 
-        imguiRender(render_time);
+        imguiRender(render_time, plays, sample);
 
         Window::swapBuffers(window);
         Window::pollEvents();
@@ -76,6 +89,11 @@ int main(int /* argc */, const char* /* argv */[]) {
         sphere_model.transform.position().x = glm::sin(time);
         sphere_model.transform.rotation().y = time;
         camera.lookAt({0, 0, -5});
+
+        if(plays) {
+            sample.play();
+            plays = false;
+        }
 
         last_time = current_time;
     }

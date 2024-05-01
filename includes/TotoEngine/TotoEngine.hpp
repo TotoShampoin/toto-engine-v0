@@ -6,6 +6,7 @@
 #include <TotoEngine/Window.hpp>
 #include <TotoEngine/Primitives.hpp>
 #include <TotoEngine/Transform.hpp>
+
 #include <TotoEngine/Graphics/Renderer.hpp>
 #include <TotoEngine/Graphics/RenderData/Materials.hpp>
 #include <TotoEngine/Graphics/RenderData/Light.hpp>
@@ -18,6 +19,12 @@
 #include <TotoEngine/Graphics/Loaders/Shapes.hpp>
 #include <TotoEngine/Graphics/Loaders/TextureLoader.hpp>
 #include <TotoEngine/Graphics/Loaders/ShaderLoader.hpp>
+
+#include <TotoEngine/Audio/Device.hpp>
+#include <TotoEngine/Audio/Context.hpp>
+#include <TotoEngine/Audio/FileFormats.hpp>
+#include <TotoEngine/Audio/Sample.hpp>
+#include <TotoEngine/Audio/WaveformLoader.hpp>
 
 #define __TOTO_ENGINE_MAJOR__ 0
 #define __TOTO_ENGINE_MINOR__ 0
