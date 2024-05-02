@@ -15,6 +15,8 @@
 #include <vector>
 #include <chrono>
 
+namespace Test_Deferred {
+
 int test_deferred() {
     using TotoEngine::Graphics::TextureTarget::TEXTURE_2D;
     using TotoEngine::Graphics::ShaderType::VERTEX;
@@ -99,4 +101,6 @@ int test_deferred() {
     }
 
     return 0;
+}
+
 }

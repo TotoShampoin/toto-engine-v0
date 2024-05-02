@@ -17,6 +17,8 @@
 #include <functional>
 #include <vector>
 
+namespace Test_Deferred {
+
 struct DeferredRendering {
     DeferredRendering(int width, int height):
         buffer(width, height, {
@@ -169,4 +171,6 @@ inline void imguiRender(
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
 }
