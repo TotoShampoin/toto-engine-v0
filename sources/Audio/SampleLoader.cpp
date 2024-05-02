@@ -9,6 +9,8 @@
 
 namespace TotoEngine {
 
+namespace Audio {
+
 void loadWavefileHeader(std::ifstream& file, WaveformAudioFile& wav) {
     char buffer[5];
     buffer[4] = '\0';
@@ -92,5 +94,6 @@ Sample loadSample(const std::filesystem::path& path) {
     throw std::runtime_error(std::format("Unknown format: {}", extension));
 }
 
+}
 
 }

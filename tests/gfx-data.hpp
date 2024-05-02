@@ -20,32 +20,32 @@
 struct DeferredRendering {
     DeferredRendering(int width, int height):
         buffer(width, height, {
-            TotoEngine::TextureFormat::RGB32F, // Position
-            TotoEngine::TextureFormat::RGB32F, // Normal
-            TotoEngine::TextureFormat::RGB32F, // Ambient
-            TotoEngine::TextureFormat::RGB32F, // Diffuse
-            TotoEngine::TextureFormat::RGB32F, // Specular
-            TotoEngine::TextureFormat::RGB32F, // Emissive
-            TotoEngine::TextureFormat::RGB32F, // Shininess
-            TotoEngine::TextureFormat::RGB32F, // Alpha
+            TotoEngine::Graphics::TextureFormat::RGB32F, // Position
+            TotoEngine::Graphics::TextureFormat::RGB32F, // Normal
+            TotoEngine::Graphics::TextureFormat::RGB32F, // Ambient
+            TotoEngine::Graphics::TextureFormat::RGB32F, // Diffuse
+            TotoEngine::Graphics::TextureFormat::RGB32F, // Specular
+            TotoEngine::Graphics::TextureFormat::RGB32F, // Emissive
+            TotoEngine::Graphics::TextureFormat::RGB32F, // Shininess
+            TotoEngine::Graphics::TextureFormat::RGB32F, // Alpha
         }),
         shader(
-            TotoEngine::loadShaderFile<TotoEngine::ShaderType::VERTEX>("tests_assets/screen.vert"),
-            TotoEngine::loadShaderFile<TotoEngine::ShaderType::FRAGMENT>("tests_assets/deferred.frag")
+            TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("tests_assets/screen.vert"),
+            TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>("tests_assets/deferred.frag")
         ),
-        hdri(TotoEngine::loadTexture2D("tests_assets/hdri.jpg"))
+        hdri(TotoEngine::Graphics::loadTexture2D("tests_assets/hdri.jpg"))
     {}
 
     void apply() {
-        TotoEngine::Texture2D::bindAs(hdri, 0);
-        TotoEngine::Texture2D::bindAs(buffer.texture(POSITION), POSITION + 1);
-        TotoEngine::Texture2D::bindAs(buffer.texture(NORMAL), NORMAL + 1);
-        TotoEngine::Texture2D::bindAs(buffer.texture(AMBIENT), AMBIENT + 1);
-        TotoEngine::Texture2D::bindAs(buffer.texture(DIFFUSE), DIFFUSE + 1);
-        TotoEngine::Texture2D::bindAs(buffer.texture(SPECULAR), SPECULAR + 1);
-        TotoEngine::Texture2D::bindAs(buffer.texture(EMISSIVE), EMISSIVE + 1);
-        TotoEngine::Texture2D::bindAs(buffer.texture(SHININESS), SHININESS + 1);
-        TotoEngine::Texture2D::bindAs(buffer.texture(ALPHA), ALPHA + 1);
+        TotoEngine::Graphics::Texture2D::bindAs(hdri, 0);
+        TotoEngine::Graphics::Texture2D::bindAs(buffer.texture(POSITION), POSITION + 1);
+        TotoEngine::Graphics::Texture2D::bindAs(buffer.texture(NORMAL), NORMAL + 1);
+        TotoEngine::Graphics::Texture2D::bindAs(buffer.texture(AMBIENT), AMBIENT + 1);
+        TotoEngine::Graphics::Texture2D::bindAs(buffer.texture(DIFFUSE), DIFFUSE + 1);
+        TotoEngine::Graphics::Texture2D::bindAs(buffer.texture(SPECULAR), SPECULAR + 1);
+        TotoEngine::Graphics::Texture2D::bindAs(buffer.texture(EMISSIVE), EMISSIVE + 1);
+        TotoEngine::Graphics::Texture2D::bindAs(buffer.texture(SHININESS), SHININESS + 1);
+        TotoEngine::Graphics::Texture2D::bindAs(buffer.texture(ALPHA), ALPHA + 1);
         shader.uniform("u_hdri", 0);
         shader.uniform("u_position", POSITION + 1);
         shader.uniform("u_normal", NORMAL + 1);
@@ -57,9 +57,9 @@ struct DeferredRendering {
         shader.uniform("u_alpha", ALPHA + 1);
     }        
 
-    TotoEngine::FrameBuffer buffer;
-    TotoEngine::ShaderProgram shader;
-    TotoEngine::Texture2D hdri;
+    TotoEngine::Graphics::FrameBuffer buffer;
+    TotoEngine::Graphics::ShaderProgram shader;
+    TotoEngine::Graphics::Texture2D hdri;
 
     static constexpr auto POSITION = 0;
     static constexpr auto NORMAL = 1;
@@ -73,10 +73,10 @@ struct DeferredRendering {
 
 struct MyMaterial {
     MyMaterial():
-        uv_texture(TotoEngine::loadTexture2D("tests_assets/uv.png")),
+        uv_texture(TotoEngine::Graphics::loadTexture2D("tests_assets/uv.png")),
         shader(
-            TotoEngine::loadShaderFile<TotoEngine::ShaderType::VERTEX>("tests_assets/basic.vert"),
-            TotoEngine::loadShaderFile<TotoEngine::ShaderType::FRAGMENT>("tests_assets/phong_pass.frag")
+            TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("tests_assets/basic.vert"),
+            TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>("tests_assets/phong_pass.frag")
         )
     {
         material.diffuse_map = uv_texture;
@@ -89,13 +89,13 @@ struct MyMaterial {
         material.apply(shader);
     }
 
-    TotoEngine::Texture2D uv_texture;
-    TotoEngine::ShaderProgram shader;
-    TotoEngine::PhongMaterial material;
+    TotoEngine::Graphics::Texture2D uv_texture;
+    TotoEngine::Graphics::ShaderProgram shader;
+    TotoEngine::Graphics::PhongMaterial material;
 };
 
 struct Mesh {
-    TotoEngine::GeometryBuffer model;
+    TotoEngine::Graphics::GeometryBuffer model;
     TotoEngine::Transform transform {};
 };
 
@@ -103,34 +103,34 @@ inline void renderDeferred(
     TotoEngine::Window& window,
     DeferredRendering& deferred, MyMaterial& material,
     const std::vector<std::reference_wrapper<Mesh>>& meshes,
-    const std::vector<TotoEngine::Light>& lights,
-    TotoEngine::Camera& camera,
+    const std::vector<TotoEngine::Graphics::Light>& lights,
+    TotoEngine::Graphics::Camera& camera,
     Mesh& screen
 ) {
-    TotoEngine::Renderer::bindRenderTarget(deferred.buffer);
+    TotoEngine::Graphics::Renderer::bindRenderTarget(deferred.buffer);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    TotoEngine::ShaderProgram::use(material.shader);
+    TotoEngine::Graphics::ShaderProgram::use(material.shader);
     material.apply();
     for(const Mesh& mesh : meshes) {
-        TotoEngine::GeometryBuffer::bind(mesh.model);
-        TotoEngine::Renderer::apply(material.shader, camera, mesh.transform);
-        TotoEngine::Renderer::draw(mesh.model);
+        TotoEngine::Graphics::GeometryBuffer::bind(mesh.model);
+        TotoEngine::Graphics::Renderer::apply(material.shader, camera, mesh.transform);
+        TotoEngine::Graphics::Renderer::draw(mesh.model);
     }
 
-    TotoEngine::Renderer::bindRenderTarget(window);
+    TotoEngine::Graphics::Renderer::bindRenderTarget(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    TotoEngine::GeometryBuffer::bind(screen.model);
-    TotoEngine::ShaderProgram::use(deferred.shader);
+    TotoEngine::Graphics::GeometryBuffer::bind(screen.model);
+    TotoEngine::Graphics::ShaderProgram::use(deferred.shader);
     deferred.apply();
-    TotoEngine::Renderer::apply(deferred.shader, camera, screen.transform);
-    TotoEngine::Renderer::apply(deferred.shader, camera, lights);
-    TotoEngine::Renderer::draw(screen.model);
+    TotoEngine::Graphics::Renderer::apply(deferred.shader, camera, screen.transform);
+    TotoEngine::Graphics::Renderer::apply(deferred.shader, camera, lights);
+    TotoEngine::Graphics::Renderer::draw(screen.model);
 }
 
 inline void imguiRender(
     float& render_time,
     bool& plays,
-    TotoEngine::Sample& sample
+    TotoEngine::Audio::Sample& sample
 ) {
     static std::vector<float> render_times(200);
     render_times.push_back(1.f / render_time);

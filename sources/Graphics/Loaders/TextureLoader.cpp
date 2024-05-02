@@ -6,6 +6,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 Texture2D loadTexture2D(const std::filesystem::path& path, const bool& flip, const bool& generate_mipmap) {
     Texture2D texture;
     Texture2D::bind(texture);
@@ -31,6 +33,8 @@ Texture2D loadTexture2D(const std::filesystem::path& path, const bool& flip, con
         Texture2D::generateMipmap();
     Texture2D::bind(Texture2D::NONE);
     return texture;
+}
+
 }
 
 }

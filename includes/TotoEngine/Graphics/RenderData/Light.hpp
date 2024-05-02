@@ -5,6 +5,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 enum class LightType {
     AMBIENT = 0,
     POINT = 1,
@@ -33,5 +35,7 @@ private:
     ColorRGB _color;
     float _intensity;
 };
+
+}
 
 }

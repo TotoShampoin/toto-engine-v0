@@ -8,6 +8,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 void Renderer::drawHDRi(const Texture2D& hdri_texture, const Camera& camera) {
     const auto& [hdri_model, hdri_shader] = HDRImodel();
     bind(hdri_model, hdri_shader);
@@ -85,6 +87,8 @@ std::pair<GeometryBuffer&, ShaderProgram&> Renderer::HDRImodel() {
         FragmentShaderFile(hdri_frag)
     );
     return {hdri_model, hdri_shader};
+}
+
 }
 
 }

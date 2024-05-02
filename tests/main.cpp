@@ -17,15 +17,16 @@
 
 int main(int /* argc */, const char* /* argv */[]) {
     using namespace TotoEngine;
-    using TotoEngine::TextureTarget::TEXTURE_2D;
-    using TotoEngine::ShaderType::VERTEX;
-    using TotoEngine::ShaderType::FRAGMENT;
+    using namespace TotoEngine::Graphics;
+    using namespace TotoEngine::Audio;
+    using TextureTarget::TEXTURE_2D;
+    using ShaderType::VERTEX;
+    using ShaderType::FRAGMENT;
     auto window = Window(800, 600, "TotoEngine");
     glewInit();
 
     auto& device = DeviceManager::open();
-#pragma clang diagnostic ignored "-Wunused-variable"
-    auto context = Context(device);
+    (void)Context(device);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

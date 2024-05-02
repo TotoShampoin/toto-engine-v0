@@ -12,6 +12,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 using GLProgram = LibObject<
     [] { return glCreateProgram(); },
     [](GLuint& id) { glDeleteProgram(id); }
@@ -56,5 +58,7 @@ private:
 
 using ShaderProgramInstance = Manager<ShaderProgram>::Instance;
 using ShaderProgramManager = Manager<ShaderProgram>;
+
+}
 
 }

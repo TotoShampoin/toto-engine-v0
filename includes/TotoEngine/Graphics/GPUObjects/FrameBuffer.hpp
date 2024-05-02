@@ -6,6 +6,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 using GLFrameBuffer = LibObject<
     []() { GLuint b; glGenFramebuffers(1, &b); return b; },
     [](GLuint& b) { glDeleteFramebuffers(1, &b); }
@@ -33,5 +35,7 @@ private:
 
     int _width, _height;
 };
+
+}
 
 }

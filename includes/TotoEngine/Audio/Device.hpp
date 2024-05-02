@@ -8,6 +8,8 @@
 
 namespace TotoEngine {
 
+namespace Audio {
+
 class Device {
 public:
     Device() {
@@ -83,5 +85,7 @@ private:
     DeviceManager() = default;
     std::map<std::string, Device> _devices;
 };
+
+}
 
 }

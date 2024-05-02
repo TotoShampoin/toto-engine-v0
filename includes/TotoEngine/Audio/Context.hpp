@@ -7,6 +7,8 @@
 
 namespace TotoEngine {
 
+namespace Audio {
+
 class Context {
 public:
     Context(const Device& device):
@@ -27,5 +29,7 @@ private:
     ALCcontext* _context;
     bool _eax2_support;
 };
+
+}
 
 }

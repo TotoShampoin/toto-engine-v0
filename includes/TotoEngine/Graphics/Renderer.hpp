@@ -15,6 +15,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 class Renderer {
 public:
     static void drawHDRi(const Texture2D&, const Camera&);
@@ -33,5 +35,7 @@ public:
 private:
     static std::pair<GeometryBuffer&, ShaderProgram&> HDRImodel();
 };
+
+}
 
 }

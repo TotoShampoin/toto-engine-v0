@@ -11,6 +11,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 using UniformVariant = std::variant<
     bool, int, uint, float, double, 
     Vector2, Vector3, Vector4,
@@ -57,5 +59,7 @@ private:
 
     friend class ShaderProgram;
 };
+
+}
 
 }

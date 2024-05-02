@@ -10,6 +10,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 using GLBuffer = LibObject<
     [] { GLuint id; glGenBuffers(1, &id); return id; },
     [](GLuint& id) { glDeleteBuffers(1, &id); }
@@ -62,5 +64,7 @@ private:
 
 using GeometryBufferInstance = Manager<GeometryBuffer>::Instance;
 using GeometryBufferManager = Manager<GeometryBuffer>;
+
+}
 
 }

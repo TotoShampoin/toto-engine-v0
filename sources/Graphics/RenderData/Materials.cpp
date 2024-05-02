@@ -12,6 +12,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 ShaderProgram& BasicMaterial::shader() {
     static auto shader = ShaderProgram(
         VertexShaderFile(basic_vert),
@@ -104,6 +106,8 @@ void PhongMaterial::apply(ShaderProgram& shader) const {
     shader.uniform("u_use_emissive_map", emissive_map.has_value());
     shader.uniform("u_use_shininess_map", shininess_map.has_value());
     shader.uniform("u_use_opacity_map", opacity_map.has_value());
+}
+
 }
 
 }

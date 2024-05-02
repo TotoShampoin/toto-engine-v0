@@ -7,6 +7,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 constexpr auto PI = glm::pi<float>();
 constexpr auto TAU = glm::tau<float>();
 
@@ -109,5 +111,7 @@ GeometryBuffer sphere(float radius, int slices, int stacks) {
 // GeometryBuffer capsule(float radius, float height, int slices, int stacks) {
 //     //
 // }
+
+}
 
 }

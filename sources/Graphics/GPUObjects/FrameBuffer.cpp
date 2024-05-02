@@ -5,6 +5,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 TextureFormat getNonFloatFormat(TextureFormat format) {
     switch (format) {
         case TextureFormat::RGB32F: return TextureFormat::RGB;
@@ -46,6 +48,8 @@ void FrameBuffer::copyFrom(const FrameBuffer& other) {
     glBlitFramebuffer(0, 0, other._width, other._height, 0, 0, _width, _height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+
 }
 
 }

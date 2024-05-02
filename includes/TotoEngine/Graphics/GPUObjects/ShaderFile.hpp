@@ -9,6 +9,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 enum class ShaderType {
     VERTEX = GL_VERTEX_SHADER,
     FRAGMENT = GL_FRAGMENT_SHADER,
@@ -68,5 +70,7 @@ using GeometryShaderFile = ShaderFile<ShaderType::GEOMETRY>;
 using TessControlShaderFile = ShaderFile<ShaderType::TESS_CONTROL>;
 using TessEvaluationShaderFile = ShaderFile<ShaderType::TESS_EVALUATION>;
 using ComputeShaderFile = ShaderFile<ShaderType::COMPUTE>;
+
+}
 
 }

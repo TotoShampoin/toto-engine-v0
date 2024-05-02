@@ -8,6 +8,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 using GLTexture = TotoEngine::LibObject<
     [] { GLuint id; glGenTextures(1, &id); return id; },
     [](GLuint& id) { glDeleteTextures(1, &id); }
@@ -139,5 +141,7 @@ using Texture3DManager = Manager<Texture3D>;
 using TextureCubeMap = Texture<TextureTarget::TEXTURE_CUBE_MAP>;
 using TextureCubeMapInstance = Manager<TextureCubeMap>::Instance;
 using TextureCubeMapManager = Manager<TextureCubeMap>;
+
+}
 
 }

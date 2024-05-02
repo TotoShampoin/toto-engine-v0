@@ -6,6 +6,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 template <ShaderType TYPE>
 ShaderFile<TYPE> loadShaderFile(const std::filesystem::path& path) {
     auto file = std::ifstream(path);
@@ -14,6 +16,8 @@ ShaderFile<TYPE> loadShaderFile(const std::filesystem::path& path) {
     }
     std::string shader_source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     return ShaderFile<TYPE>(shader_source);
+}
+
 }
 
 }

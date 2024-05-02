@@ -3,6 +3,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 GeometryBuffer::GeometryBuffer():
     _vao(), _vbo(), _ibo(),
     _vertices(), _indices()
@@ -43,6 +45,8 @@ void GeometryBuffer::bind(const optional_ref<const GeometryBuffer>& buffer) {
     }
     auto& buffer_ref = buffer.value().get();
     glBindVertexArray(buffer_ref.vao());
+}
+
 }
 
 }

@@ -8,6 +8,8 @@
 
 namespace TotoEngine {
 
+namespace Audio {
+
 struct WaveformAudioFile {
     struct Header {
         ALubyte channels;
@@ -22,5 +24,7 @@ struct WaveformAudioFile {
 WaveformAudioFile loadWavefile(const std::filesystem::path& path);
 
 Sample loadSample(const std::filesystem::path& path);
+
+}
 
 }

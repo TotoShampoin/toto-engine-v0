@@ -9,6 +9,8 @@
 
 namespace TotoEngine {
 
+namespace Audio {
+
 using ALBuffer = LibObject<
     []() { ALuint buffer; alGenBuffers(1, &buffer); return buffer; },
     [](ALuint& buffer) { alDeleteBuffers(1, &buffer); }
@@ -54,5 +56,7 @@ private:
 
 using SampleManager = Manager<Sample>;
 using SampleInstance = Manager<Sample>::Instance;
+
+}
 
 }

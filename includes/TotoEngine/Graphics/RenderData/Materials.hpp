@@ -10,6 +10,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 class BasicMaterial {
 public:
     ColorRGB color { 1.0f, 1.0f, 1.0f };
@@ -97,5 +99,7 @@ struct Material {
         }, data);
     }
 };
+
+}
 
 }

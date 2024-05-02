@@ -6,6 +6,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 class Camera : public Transformed {
 public:
     Camera(const Matrix4& projection_matrix):
@@ -24,5 +26,7 @@ public:
 private:
     Matrix4 _projection_matrix;
 };
+
+}
 
 }

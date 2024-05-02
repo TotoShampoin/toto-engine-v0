@@ -5,6 +5,8 @@
 
 namespace TotoEngine {
 
+namespace Graphics {
+
 void ShaderProgram::use(const optional_ref<const ShaderProgram>& program) {
     if(!program.has_value()) {
         glUseProgram(0);
@@ -44,5 +46,7 @@ void ShaderProgram::uniform(const std::string& name, const UniformVariant& value
 //     glUseProgram(program);
 //     boundProgram() = program;
 // }
+
+}
 
 }
