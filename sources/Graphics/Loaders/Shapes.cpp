@@ -70,7 +70,6 @@ GeometryBuffer cube(float width, float height, float depth) {
     );
 }
 
-// TODO: Fix vertex lost at the center
 GeometryBuffer sphere(float radius, int slices, int stacks) {
     std::vector<Vertex> vertices;
     std::vector<Index> indices;
