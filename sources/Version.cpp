@@ -1,4 +1,5 @@
-#include "TotoEngine/TotoEngine.hpp"
+#include "TotoEngine/Version.hpp"
+
 #include <iostream>
 
 namespace TotoEngine {
