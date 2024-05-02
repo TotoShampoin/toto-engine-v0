@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 
 #include <TotoEngine/Core/Aliases.hpp>
-#include <TotoEngine/Primitives.hpp>
+#include <TotoEngine/Math/Primitives.hpp>
 #include <TotoEngine/Core/Instantiation.hpp>
 #include <TotoEngine/Core/LibObject.hpp>
 #include <vector>
@@ -22,9 +22,9 @@ using GLVertexArray = Core::LibObject<
 >;
 
 struct Vertex {
-    Vector3 position;
-    Vector3 normal;
-    Vector2 uv;
+    Math::Vector3 position;
+    Math::Vector3 normal;
+    Math::Vector2 uv;
 };
 static constexpr auto VERTEX_ATTRIBUTE_POSITION = 0;
 static constexpr auto VERTEX_ATTRIBUTE_NORMAL = 1;

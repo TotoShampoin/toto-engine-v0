@@ -6,8 +6,8 @@
 #include "TotoEngine/Graphics/RenderData/Camera.hpp"
 #include "TotoEngine/Graphics/RenderData/Light.hpp"
 #include "TotoEngine/Graphics/RenderData/Materials.hpp"
-#include "TotoEngine/Transform.hpp"
-#include "TotoEngine/Window.hpp"
+#include "TotoEngine/Math/Transform.hpp"
+#include "TotoEngine/Core/Window.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -80,7 +80,7 @@ struct MyMaterial {
         )
     {
         material.diffuse_map = uv_texture;
-        material.specular = TotoEngine::ColorRGB(1.0f);
+        material.specular = TotoEngine::Math::ColorRGB(1.0f);
         material.shininess = 64.f;
         material.ambient_map = uv_texture;
     }
@@ -96,11 +96,11 @@ struct MyMaterial {
 
 struct Mesh {
     TotoEngine::Graphics::GeometryBuffer model;
-    TotoEngine::Transform transform {};
+    TotoEngine::Math::Transform transform {};
 };
 
 inline void renderDeferred(
-    TotoEngine::Window& window,
+    TotoEngine::Core::Window& window,
     DeferredRendering& deferred, MyMaterial& material,
     const std::vector<std::reference_wrapper<Mesh>>& meshes,
     const std::vector<TotoEngine::Graphics::Light>& lights,

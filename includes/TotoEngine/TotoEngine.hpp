@@ -3,9 +3,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <TotoEngine/Window.hpp>
-#include <TotoEngine/Primitives.hpp>
-#include <TotoEngine/Transform.hpp>
+#include <TotoEngine/Core/Window.hpp>
+
+#include <TotoEngine/Math/Primitives.hpp>
+#include <TotoEngine/Math/Transform.hpp>
 
 #include <TotoEngine/Graphics/Renderer.hpp>
 #include <TotoEngine/Graphics/RenderData/Materials.hpp>

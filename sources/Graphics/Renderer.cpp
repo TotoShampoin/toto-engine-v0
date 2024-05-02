@@ -33,7 +33,7 @@ void Renderer::bindRenderTarget(const FrameBuffer &target) {
     glBindFramebuffer(GL_FRAMEBUFFER, target.framebuffer());
     glViewport(0, 0, target.width(), target.height());
 }
-void Renderer::bindRenderTarget(const Window &window) {
+void Renderer::bindRenderTarget(const Core::Window &window) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     auto [width, height] = window.size();
     glViewport(0, 0, width, height);
@@ -43,7 +43,7 @@ void Renderer::apply(ShaderProgram& program, const Camera& camera) {
     program.uniform("u_projection", camera.projectionMatrix());
     program.uniform("u_view", camera.viewMatrix());
 }
-void Renderer::apply(ShaderProgram& program, const Camera& camera, const Transform& transform) {
+void Renderer::apply(ShaderProgram& program, const Camera& camera, const Math::Transform& transform) {
     apply(program, camera);
     program.uniform("u_model", transform.matrix());
 }
@@ -59,7 +59,7 @@ void Renderer::apply(ShaderProgram& program, const Camera& camera, const std::ve
                 glm::vec3(camera.viewMatrix() * glm::vec4(light.position(), 1)));
         }
         else if(light.type() == LightType::DIRECTIONAL) {
-            Vector3 direction = light.rotationMatrix() * Vector4(0.0f, 0.0f, 1.0f, 0.0f);
+            Math::Vector3 direction = light.rotationMatrix() * Math::Vector4(0.0f, 0.0f, 1.0f, 0.0f);
             program.uniform(std::format("u_lights[{}].pos_or_dir", index),
                 camera.viewNormalMatrix() * direction);
         }

@@ -1,30 +1,30 @@
 #pragma once
 
-#include <TotoEngine/Primitives.hpp>
-#include <TotoEngine/Transform.hpp>
+#include <TotoEngine/Math/Primitives.hpp>
+#include <TotoEngine/Math/Transform.hpp>
 #include <glm/matrix.hpp>
 
 namespace TotoEngine {
 
 namespace Graphics {
 
-class Camera : public Transformed {
+class Camera : public Math::Transformed {
 public:
-    Camera(const Matrix4& projection_matrix):
+    Camera(const Math::Matrix4& projection_matrix):
         _projection_matrix(projection_matrix)
     {}
 
-    Matrix4 viewMatrix() const {
+    Math::Matrix4 viewMatrix() const {
         return glm::inverse(matrix());
     }
-    Matrix3 viewNormalMatrix() const {
-        return Matrix3(glm::transpose(matrix()));
+    Math::Matrix3 viewNormalMatrix() const {
+        return Math::Matrix3(glm::transpose(matrix()));
     }
 
-    Matrix4& projectionMatrix() { return _projection_matrix; }
-    const Matrix4& projectionMatrix() const { return _projection_matrix; }
+    Math::Matrix4& projectionMatrix() { return _projection_matrix; }
+    const Math::Matrix4& projectionMatrix() const { return _projection_matrix; }
 private:
-    Matrix4 _projection_matrix;
+    Math::Matrix4 _projection_matrix;
 };
 
 }

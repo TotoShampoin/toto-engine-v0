@@ -1,6 +1,6 @@
 #pragma once
 
-#include <TotoEngine/Primitives.hpp>
+#include <TotoEngine/Math/Primitives.hpp>
 #include <TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp>
 #include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
 
@@ -14,7 +14,7 @@ namespace Graphics {
 
 class BasicMaterial {
 public:
-    ColorRGB color { 1.0f, 1.0f, 1.0f };
+    Math::ColorRGB color { 1.0f, 1.0f, 1.0f };
     float opacity { 1.0f };
     optional_ref<Texture2D> map { std::nullopt };
 
@@ -42,10 +42,10 @@ public:
 
 class PhongMaterial {
 public:
-    ColorRGB ambient { 1.0f, 1.0f, 1.0f };
-    ColorRGB diffuse { 1.0f, 1.0f, 1.0f };
-    ColorRGB specular { 1.0f, 1.0f, 1.0f };
-    ColorRGB emissive { 0.0f, 0.0f, 0.0f };
+    Math::ColorRGB ambient { 1.0f, 1.0f, 1.0f };
+    Math::ColorRGB diffuse { 1.0f, 1.0f, 1.0f };
+    Math::ColorRGB specular { 1.0f, 1.0f, 1.0f };
+    Math::ColorRGB emissive { 0.0f, 0.0f, 0.0f };
     float shininess { 32.0f };
     float opacity { 1.0f };
 
@@ -62,7 +62,7 @@ public:
 
 class PBRMaterial {
 public:
-    ColorRGB albedo { 1.0f, 1.0f, 1.0f };
+    Math::ColorRGB albedo { 1.0f, 1.0f, 1.0f };
     float metallic { 0.0f };
     float roughness { 1.0f };
     float ao { 1.0f };

@@ -5,6 +5,8 @@
 
 namespace TotoEngine {
 
+namespace Core {
+
 class Window {
 public:
     Window(int width, int height, const char* title);
@@ -30,5 +32,7 @@ public:
 private:
     GLFWwindow* _glfw_window;
 };
+
+}
 
 }

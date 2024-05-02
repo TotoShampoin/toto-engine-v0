@@ -6,9 +6,9 @@
 #include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
 #include <TotoEngine/Graphics/RenderData/Camera.hpp>
 #include <TotoEngine/Graphics/RenderData/Light.hpp>
-#include <TotoEngine/Primitives.hpp>
-#include <TotoEngine/Transform.hpp>
-#include <TotoEngine/Window.hpp>
+#include <TotoEngine/Math/Primitives.hpp>
+#include <TotoEngine/Math/Transform.hpp>
+#include <TotoEngine/Core/Window.hpp>
 #include <functional>
 #include <utility>
 #include <vector>
@@ -26,10 +26,10 @@ public:
     static void bind(const GeometryBuffer& geometry_buffer, const ShaderProgram& shader);
 
     static void bindRenderTarget(const FrameBuffer& target);
-    static void bindRenderTarget(const Window& window);
+    static void bindRenderTarget(const Core::Window& window);
 
     static void apply(ShaderProgram&, const Camera&);
-    static void apply(ShaderProgram&, const Camera&, const Transform&);
+    static void apply(ShaderProgram&, const Camera&, const Math::Transform&);
     static void apply(ShaderProgram&, const Camera&, const std::vector<Light>&);
     static void apply(ShaderProgram&, const std::function<void(ShaderProgram&)>&);
 private:

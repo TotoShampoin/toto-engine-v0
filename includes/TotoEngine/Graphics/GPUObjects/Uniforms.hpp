@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include <variant>
-#include <TotoEngine/Primitives.hpp>
+#include <TotoEngine/Math/Primitives.hpp>
 
 namespace TotoEngine {
 
@@ -15,8 +15,8 @@ namespace Graphics {
 
 using UniformVariant = std::variant<
     bool, int, uint, float, double, 
-    Vector2, Vector3, Vector4,
-    Matrix2, Matrix3, Matrix4
+    Math::Vector2, Math::Vector3, Math::Vector4,
+    Math::Matrix2, Math::Matrix3, Math::Matrix4
 >;
 
 struct UniformVisitor {
@@ -25,12 +25,12 @@ struct UniformVisitor {
     void operator()(const GLuint& value) const { glUniform1ui(location, value); }
     void operator()(const GLfloat& value) const { glUniform1f(location, value); }
     void operator()(const GLdouble& value) const { glUniform1d(location, value); }
-    void operator()(const Vector2& value) const { glUniform2fv(location, 1, &value[0]); }
-    void operator()(const Vector3& value) const { glUniform3fv(location, 1, &value[0]); }
-    void operator()(const Vector4& value) const { glUniform4fv(location, 1, &value[0]); }
-    void operator()(const Matrix2& value) const { glUniformMatrix2fv(location, 1, GL_FALSE, &value[0][0]); }
-    void operator()(const Matrix3& value) const { glUniformMatrix3fv(location, 1, GL_FALSE, &value[0][0]); }
-    void operator()(const Matrix4& value) const { glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]); }
+    void operator()(const Math::Vector2& value) const { glUniform2fv(location, 1, &value[0]); }
+    void operator()(const Math::Vector3& value) const { glUniform3fv(location, 1, &value[0]); }
+    void operator()(const Math::Vector4& value) const { glUniform4fv(location, 1, &value[0]); }
+    void operator()(const Math::Matrix2& value) const { glUniformMatrix2fv(location, 1, GL_FALSE, &value[0][0]); }
+    void operator()(const Math::Matrix3& value) const { glUniformMatrix3fv(location, 1, GL_FALSE, &value[0][0]); }
+    void operator()(const Math::Matrix4& value) const { glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]); }
 
     GLint location;
 };

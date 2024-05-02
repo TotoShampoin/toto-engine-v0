@@ -23,7 +23,7 @@ int main(int /* argc */, const char* /* argv */[]) {
     using TotoEngine::Graphics::LightType::DIRECTIONAL;
     using TotoEngine::Graphics::LightType::POINT;
     
-    auto window = TotoEngine::Window(800, 600, "TotoEngine");
+    auto window = TotoEngine::Core::Window(800, 600, "TotoEngine");
     glewInit();
 
     auto& device = TotoEngine::Audio::DeviceManager::open();
@@ -40,9 +40,9 @@ int main(int /* argc */, const char* /* argv */[]) {
     auto screen_model = Mesh { TotoEngine::Graphics::plane(2, 2) };
     auto plane_model = Mesh { TotoEngine::Graphics::cube(2, 2, 2) };
     auto sphere_model = Mesh { TotoEngine::Graphics::sphere(1, 32, 16)  };
-    auto amb_light = TotoEngine::Graphics::Light(AMBIENT, TotoEngine::ColorRGB(1, 1, 1), 0.33333f);
-    auto dir_light = TotoEngine::Graphics::Light(DIRECTIONAL, TotoEngine::ColorRGB(1, 1, 1), 1);
-    auto pt_light = TotoEngine::Graphics::Light(POINT, TotoEngine::ColorRGB(1, 1, 1), 2);
+    auto amb_light = TotoEngine::Graphics::Light(AMBIENT, TotoEngine::Math::ColorRGB(1, 1, 1), 0.33333f);
+    auto dir_light = TotoEngine::Graphics::Light(DIRECTIONAL, TotoEngine::Math::ColorRGB(1, 1, 1), 1);
+    auto pt_light = TotoEngine::Graphics::Light(POINT, TotoEngine::Math::ColorRGB(1, 1, 1), 2);
     screen_model.transform.position() = {0, 0, -1};
     plane_model.transform.position() = {0, -2, -5};
     sphere_model.transform.position() = {0, 0, -5};
@@ -69,7 +69,7 @@ int main(int /* argc */, const char* /* argv */[]) {
         auto [width, height] = window.size();
         camera.projectionMatrix() = glm::perspective(glm::radians(70.0f), (float)width / height, 0.1f, 100.0f);
 
-        TotoEngine::Window::makeContextCurrent(window);
+        TotoEngine::Core::Window::makeContextCurrent(window);
 
         renderDeferred(
             window, deferred, material,
@@ -82,8 +82,8 @@ int main(int /* argc */, const char* /* argv */[]) {
 
         imguiRender(render_time, plays, sample);
 
-        TotoEngine::Window::swapBuffers(window);
-        TotoEngine::Window::pollEvents();
+        TotoEngine::Core::Window::swapBuffers(window);
+        TotoEngine::Core::Window::pollEvents();
 
         plane_model.transform.rotation() = glm::vec3(time);
         sphere_model.transform.position().x = glm::sin(time);

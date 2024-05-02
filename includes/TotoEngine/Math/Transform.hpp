@@ -1,8 +1,10 @@
 #pragma once
 
-#include <TotoEngine/Primitives.hpp>
+#include <TotoEngine/Math/Primitives.hpp>
 
 namespace TotoEngine {
+
+namespace Math {
 
 class Transform {
 public:
@@ -54,5 +56,7 @@ public:
 private:
     Transform _transform;
 };
+
+}
 
 };
