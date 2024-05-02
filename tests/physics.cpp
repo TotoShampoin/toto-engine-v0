@@ -139,7 +139,7 @@ void render(Core::Window& window, TestData& data) {
 void physics(TestData& data) {
     auto rotated_pos_1 = glm::cos(glm::radians(data.time * 10));
     auto rotated_pos_2 = glm::sin(glm::radians(data.time * 10));
-    data.camera.position() = {0, 10, 30};
+    data.camera.position() = {5, -2.5, 20};
     data.camera.lookAt({0, 0, 0});
 
     data.hitbox_a.center = Math::Vector3(rotated_pos_1, 0, -rotated_pos_1) * 10.f;
