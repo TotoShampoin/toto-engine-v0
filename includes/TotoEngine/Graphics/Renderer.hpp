@@ -32,6 +32,8 @@ public:
     static void apply(ShaderProgram&, const Camera&, const Math::Transform&);
     static void apply(ShaderProgram&, const Camera&, const std::vector<Light>&);
     static void apply(ShaderProgram&, const std::function<void(ShaderProgram&)>&);
+
+    static void init();
 private:
     static std::pair<GeometryBuffer&, ShaderProgram&> HDRImodel();
 };

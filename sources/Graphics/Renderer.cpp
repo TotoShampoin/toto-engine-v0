@@ -89,6 +89,10 @@ std::pair<GeometryBuffer&, ShaderProgram&> Renderer::HDRImodel() {
     return {hdri_model, hdri_shader};
 }
 
+void Renderer::init() {
+    glewInit();
+}
+
 }
 
 }

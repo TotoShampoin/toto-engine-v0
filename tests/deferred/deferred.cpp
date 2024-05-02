@@ -24,7 +24,7 @@ int test_deferred() {
     using TotoEngine::Graphics::LightType::POINT;
     
     auto window = TotoEngine::Core::Window(800, 600, "TotoEngine");
-    glewInit();
+    TotoEngine::Graphics::Renderer::init();
 
     auto& device = TotoEngine::Audio::DeviceManager::open();
     (void)TotoEngine::Audio::Context(device);
