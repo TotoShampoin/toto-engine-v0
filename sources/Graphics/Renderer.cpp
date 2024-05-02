@@ -89,6 +89,13 @@ std::pair<GeometryBuffer&, ShaderProgram&> Renderer::HDRImodel() {
     return {hdri_model, hdri_shader};
 }
 
+void Renderer::clear(bool color, bool depth, bool stencil) {
+    glClear((color ? GL_COLOR_BUFFER_BIT : 0) | (depth ? GL_DEPTH_BUFFER_BIT : 0) | (stencil ? GL_STENCIL_BUFFER_BIT : 0));
+}
+void Renderer::clearColor(TotoEngine::Math::ColorRGBA color) {
+    glClearColor(color.r, color.g, color.b, color.a);
+}
+
 void Renderer::init() {
     glewInit();
 }

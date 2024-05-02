@@ -20,11 +20,9 @@ namespace Graphics {
 class Renderer {
 public:
     static void drawHDRi(const Texture2D&, const Camera&);
-
     static void draw(const GeometryBuffer& geometry_buffer);
 
     static void bind(const GeometryBuffer& geometry_buffer, const ShaderProgram& shader);
-
     static void bindRenderTarget(const FrameBuffer& target);
     static void bindRenderTarget(const Core::Window& window);
 
@@ -32,6 +30,9 @@ public:
     static void apply(ShaderProgram&, const Camera&, const Math::Transform&);
     static void apply(ShaderProgram&, const Camera&, const std::vector<Light>&);
     static void apply(ShaderProgram&, const std::function<void(ShaderProgram&)>&);
+
+    static void clear(bool color = true, bool depth = true, bool stencil = false);
+    static void clearColor(TotoEngine::Math::ColorRGBA color = {0, 0, 0, 1});
 
     static void init();
 private:
