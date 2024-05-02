@@ -20,7 +20,7 @@ namespace Graphics {
 class Renderer {
 public:
     static void drawHDRi(const Texture2D&, const Camera&);
-    static void draw(const GeometryBuffer& geometry_buffer);
+    static void draw(const GeometryBuffer& geometry_buffer, const GLenum& mode = GL_TRIANGLES);
 
     static void bind(const GeometryBuffer& geometry_buffer, const ShaderProgram& shader);
     static void bindRenderTarget(const FrameBuffer& target);
@@ -33,6 +33,8 @@ public:
 
     static void clear(bool color = true, bool depth = true, bool stencil = false);
     static void clearColor(TotoEngine::Math::ColorRGBA color = {0, 0, 0, 1});
+    static void enable(GLenum);
+    static void disable(GLenum);
 
     static void init();
 private:

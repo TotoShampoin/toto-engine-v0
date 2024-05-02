@@ -5,6 +5,7 @@
 #include "TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp"
 #include "impl/shaders/hdri.vert.hpp"
 #include "impl/shaders/hdri.frag.hpp"
+#include <GL/gl.h>
 
 namespace TotoEngine {
 
@@ -20,8 +21,8 @@ void Renderer::drawHDRi(const Texture2D& hdri_texture, const Camera& camera) {
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::draw(const GeometryBuffer &geometry_buffer) {
-    glDrawElements(GL_TRIANGLES, geometry_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
+void Renderer::draw(const GeometryBuffer &geometry_buffer, const GLenum& mode) {
+    glDrawElements(mode, geometry_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Renderer::bind(const GeometryBuffer &geometry_buffer, const ShaderProgram &shader) {
@@ -94,6 +95,14 @@ void Renderer::clear(bool color, bool depth, bool stencil) {
 }
 void Renderer::clearColor(TotoEngine::Math::ColorRGBA color) {
     glClearColor(color.r, color.g, color.b, color.a);
+}
+
+void Renderer::enable(GLenum cap) {
+    glEnable(cap);
+}
+
+void Renderer::disable(GLenum cap) {
+    glDisable(cap);
 }
 
 void Renderer::init() {
