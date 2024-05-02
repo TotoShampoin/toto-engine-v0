@@ -1,5 +1,6 @@
 #include "TotoEngine/Math/Transform.hpp"
 #include "TotoEngine/Math/Primitives.hpp"
+#include <glm/geometric.hpp>
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -22,7 +23,9 @@ void Math::Transform::scale(const Math::Vector3& factor) {
 void Math::Transform::lookAt(const Math::Vector3& target, const Math::Vector3& up) {
     if(target == _position)
         return;
-    if(target - _position == up) {
+    auto direction = glm::normalize(target - _position);
+    auto up_dir = glm::normalize(up);
+    if(glm::abs(glm::dot(direction, up_dir)) > .99f) {
         _rotation.y = std::atan2(up.x, up.z);
         _rotation.x = std::atan2(up.y, std::sqrt(up.x * up.x + up.z * up.z));
         return;
