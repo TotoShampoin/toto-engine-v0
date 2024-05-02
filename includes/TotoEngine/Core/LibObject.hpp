@@ -5,6 +5,8 @@
 
 namespace TotoEngine {
 
+namespace Core {
+
 template <GLuint gen(), void del(GLuint&)>
 class LibObject {
 public:
@@ -35,5 +37,7 @@ public:
 private:
     GLuint _id;
 };
+
+}
 
 }

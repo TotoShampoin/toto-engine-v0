@@ -2,21 +2,21 @@
 
 #include <GL/glew.h>
 
-#include <TotoEngine/Aliases.hpp>
+#include <TotoEngine/Core/Aliases.hpp>
 #include <TotoEngine/Primitives.hpp>
-#include <TotoEngine/Instantiation.hpp>
-#include <TotoEngine/LibObject.hpp>
+#include <TotoEngine/Core/Instantiation.hpp>
+#include <TotoEngine/Core/LibObject.hpp>
 #include <vector>
 
 namespace TotoEngine {
 
 namespace Graphics {
 
-using GLBuffer = LibObject<
+using GLBuffer = Core::LibObject<
     [] { GLuint id; glGenBuffers(1, &id); return id; },
     [](GLuint& id) { glDeleteBuffers(1, &id); }
 >;
-using GLVertexArray = LibObject<
+using GLVertexArray = Core::LibObject<
     [] { GLuint id; glGenVertexArrays(1, &id); return id; },
     [](GLuint& id) { glDeleteVertexArrays(1, &id); }
 >;
@@ -62,8 +62,8 @@ private:
     GLenum _draw_mode = GL_TRIANGLES;
 };
 
-using GeometryBufferInstance = Manager<GeometryBuffer>::Instance;
-using GeometryBufferManager = Manager<GeometryBuffer>;
+using GeometryBufferInstance = Core::Manager<GeometryBuffer>::Instance;
+using GeometryBufferManager = Core::Manager<GeometryBuffer>;
 
 }
 

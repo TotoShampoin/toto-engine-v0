@@ -1,5 +1,5 @@
 #include "TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp"
-#include "TotoEngine/Aliases.hpp"
+#include "TotoEngine/Core/Aliases.hpp"
 #include <format>
 #include <stdexcept>
 
@@ -31,21 +31,8 @@ void ShaderProgram::linkProgram() {
 }
 
 void ShaderProgram::uniform(const std::string& name, const UniformVariant& value) {
-    // use(*this);
     _uniform(name, value);
 }
-
-// GLuint& ShaderProgram::boundProgram() {
-//     static GLuint bound_program = 0;
-//     return bound_program;
-// }
-// void ShaderProgram::useProgram(const GLuint& program) {
-//     if(boundProgram() == program) {
-//         return;
-//     }
-//     glUseProgram(program);
-//     boundProgram() = program;
-// }
 
 }
 

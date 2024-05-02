@@ -2,11 +2,11 @@
 
 #include <GL/glew.h>
 
-#include <TotoEngine/LibObject.hpp>
+#include <TotoEngine/Core/LibObject.hpp>
 #include <optional>
 
-#include <TotoEngine/Aliases.hpp>
-#include <TotoEngine/Instantiation.hpp>
+#include <TotoEngine/Core/Aliases.hpp>
+#include <TotoEngine/Core/Instantiation.hpp>
 #include <TotoEngine/Graphics/GPUObjects/ShaderFile.hpp>
 #include <TotoEngine/Graphics/GPUObjects/Uniforms.hpp>
 
@@ -14,7 +14,7 @@ namespace TotoEngine {
 
 namespace Graphics {
 
-using GLProgram = LibObject<
+using GLProgram = Core::LibObject<
     [] { return glCreateProgram(); },
     [](GLuint& id) { glDeleteProgram(id); }
 >;
@@ -56,8 +56,8 @@ private:
     void linkProgram();
 };
 
-using ShaderProgramInstance = Manager<ShaderProgram>::Instance;
-using ShaderProgramManager = Manager<ShaderProgram>;
+using ShaderProgramInstance = Core::Manager<ShaderProgram>::Instance;
+using ShaderProgramManager = Core::Manager<ShaderProgram>;
 
 }
 

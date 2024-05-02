@@ -1,9 +1,9 @@
 #pragma once
 
-#include "TotoEngine/Instantiation.hpp"
+#include "TotoEngine/Core/Instantiation.hpp"
 
 #include <AL/al.h>
-#include <TotoEngine/LibObject.hpp>
+#include <TotoEngine/Core/LibObject.hpp>
 #include <format>
 #include <stdexcept>
 
@@ -11,11 +11,11 @@ namespace TotoEngine {
 
 namespace Audio {
 
-using ALBuffer = LibObject<
+using ALBuffer = Core::LibObject<
     []() { ALuint buffer; alGenBuffers(1, &buffer); return buffer; },
     [](ALuint& buffer) { alDeleteBuffers(1, &buffer); }
 >;
-using ALSource = LibObject<
+using ALSource = Core::LibObject<
     []() { ALuint source; alGenSources(1, &source); return source; },
     [](ALuint& source) { alDeleteSources(1, &source); }
 >;
@@ -54,8 +54,8 @@ private:
     ALSource _source;
 };
 
-using SampleManager = Manager<Sample>;
-using SampleInstance = Manager<Sample>::Instance;
+using SampleManager = Core::Manager<Sample>;
+using SampleInstance = Core::Manager<Sample>::Instance;
 
 }
 

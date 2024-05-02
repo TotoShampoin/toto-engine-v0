@@ -1,6 +1,6 @@
 #pragma once
 
-#include <TotoEngine/LibObject.hpp>
+#include <TotoEngine/Core/LibObject.hpp>
 #include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
 #include <vector>
 
@@ -8,11 +8,11 @@ namespace TotoEngine {
 
 namespace Graphics {
 
-using GLFrameBuffer = LibObject<
+using GLFrameBuffer = Core::LibObject<
     []() { GLuint b; glGenFramebuffers(1, &b); return b; },
     [](GLuint& b) { glDeleteFramebuffers(1, &b); }
 >;
-using GLRenderBuffer = LibObject<
+using GLRenderBuffer = Core::LibObject<
     []() { GLuint b; glGenRenderbuffers(1, &b); return b; },
     [](GLuint& b) { glDeleteRenderbuffers(1, &b); }
 >;

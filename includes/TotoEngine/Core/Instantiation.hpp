@@ -7,6 +7,8 @@
 
 namespace TotoEngine {
 
+namespace Core {
+
 template <typename TYPE>
 class Manager {
 public:
@@ -58,5 +60,7 @@ private:
     }
     // size_t _unique_counter {1};
 };
+
+}
 
 }

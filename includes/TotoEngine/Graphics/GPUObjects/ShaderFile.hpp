@@ -1,6 +1,6 @@
 #pragma once
 
-#include <TotoEngine/LibObject.hpp>
+#include <TotoEngine/Core/LibObject.hpp>
 #include <GL/glew.h>
 
 #include <format>
@@ -32,7 +32,7 @@ inline constexpr std::string shaderTypeToString(ShaderType type) {
 }
 
 template <ShaderType TYPE>
-class GLShader : public LibObject<
+class GLShader : public Core::LibObject<
     [] { return glCreateShader(static_cast<GLenum>(TYPE)); },
     [](GLuint& id) { glDeleteShader(id); }
 > {};

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <TotoEngine/LibObject.hpp>
-#include <TotoEngine/Aliases.hpp>
-#include <TotoEngine/Instantiation.hpp>
+#include <TotoEngine/Core/LibObject.hpp>
+#include <TotoEngine/Core/Aliases.hpp>
+#include <TotoEngine/Core/Instantiation.hpp>
 #include <GL/gl.h>
 #include <format>
 
@@ -10,7 +10,7 @@ namespace TotoEngine {
 
 namespace Graphics {
 
-using GLTexture = TotoEngine::LibObject<
+using GLTexture = TotoEngine::Core::LibObject<
     [] { GLuint id; glGenTextures(1, &id); return id; },
     [](GLuint& id) { glDeleteTextures(1, &id); }
 >;
@@ -122,25 +122,25 @@ private:
 };
 
 template <TextureTarget TARGET>
-using TextureInstance = Manager<Texture<TARGET>>::Instance;
+using TextureInstance = Core::Manager<Texture<TARGET>>::Instance;
 template <TextureTarget TARGET>
-using TextureManager = Manager<Texture<TARGET>>;
+using TextureManager = Core::Manager<Texture<TARGET>>;
 
 using Texture2D = Texture<TextureTarget::TEXTURE_2D>;
-using Texture2DInstance = Manager<Texture2D>::Instance;
-using Texture2DManager = Manager<Texture2D>;
+using Texture2DInstance = Core::Manager<Texture2D>::Instance;
+using Texture2DManager = Core::Manager<Texture2D>;
 
 using Texture2DArray = Texture<TextureTarget::TEXTURE_2D_ARRAY>;
-using Texture2DArrayInstance = Manager<Texture2DArray>::Instance;
-using Texture2DArrayManager = Manager<Texture2DArray>;
+using Texture2DArrayInstance = Core::Manager<Texture2DArray>::Instance;
+using Texture2DArrayManager = Core::Manager<Texture2DArray>;
 
 using Texture3D = Texture<TextureTarget::TEXTURE_3D>;
-using Texture3DInstance = Manager<Texture3D>::Instance;
-using Texture3DManager = Manager<Texture3D>;
+using Texture3DInstance = Core::Manager<Texture3D>::Instance;
+using Texture3DManager = Core::Manager<Texture3D>;
 
 using TextureCubeMap = Texture<TextureTarget::TEXTURE_CUBE_MAP>;
-using TextureCubeMapInstance = Manager<TextureCubeMap>::Instance;
-using TextureCubeMapManager = Manager<TextureCubeMap>;
+using TextureCubeMapInstance = Core::Manager<TextureCubeMap>::Instance;
+using TextureCubeMapManager = Core::Manager<TextureCubeMap>;
 
 }
 
