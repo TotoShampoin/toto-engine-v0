@@ -1,6 +1,6 @@
 #include <TotoEngine/TotoEngine.hpp>
+#include "level1.hpp"
 
-#include "TotoEngine/Math/Primitives.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -9,49 +9,9 @@ namespace Test_Physics {
 
 using namespace TotoEngine;
 
-// Level 1: Hard coded coordinates
 // TODO(Physics): Level 2: Depend on Transforms for flexible collisions
-struct Sphere {
-    float radius;
-    Math::Vector3 center {};
-};
-struct AABB {
-    Math::Vector3 position {};
-    Math::Vector3 size {};
 
-    Math::Vector3 min() const {
-        return position - size / 2.f;
-    }
-    Math::Vector3 max() const {
-        return position + size / 2.f;
-    }
-};
-bool collides(const Sphere& a, const Sphere& b) {
-    auto distance = glm::distance(a.center, b.center);
-    return distance < a.radius + b.radius;
-}
-bool collides(const AABB& a, const AABB& b) {
-    Math::Vector3 a_min = a.min();
-    Math::Vector3 a_max = a.max();
-    Math::Vector3 b_min = b.min();
-    Math::Vector3 b_max = b.max();
-    for(int i = 0; i < 3; i++) {
-        if(a_max[i] < b_min[i] || a_min[i] > b_max[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-bool collides(const Sphere& a, const AABB& b) {
-    Math::Vector3 closest_point = b.position;
-    for(int i = 0; i < 3; i++) {
-        closest_point[i] = glm::clamp(a.center[i], b.min()[i], b.max()[i]);
-    }
-    return glm::distance(a.center, closest_point) < a.radius;
-}
-bool collides(const AABB& a, const Sphere& b) { return collides(b, a); }
-
-void renderSphere(const Graphics::Camera& camera, const Sphere& sphere, const Math::ColorRGB& color = {1, 1, 1}) {
+void renderSphere(const Graphics::Camera& camera, const Level1::Sphere& sphere, const Math::ColorRGB& color = {1, 1, 1}) {
     static auto material = Graphics::BasicMaterial();
     static auto mesh = Graphics::sphere(1, 32, 16);
     static auto transform = Math::Transform();
@@ -65,7 +25,7 @@ void renderSphere(const Graphics::Camera& camera, const Sphere& sphere, const Ma
     material.apply();
     Graphics::Renderer::draw(mesh);
 }
-void renderAABB(const Graphics::Camera& camera, const AABB& aabb, const Math::ColorRGB& color = {1, 1, 1}) {
+void renderAABB(const Graphics::Camera& camera, const Level1::AABB& aabb, const Math::ColorRGB& color = {1, 1, 1}) {
     static auto material = Graphics::BasicMaterial();
     static auto mesh = Graphics::cube(1, 1, 1);
     static auto transform = Math::Transform();
@@ -96,10 +56,10 @@ void renderFloor(const Graphics::Camera& camera) {
 
 struct TestData {
     Graphics::Camera camera {glm::perspective(70.f, (float)800/600, .1f, 100.f)};
-    Sphere hitbox_a {2};
-    Sphere hitbox_b {3};
-    AABB hitbox_c {};
-    AABB hitbox_d {};
+    Level1::Sphere hitbox_a {2};
+    Level1::Sphere hitbox_b {3};
+    Level1::AABB hitbox_c {};
+    Level1::AABB hitbox_d {};
 
     float time {0};
 };
