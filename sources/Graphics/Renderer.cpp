@@ -60,9 +60,8 @@ void Renderer::apply(ShaderProgram& program, const Camera& camera, const std::ve
                 glm::vec3(camera.viewMatrix() * glm::vec4(light.position(), 1)));
         }
         else if(light.type() == LightType::DIRECTIONAL) {
-            Math::Vector3 direction = light.rotationMatrix() * Math::Vector4(0.0f, 0.0f, 1.0f, 0.0f);
             program.uniform(std::format("u_lights[{}].pos_or_dir", index),
-                camera.viewNormalMatrix() * direction);
+                camera.viewNormalMatrix() * light.direction());
         }
     }
 }

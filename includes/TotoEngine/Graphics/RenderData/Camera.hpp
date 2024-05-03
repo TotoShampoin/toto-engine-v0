@@ -8,7 +8,7 @@ namespace TotoEngine {
 
 namespace Graphics {
 
-class Camera : public Math::Transformed {
+class Camera : private Math::Transform {
 public:
     Camera(const Math::Matrix4& projection_matrix):
         _projection_matrix(projection_matrix)
@@ -23,6 +23,15 @@ public:
 
     Math::Matrix4& projectionMatrix() { return _projection_matrix; }
     const Math::Matrix4& projectionMatrix() const { return _projection_matrix; }
+
+    using Math::Transform::translate;
+    using Math::Transform::rotate;
+    using Math::Transform::lookAt;
+    using Math::Transform::matrix;
+    using Math::Transform::position;
+    using Math::Transform::rotation;
+    using Math::Transform::translationMatrix;
+    using Math::Transform::rotationMatrix;
 private:
     Math::Matrix4 _projection_matrix;
 };

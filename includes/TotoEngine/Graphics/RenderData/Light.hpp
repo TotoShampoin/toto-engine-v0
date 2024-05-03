@@ -15,13 +15,17 @@ enum class LightType {
     AREA = 4,
 };
 
-class Light : public Math::Transformed {
+class Light : private Math::Transform {
 public:
     Light(
         const LightType& type = LightType::POINT,
         const Math::ColorRGB& color = Math::ColorRGB(1.0f, 1.0f, 1.0f),
         const float& intensity = 1.0f
     ) : _type(type), _color(color), _intensity(intensity) {}
+
+    [[nodiscard]] glm::vec3 direction() const {
+        return rotationMatrix() * Math::Vector4(0.0f, 0.0f, 1.0f, 0.0f);
+    }
 
     [[nodiscard]] LightType& type() { return _type; }
     [[nodiscard]] Math::ColorRGB& color() { return _color; }
@@ -30,6 +34,15 @@ public:
     [[nodiscard]] LightType type() const { return _type; }
     [[nodiscard]] Math::ColorRGB color() const { return _color; }
     [[nodiscard]] float intensity() const { return _intensity; }
+
+    using Math::Transform::translate;
+    using Math::Transform::rotate;
+    using Math::Transform::lookAt;
+    using Math::Transform::matrix;
+    using Math::Transform::position;
+    using Math::Transform::rotation;
+    using Math::Transform::translationMatrix;
+    using Math::Transform::rotationMatrix;
 private:
     LightType _type;
     Math::ColorRGB _color;
