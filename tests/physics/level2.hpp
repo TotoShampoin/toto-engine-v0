@@ -13,7 +13,7 @@ using namespace TotoEngine;
 
 // Level 2: Transformed hitboxes
 // Full transforms not supported
-// TODO(Physics): Find a way to use scaling on spheres
+// TODO(Physics): Find a way to use scaling on spheres (might be impossible)
 namespace Level2 {
 
 class Sphere : private Math::Transform {
