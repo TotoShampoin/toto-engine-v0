@@ -10,17 +10,19 @@
 
 namespace TotoEngine {
 
-void Math::Transform::translate(const Math::Vector3& translation) {
+namespace Math {
+
+void Transform::translate(const Vector3& translation) {
     _position += translation;
 }
-void Math::Transform::rotate(const float& angle, const Math::Vector3& axis) {
+void Transform::rotate(const float& angle, const Vector3& axis) {
     auto rotated = glm::rotate(rotationMatrix(), angle, axis);
     glm::extractEulerAngleXYZ(rotated, _rotation.x, _rotation.y, _rotation.z);
 }
-void Math::Transform::scale(const Math::Vector3& factor) {
+void Transform::scale(const Vector3& factor) {
     _scale *= factor;
 }
-void Math::Transform::lookAt(const Math::Vector3& target, const Math::Vector3& up) {
+void Transform::lookAt(const Vector3& target, const Vector3& up) {
     if(target == _position)
         return;
     auto direction = glm::normalize(target - _position);
@@ -34,19 +36,24 @@ void Math::Transform::lookAt(const Math::Vector3& target, const Math::Vector3& u
     glm::extractEulerAngleXYZ(rotation, _rotation.x, _rotation.y, _rotation.z);
 }
 
-Math::Matrix4 Math::Transform::matrix() const {
+Matrix4 Transform::matrix() const {
     return translationMatrix() * rotationMatrix() * scaleMatrix();
 }
-Math::Matrix4 Math::Transform::translationMatrix() const {
+Matrix4 Transform::inverseMatrix() const {
+    return glm::inverse(matrix());
+}
+Matrix4 Transform::translationMatrix() const {
     return glm::translate(glm::mat4(1.0f), _position);
 }
-Math::Matrix4 Math::Transform::rotationMatrix() const {
+Matrix4 Transform::rotationMatrix() const {
     return glm::rotate(glm::mat4(1.0f), _rotation.x, {1.0f, 0.0f, 0.0f}) *
            glm::rotate(glm::mat4(1.0f), _rotation.y, {0.0f, 1.0f, 0.0f}) *
            glm::rotate(glm::mat4(1.0f), _rotation.z, {0.0f, 0.0f, 1.0f});
 }
-Math::Matrix4 Math::Transform::scaleMatrix() const {
+Matrix4 Transform::scaleMatrix() const {
     return glm::scale(glm::mat4(1.0f), _scale);
+}
+
 }
 
 }

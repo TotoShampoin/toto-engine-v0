@@ -15,7 +15,7 @@ public:
     {}
 
     Math::Matrix4 viewMatrix() const {
-        return glm::inverse(matrix());
+        return inverseMatrix();
     }
     Math::Matrix3 viewNormalMatrix() const {
         return Math::Matrix3(glm::transpose(matrix()));

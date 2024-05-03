@@ -14,6 +14,7 @@ public:
     void lookAt(const Vector3&, const Vector3& up = {0.0f, 1.0f, 0.0f});
 
     Matrix4 matrix() const;
+    Matrix4 inverseMatrix() const;
     Matrix4 translationMatrix() const;
     Matrix4 rotationMatrix() const;
     Matrix4 scaleMatrix() const;
