@@ -48,6 +48,36 @@ inline bool collides(const Sphere& a, const AABB& b) {
 }
 inline bool collides(const AABB& a, const Sphere& b) { return collides(b, a); }
 
+
+inline void renderSphere(const Graphics::Camera& camera, const Level1::Sphere& sphere, const Math::ColorRGB& color = {1, 1, 1}) {
+    static auto material = Graphics::BasicMaterial();
+    static auto mesh = Graphics::sphere(1, 32, 16);
+    static auto transform = Math::Transform();
+
+    transform.position() = sphere.center;
+    transform.scale() = Math::Vector3(sphere.radius);
+    material.color = color;
+
+    Graphics::Renderer::bind(mesh, material.shader());
+    Graphics::Renderer::apply(material.shader(), camera, transform);
+    material.apply();
+    Graphics::Renderer::draw(mesh);
+}
+inline void renderAABB(const Graphics::Camera& camera, const Level1::AABB& aabb, const Math::ColorRGB& color = {1, 1, 1}) {
+    static auto material = Graphics::BasicMaterial();
+    static auto mesh = Graphics::cube(1, 1, 1);
+    static auto transform = Math::Transform();
+
+    transform.position() = aabb.position;
+    transform.scale() = aabb.size;
+    material.color = color;
+
+    Graphics::Renderer::bind(mesh, material.shader());
+    Graphics::Renderer::apply(material.shader(), camera, transform);
+    material.apply();
+    Graphics::Renderer::draw(mesh);
+}
+
 }
 
 }

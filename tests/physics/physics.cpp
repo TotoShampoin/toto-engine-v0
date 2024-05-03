@@ -1,5 +1,6 @@
 #include <TotoEngine/TotoEngine.hpp>
-#include "level1.hpp"
+#include "TotoEngine/Math/Primitives.hpp"
+#include "level2.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -9,37 +10,7 @@ namespace Test_Physics {
 
 using namespace TotoEngine;
 
-// TODO(Physics): Level 2: Depend on Transforms for flexible collisions
-
-void renderSphere(const Graphics::Camera& camera, const Level1::Sphere& sphere, const Math::ColorRGB& color = {1, 1, 1}) {
-    static auto material = Graphics::BasicMaterial();
-    static auto mesh = Graphics::sphere(1, 32, 16);
-    static auto transform = Math::Transform();
-
-    transform.position() = sphere.center;
-    transform.scale() = Math::Vector3(sphere.radius);
-    material.color = color;
-
-    Graphics::Renderer::bind(mesh, material.shader());
-    Graphics::Renderer::apply(material.shader(), camera, transform);
-    material.apply();
-    Graphics::Renderer::draw(mesh);
-}
-void renderAABB(const Graphics::Camera& camera, const Level1::AABB& aabb, const Math::ColorRGB& color = {1, 1, 1}) {
-    static auto material = Graphics::BasicMaterial();
-    static auto mesh = Graphics::cube(1, 1, 1);
-    static auto transform = Math::Transform();
-
-    transform.position() = aabb.position;
-    transform.scale() = aabb.size;
-    material.color = color;
-
-    Graphics::Renderer::bind(mesh, material.shader());
-    Graphics::Renderer::apply(material.shader(), camera, transform);
-    material.apply();
-    Graphics::Renderer::draw(mesh);
-}
-void renderFloor(const Graphics::Camera& camera) {
+inline void renderFloor(const Graphics::Camera& camera) {
     static auto mesh = Graphics::plane(25, 25);
     static auto material = Graphics::BasicMaterial();
     static auto transform = Math::Transform();
@@ -56,10 +27,10 @@ void renderFloor(const Graphics::Camera& camera) {
 
 struct TestData {
     Graphics::Camera camera {glm::perspective(70.f, (float)800/600, .1f, 100.f)};
-    Level1::Sphere hitbox_a {2};
-    Level1::Sphere hitbox_b {3};
-    Level1::AABB hitbox_c {};
-    Level1::AABB hitbox_d {};
+    Level2::Sphere hitbox_a {2};
+    Level2::Sphere hitbox_b {3};
+    Level2::Box hitbox_c {};
+    Level2::Box hitbox_d {};
 
     float time {0};
 };
@@ -87,10 +58,10 @@ void render(Core::Window& window, TestData& data) {
     Graphics::Renderer::clear();
 
     renderFloor(data.camera);
-    renderSphere(data.camera, data.hitbox_a, {1, 0, 0});
-    renderSphere(data.camera, data.hitbox_b, {0, 0, 1});
-    renderAABB(data.camera, data.hitbox_c, {0, 1, 0});
-    renderAABB(data.camera, data.hitbox_d, {1, 1, 0});
+    Level2::renderSphere(data.camera, data.hitbox_a, {1, 0, 0});
+    Level2::renderSphere(data.camera, data.hitbox_b, collides(data.hitbox_b, data.hitbox_d) ? Math::Vector3(1, 0, 1) : Math::Vector3(0, 0, 1));
+    Level2::renderBox(data.camera, data.hitbox_c, collides(data.hitbox_c, data.hitbox_d) ? Math::Vector3(0, 1, 1) : Math::Vector3(0, 1, 0));
+    Level2::renderBox(data.camera, data.hitbox_d, {1, 1, 0});
 
     renderImgui(window, data);
     Core::Window::swapBuffers(window);
@@ -99,11 +70,12 @@ void render(Core::Window& window, TestData& data) {
 void physics(TestData& data) {
     auto rotated_pos_1 = glm::cos(glm::radians(data.time * 10));
     auto rotated_pos_2 = glm::sin(glm::radians(data.time * 10));
-    data.camera.position() = {5, -2.5, 20};
+    data.camera.position() = {5, 2.5, 20};
     data.camera.lookAt({0, 0, 0});
 
-    data.hitbox_a.center = Math::Vector3(rotated_pos_1, 0, -rotated_pos_1) * 10.f;
-    data.hitbox_d.position = Math::Vector3(3, rotated_pos_2 * 5, 3);
+    data.hitbox_a.position() = Math::Vector3(rotated_pos_1, 0, -rotated_pos_1) * 10.f;
+    data.hitbox_d.position() = Math::Vector3(3, rotated_pos_2 * 5, 3);
+    data.hitbox_d.rotation() = {data.time / 2, data.time / 3, data.time / 5};
 }
 
 int test_physics() {
@@ -117,12 +89,12 @@ int test_physics() {
 
     auto data = TestData();
 
-    data.hitbox_a.center = {5, 0, 0};
-    data.hitbox_b.center = {0, 0, 0};
-    data.hitbox_c.position = {5, -1, 5};
-    data.hitbox_c.size = {2, 2, 2};
-    data.hitbox_d.position = {5, 3, 5};
-    data.hitbox_d.size = {4, 3, 4};
+    data.hitbox_a.position() = {5, 0, 0};
+    data.hitbox_b.position() = {0, 0, 0};
+    data.hitbox_c.position() = {5, -1, 5};
+    data.hitbox_c.size() = {2, 2, 2};
+    data.hitbox_d.position() = {3, 2, 3};
+    data.hitbox_d.size() = {5, 3, 5};
 
     Graphics::Renderer::enable(GL_DEPTH_TEST);
     while(!window.shouldClose()) {
