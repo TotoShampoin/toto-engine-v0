@@ -7,4 +7,5 @@
 #include <TotoEngine/Core/LibObject.hpp>
 #include <TotoEngine/Core/Instantiation.hpp>
 #include <TotoEngine/Core/Window.hpp>
+#include <TotoEngine/Core/Logger.hpp>
 
