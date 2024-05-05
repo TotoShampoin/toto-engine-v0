@@ -13,6 +13,11 @@ public:
     void scale(const Vector3&);
     void lookAt(const Vector3&, const Vector3& up = {0.0f, 1.0f, 0.0f});
 
+    static Transform fromMatrix(const Matrix4&);
+
+    Transform applied(const Transform&) const;
+    Transform inverse() const;
+
     Matrix4 matrix() const;
     Matrix4 inverseMatrix() const;
     Matrix4 translationMatrix() const;

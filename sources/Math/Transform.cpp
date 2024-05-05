@@ -36,6 +36,21 @@ void Transform::lookAt(const Vector3& target, const Vector3& up) {
     glm::extractEulerAngleXYZ(rotation, _rotation.x, _rotation.y, _rotation.z);
 }
 
+Transform Transform::fromMatrix(const Matrix4& matrix) {
+    Transform transform;
+    glm::extractEulerAngleXYZ(matrix, transform._rotation.x, transform._rotation.y, transform._rotation.z);
+    transform._position = matrix[3];
+    transform._scale = glm::vec3(glm::length(matrix[0]), glm::length(matrix[1]), glm::length(matrix[2]));
+    return transform;
+}
+
+Transform Transform::applied(const Transform& other) const {
+    return Transform::fromMatrix(matrix() * other.matrix());
+}
+Transform Transform::inverse() const {
+    return Transform::fromMatrix(inverseMatrix());
+}
+
 Matrix4 Transform::matrix() const {
     return translationMatrix() * rotationMatrix() * scaleMatrix();
 }
