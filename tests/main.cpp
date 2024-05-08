@@ -2,6 +2,7 @@ namespace Test_Deferred {
 int test_deferred();
 }
 namespace Test_Physics {
+int test_physics_beta();
 int test_physics();
 }
 
