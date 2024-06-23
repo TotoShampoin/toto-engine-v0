@@ -5,6 +5,7 @@
 #include "TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp"
 #include "impl/shaders/hdri.vert.hpp"
 #include "impl/shaders/hdri.frag.hpp"
+#include <GL/gl.h>
 
 namespace TotoEngine {
 
@@ -20,8 +21,8 @@ void Renderer::drawHDRi(const Texture2D& hdri_texture, const Camera& camera) {
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::draw(const GeometryBuffer &geometry_buffer) {
-    glDrawElements(GL_TRIANGLES, geometry_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
+void Renderer::draw(const GeometryBuffer &geometry_buffer, const GLenum& mode) {
+    glDrawElements(mode, geometry_buffer.indexCount(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Renderer::bind(const GeometryBuffer &geometry_buffer, const ShaderProgram &shader) {
@@ -59,9 +60,8 @@ void Renderer::apply(ShaderProgram& program, const Camera& camera, const std::ve
                 glm::vec3(camera.viewMatrix() * glm::vec4(light.position(), 1)));
         }
         else if(light.type() == LightType::DIRECTIONAL) {
-            Math::Vector3 direction = light.rotationMatrix() * Math::Vector4(0.0f, 0.0f, 1.0f, 0.0f);
             program.uniform(std::format("u_lights[{}].pos_or_dir", index),
-                camera.viewNormalMatrix() * direction);
+                camera.viewNormalMatrix() * light.direction());
         }
     }
 }
@@ -87,6 +87,25 @@ std::pair<GeometryBuffer&, ShaderProgram&> Renderer::HDRImodel() {
         FragmentShaderFile(hdri_frag)
     );
     return {hdri_model, hdri_shader};
+}
+
+void Renderer::clear(bool color, bool depth, bool stencil) {
+    glClear((color ? GL_COLOR_BUFFER_BIT : 0) | (depth ? GL_DEPTH_BUFFER_BIT : 0) | (stencil ? GL_STENCIL_BUFFER_BIT : 0));
+}
+void Renderer::clearColor(TotoEngine::Math::ColorRGBA color) {
+    glClearColor(color.r, color.g, color.b, color.a);
+}
+
+void Renderer::enable(GLenum cap) {
+    glEnable(cap);
+}
+
+void Renderer::disable(GLenum cap) {
+    glDisable(cap);
+}
+
+void Renderer::init() {
+    glewInit();
 }
 
 }

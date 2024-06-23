@@ -80,6 +80,12 @@ public:
 };
 
 struct Material {
+    Material(BasicMaterial& material): data(material) {}
+    Material(PositionMaterial& material): data(material) {}
+    Material(DepthMaterial& material): data(material) {}
+    Material(NormalMaterial& material): data(material) {}
+    Material(PhongMaterial& material): data(material) {}
+
     std::variant<
         std::reference_wrapper<BasicMaterial>,
         std::reference_wrapper<PositionMaterial>,
