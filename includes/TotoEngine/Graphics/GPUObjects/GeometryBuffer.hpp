@@ -3,23 +3,18 @@
 #include <GL/glew.h>
 
 #include <TotoEngine/Core/Aliases.hpp>
-#include <TotoEngine/Math/Primitives.hpp>
 #include <TotoEngine/Core/Instantiation.hpp>
 #include <TotoEngine/Core/LibObject.hpp>
+#include <TotoEngine/Graphics/GPUObjects/Allocators.hpp>
+#include <TotoEngine/Math/Primitives.hpp>
 #include <vector>
 
 namespace TotoEngine {
 
 namespace Graphics {
 
-using GLBuffer = Core::LibObject<
-    [] { GLuint id; glGenBuffers(1, &id); return id; },
-    [](GLuint& id) { glDeleteBuffers(1, &id); }
->;
-using GLVertexArray = Core::LibObject<
-    [] { GLuint id; glGenVertexArrays(1, &id); return id; },
-    [](GLuint& id) { glDeleteVertexArrays(1, &id); }
->;
+using GLBuffer = Core::LibObject<createBuffer, deleteBuffer>;
+using GLVertexArray = Core::LibObject<createVertexArray, deleteVertexArray>;
 
 struct Vertex {
     Math::Vector3 position;
@@ -51,6 +46,7 @@ public:
     [[nodiscard]] const std::vector<GLuint>& indices() const { return _indices; }
     [[nodiscard]] GLenum cullFace() const { return _cull_face; }
     [[nodiscard]] GLenum drawMode() const { return _draw_mode; }
+
 private:
     GLBuffer _vbo;
     GLBuffer _ibo;
@@ -65,6 +61,6 @@ private:
 using GeometryBufferInstance = Core::Manager<GeometryBuffer>::Instance;
 using GeometryBufferManager = Core::Manager<GeometryBuffer>;
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

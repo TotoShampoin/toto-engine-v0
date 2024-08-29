@@ -1,23 +1,21 @@
 #pragma once
 
 #include <GL/glew.h>
+
+#include <TotoEngine/Math/Primitives.hpp>
 #include <format>
 #include <iostream>
-// #include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <variant>
-#include <TotoEngine/Math/Primitives.hpp>
 
 namespace TotoEngine {
 
 namespace Graphics {
 
 using UniformVariant = std::variant<
-    bool, int, uint, float, double, 
-    Math::Vector2, Math::Vector3, Math::Vector4,
-    Math::Matrix2, Math::Matrix3, Math::Matrix4
->;
+    bool, int, uint, float, double, Math::Vector2, Math::Vector3, Math::Vector4, Math::Matrix2, Math::Matrix3,
+    Math::Matrix4>;
 
 struct UniformVisitor {
     void operator()(const bool& value) const { glUniform1i(location, value); }
@@ -37,15 +35,14 @@ struct UniformVisitor {
 
 class Uniform {
 private:
-    Uniform(const GLint& program):
-        _program(program)
-    {}
+    Uniform(const GLint& program)
+        : _program(program) {}
     ~Uniform() = default;
 
     void operator()(const std::string& name, const UniformVariant& value) {
-        if(_uniforms.find(name) == _uniforms.end()) {
+        if (_uniforms.find(name) == _uniforms.end()) {
             GLint location = glGetUniformLocation(_program, name.c_str());
-            if(location == -1) {
+            if (location == -1) {
                 std::cerr << std::format("Warning: Uniform '{}' not found in shader program\n", name);
                 // throw std::runtime_error(std::format("ERROR::SHADER::UNIFORM::NOT_FOUND ({})", name));
             }
@@ -60,6 +57,6 @@ private:
     friend class ShaderProgram;
 };
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

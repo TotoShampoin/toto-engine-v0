@@ -8,7 +8,7 @@ namespace TotoEngine {
 namespace Graphics {
 
 void ShaderProgram::use(const optional_ref<const ShaderProgram>& program) {
-    if(!program.has_value()) {
+    if (!program.has_value()) {
         glUseProgram(0);
         return;
     }
@@ -24,7 +24,7 @@ void ShaderProgram::linkProgram() {
     int success;
     char info_log[512];
     glGetProgramiv(_program, GL_LINK_STATUS, &success);
-    if(!success) {
+    if (!success) {
         glGetProgramInfoLog(_program, 512, nullptr, info_log);
         throw std::runtime_error(std::format("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}", info_log));
     }
@@ -34,6 +34,6 @@ void ShaderProgram::uniform(const std::string& name, const UniformVariant& value
     _uniform(name, value);
 }
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

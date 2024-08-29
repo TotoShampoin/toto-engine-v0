@@ -1,14 +1,16 @@
 #pragma once
 
+#include <GL/glew.h>
+
+#include <TotoEngine/Core/Window.hpp>
+#include <TotoEngine/Graphics/GPUObjects/FrameBuffer.hpp>
 #include <TotoEngine/Graphics/GPUObjects/GeometryBuffer.hpp>
 #include <TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp>
-#include <TotoEngine/Graphics/GPUObjects/FrameBuffer.hpp>
 #include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
 #include <TotoEngine/Graphics/RenderData/Camera.hpp>
 #include <TotoEngine/Graphics/RenderData/Light.hpp>
 #include <TotoEngine/Math/Primitives.hpp>
 #include <TotoEngine/Math/Transform.hpp>
-#include <TotoEngine/Core/Window.hpp>
 #include <functional>
 #include <utility>
 #include <vector>
@@ -37,10 +39,11 @@ public:
     static void disable(GLenum);
 
     static void init();
+
 private:
     static std::pair<GeometryBuffer&, ShaderProgram&> HDRImodel();
 };
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

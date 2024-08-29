@@ -42,7 +42,7 @@ int test_deferred() {
     auto screen_model = Mesh { TotoEngine::Graphics::plane(2, 2) };
     auto plane_model = Mesh { TotoEngine::Graphics::cube(2, 2, 2) };
     auto sphere_model = Mesh { TotoEngine::Graphics::sphere(1, 32, 16)  };
-    auto amb_light = TotoEngine::Graphics::Light(AMBIENT, TotoEngine::Math::ColorRGB(1, 1, 1), 0.33333f);
+    // auto amb_light = TotoEngine::Graphics::Light(AMBIENT, TotoEngine::Math::ColorRGB(1, 1, 1), 0.33333f);
     auto dir_light = TotoEngine::Graphics::Light(DIRECTIONAL, TotoEngine::Math::ColorRGB(1, 1, 1), 1);
     auto pt_light = TotoEngine::Graphics::Light(POINT, TotoEngine::Math::ColorRGB(1, 1, 1), 2);
     screen_model.transform.position() = {0, 0, -1};

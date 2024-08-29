@@ -7,6 +7,7 @@
 
 #include <TotoEngine/Core/Aliases.hpp>
 #include <TotoEngine/Core/Instantiation.hpp>
+#include <TotoEngine/Graphics/GPUObjects/Allocators.hpp>
 #include <TotoEngine/Graphics/GPUObjects/ShaderFile.hpp>
 #include <TotoEngine/Graphics/GPUObjects/Uniforms.hpp>
 
@@ -14,26 +15,23 @@ namespace TotoEngine {
 
 namespace Graphics {
 
-using GLProgram = Core::LibObject<
-    [] { return glCreateProgram(); },
-    [](GLuint& id) { glDeleteProgram(id); }
->;
+using GLProgram = Core::LibObject<createProgram, deleteProgram>;
 
 class ShaderProgram {
 public:
     template <typename... Shaders>
-    ShaderProgram(const Shaders&... shaders):
-        _program(),
-        _uniform(_program)
-    {
-        static_assert((
-            (std::is_base_of_v<ShaderFile<ShaderType::VERTEX>, Shaders> ||
-            std::is_base_of_v<ShaderFile<ShaderType::FRAGMENT>, Shaders> ||
-            std::is_base_of_v<ShaderFile<ShaderType::GEOMETRY>, Shaders> ||
-            std::is_base_of_v<ShaderFile<ShaderType::TESS_CONTROL>, Shaders> ||
-            std::is_base_of_v<ShaderFile<ShaderType::TESS_EVALUATION>, Shaders> ||
-            std::is_base_of_v<ShaderFile<ShaderType::COMPUTE>, Shaders>)
-            && ...));
+    ShaderProgram(const Shaders&... shaders)
+        : _program(),
+          _uniform(_program) {
+        static_assert(
+            ((std::is_base_of_v<ShaderFile<ShaderType::VERTEX>, Shaders> ||
+              std::is_base_of_v<ShaderFile<ShaderType::FRAGMENT>, Shaders> ||
+              std::is_base_of_v<ShaderFile<ShaderType::GEOMETRY>, Shaders> ||
+              std::is_base_of_v<ShaderFile<ShaderType::TESS_CONTROL>, Shaders> ||
+              std::is_base_of_v<ShaderFile<ShaderType::TESS_EVALUATION>, Shaders> ||
+              std::is_base_of_v<ShaderFile<ShaderType::COMPUTE>, Shaders>) &&
+             ...)
+        );
         (attachShader(shaders.shader()), ...);
         linkProgram();
     }
@@ -46,6 +44,7 @@ public:
 
     [[nodiscard]] GLuint program() const { return _program; }
     [[nodiscard]] Uniform& uniform() { return _uniform; }
+
 private:
     GLProgram _program;
     Uniform _uniform;
@@ -59,6 +58,6 @@ private:
 using ShaderProgramInstance = Core::Manager<ShaderProgram>::Instance;
 using ShaderProgramManager = Core::Manager<ShaderProgram>;
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

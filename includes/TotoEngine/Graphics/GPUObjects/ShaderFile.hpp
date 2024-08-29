@@ -1,7 +1,8 @@
 #pragma once
 
-#include <TotoEngine/Core/LibObject.hpp>
 #include <GL/glew.h>
+
+#include <TotoEngine/Core/LibObject.hpp>
 
 #include <format>
 #include <stdexcept>
@@ -20,33 +21,38 @@ enum class ShaderType {
     COMPUTE = GL_COMPUTE_SHADER,
 };
 inline constexpr std::string shaderTypeToString(ShaderType type) {
-    switch(type) {
-        case ShaderType::VERTEX: return "VERTEX";
-        case ShaderType::FRAGMENT: return "FRAGMENT";
-        case ShaderType::GEOMETRY: return "GEOMETRY";
-        case ShaderType::TESS_CONTROL: return "TESS_CONTROL";
-        case ShaderType::TESS_EVALUATION: return "TESS_EVALUATION";
-        case ShaderType::COMPUTE: return "COMPUTE";
+    switch (type) {
+    case ShaderType::VERTEX: return "VERTEX";
+    case ShaderType::FRAGMENT: return "FRAGMENT";
+    case ShaderType::GEOMETRY: return "GEOMETRY";
+    case ShaderType::TESS_CONTROL: return "TESS_CONTROL";
+    case ShaderType::TESS_EVALUATION: return "TESS_EVALUATION";
+    case ShaderType::COMPUTE: return "COMPUTE";
     }
     return "UNKNOWN";
 }
 
 template <ShaderType TYPE>
-class GLShader : public Core::LibObject<
-    [] { return glCreateShader(static_cast<GLenum>(TYPE)); },
-    [](GLuint& id) { glDeleteShader(id); }
-> {};
+GLuint createShader() {
+    return glCreateShader(static_cast<GLenum>(TYPE));
+}
+template <ShaderType TYPE>
+void deleteShader(GLuint& id) {
+    glDeleteShader(id);
+}
+
+template <ShaderType TYPE>
+class GLShader : public Core::LibObject<createShader<TYPE>, deleteShader<TYPE>> {};
 
 template <ShaderType TYPE>
 class ShaderFile {
 public:
-    ShaderFile(const std::string& shader_source) {
-        loadAndCompile(shader_source);
-    }
+    ShaderFile(const std::string& shader_source) { loadAndCompile(shader_source); }
 
     ~ShaderFile() = default;
 
     [[nodiscard]] GLuint shader() const { return _shader; }
+
 private:
     GLShader<TYPE> _shader;
 
@@ -57,9 +63,11 @@ private:
         int success;
         char info_log[512];
         glGetShaderiv(_shader, GL_COMPILE_STATUS, &success);
-        if(!success) {
+        if (!success) {
             glGetShaderInfoLog(_shader, 512, nullptr, info_log);
-            throw std::runtime_error(std::format("ERROR::SHADER::{}::COMPILATION_FAILED\n{}", shaderTypeToString(TYPE), info_log));
+            throw std::runtime_error(
+                std::format("ERROR::SHADER::{}::COMPILATION_FAILED\n{}", shaderTypeToString(TYPE), info_log)
+            );
         }
     }
 };
@@ -71,6 +79,6 @@ using TessControlShaderFile = ShaderFile<ShaderType::TESS_CONTROL>;
 using TessEvaluationShaderFile = ShaderFile<ShaderType::TESS_EVALUATION>;
 using ComputeShaderFile = ShaderFile<ShaderType::COMPUTE>;
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

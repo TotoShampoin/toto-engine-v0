@@ -34,6 +34,6 @@ Window::~Window() {
     glfwDestroyWindow(_glfw_window);
 }
 
-}
+} // namespace Core
 
-}
+} // namespace TotoEngine

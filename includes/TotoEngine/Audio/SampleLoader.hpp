@@ -1,8 +1,8 @@
 #pragma once
 
 #include <AL/al.h>
-#include <vector>
 #include <filesystem>
+#include <vector>
 
 #include <TotoEngine/Audio/Sample.hpp>
 
@@ -25,6 +25,6 @@ WaveformAudioFile loadWavefile(const std::filesystem::path& path);
 
 Sample loadSample(const std::filesystem::path& path);
 
-}
+} // namespace Audio
 
-}
+} // namespace TotoEngine

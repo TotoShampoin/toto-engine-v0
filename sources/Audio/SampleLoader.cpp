@@ -17,28 +17,28 @@ void loadWavefileHeader(std::ifstream& file, WaveformAudioFile& wav) {
 
     auto read_n_bytes = [&](int n, const std::string& step = "") {
         assert(n <= 4 && "DON'T LOAD MORE THAN 4 BYTES");
-        if(!file.read(buffer, n))
+        if (!file.read(buffer, n))
             throw std::runtime_error(std::format("ERROR: invalid WAVE file ({})", step));
         buffer[n] = '\0';
     };
     auto bytes_to_int = [&](std::size_t len) {
         std::int32_t a = 0;
-        if(std::endian::native == std::endian::little)
+        if (std::endian::native == std::endian::little)
             std::memcpy(&a, buffer, len);
         else
-            for(std::size_t i = 0; i < len; ++i)
+            for (std::size_t i = 0; i < len; ++i)
                 reinterpret_cast<char*>(&a)[3 - i] = buffer[i];
         return a;
     };
 
-    if(!file.is_open())
+    if (!file.is_open())
         throw std::runtime_error("Couldn't open the file");
     read_n_bytes(4, "RIFF");
-    if(std::strncmp(buffer, "RIFF", 4))
+    if (std::strncmp(buffer, "RIFF", 4))
         throw std::runtime_error("ERROR: invalid WAVE file");
     read_n_bytes(4, "File size");
     read_n_bytes(4, "WAVE");
-    if(std::strncmp(buffer, "WAVE", 4))
+    if (std::strncmp(buffer, "WAVE", 4))
         throw std::runtime_error("ERROR: invalid WAVE file");
     read_n_bytes(4, "Format chunk marker");
     read_n_bytes(4, "FMT length");
@@ -51,18 +51,10 @@ void loadWavefileHeader(std::ifstream& file, WaveformAudioFile& wav) {
     read_n_bytes(2, "Format");
     int format = bytes_to_int(2);
     switch (format) {
-        case 1:
-            wav.header.format = AL_FORMAT_MONO8;
-            break;
-        case 2:
-            wav.header.format = AL_FORMAT_STEREO8;
-            break;
-        case 3:
-            wav.header.format = AL_FORMAT_MONO16;
-            break;
-        case 4:
-            wav.header.format = AL_FORMAT_STEREO16;
-            break;
+    case 1: wav.header.format = AL_FORMAT_MONO8; break;
+    case 2: wav.header.format = AL_FORMAT_STEREO8; break;
+    case 3: wav.header.format = AL_FORMAT_MONO16; break;
+    case 4: wav.header.format = AL_FORMAT_STEREO16; break;
     }
     read_n_bytes(2, "Bits per sample");
     wav.header.bits_per_sample = bytes_to_int(2);
@@ -85,8 +77,10 @@ WaveformAudioFile loadWavefile(const std::filesystem::path& path) {
 
 Sample loadSample(const std::filesystem::path& path) {
     std::string extension = path.extension();
-    std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c){ return std::tolower(c); });
-    if(extension == ".wav") {
+    std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) {
+        return std::tolower(c);
+    });
+    if (extension == ".wav") {
         auto wav = loadWavefile(path);
         return Sample(wav.header.format, wav.data.data(), wav.size, wav.header.sample_rate);
     }
@@ -94,6 +88,6 @@ Sample loadSample(const std::filesystem::path& path) {
     throw std::runtime_error(std::format("Unknown format: {}", extension));
 }
 
-}
+} // namespace Audio
 
-}
+} // namespace TotoEngine

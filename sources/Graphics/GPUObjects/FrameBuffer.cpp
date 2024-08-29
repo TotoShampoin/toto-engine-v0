@@ -9,16 +9,18 @@ namespace Graphics {
 
 TextureFormat getNonFloatFormat(TextureFormat format) {
     switch (format) {
-        case TextureFormat::RGB32F: return TextureFormat::RGB;
-        case TextureFormat::RGBA32F: return TextureFormat::RGBA;
-        default: return format;
+    case TextureFormat::RGB32F: return TextureFormat::RGB;
+    case TextureFormat::RGBA32F: return TextureFormat::RGBA;
+    default: return format;
     }
 }
 
-FrameBuffer::FrameBuffer(int width, int height, std::vector<TextureFormat> format):
-    _frame_buffer(), _render_buffers(),
-    _textures(), _width(width), _height(height)
-{
+FrameBuffer::FrameBuffer(int width, int height, std::vector<TextureFormat> format)
+    : _frame_buffer(),
+      _render_buffers(),
+      _textures(),
+      _width(width),
+      _height(height) {
     glBindFramebuffer(GL_FRAMEBUFFER, _frame_buffer);
     GLenum draw_buffers[format.size()];
     for (int i = 0; i < format.size(); i++) {
@@ -50,6 +52,6 @@ void FrameBuffer::copyFrom(const FrameBuffer& other) {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

@@ -1,21 +1,19 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include <TotoEngine/Core/LibObject.hpp>
+#include <TotoEngine/Graphics/GPUObjects/Allocators.hpp>
 #include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
+
 #include <vector>
 
 namespace TotoEngine {
 
 namespace Graphics {
 
-using GLFrameBuffer = Core::LibObject<
-    []() { GLuint b; glGenFramebuffers(1, &b); return b; },
-    [](GLuint& b) { glDeleteFramebuffers(1, &b); }
->;
-using GLRenderBuffer = Core::LibObject<
-    []() { GLuint b; glGenRenderbuffers(1, &b); return b; },
-    [](GLuint& b) { glDeleteRenderbuffers(1, &b); }
->;
+using GLFrameBuffer = Core::LibObject<createFrameBuffer, deleteFrameBuffer>;
+using GLRenderBuffer = Core::LibObject<createRenderBuffer, deleteRenderBuffer>;
 
 class FrameBuffer {
 public:
@@ -28,6 +26,7 @@ public:
     [[nodiscard]] const Texture2D& texture(int i = 0) const { return _textures[i]; }
     [[nodiscard]] int width() const { return _width; }
     [[nodiscard]] int height() const { return _height; }
+
 private:
     GLFrameBuffer _frame_buffer;
     std::vector<GLRenderBuffer> _render_buffers;
@@ -36,6 +35,6 @@ private:
     int _width, _height;
 };
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

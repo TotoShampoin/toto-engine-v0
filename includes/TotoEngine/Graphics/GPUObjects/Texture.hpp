@@ -1,19 +1,19 @@
 #pragma once
 
-#include <TotoEngine/Core/LibObject.hpp>
+#include <GL/glew.h>
+
 #include <TotoEngine/Core/Aliases.hpp>
 #include <TotoEngine/Core/Instantiation.hpp>
-#include <GL/gl.h>
+#include <TotoEngine/Core/LibObject.hpp>
+#include <TotoEngine/Graphics/GPUObjects/Allocators.hpp>
+
 #include <format>
 
 namespace TotoEngine {
 
 namespace Graphics {
 
-using GLTexture = TotoEngine::Core::LibObject<
-    [] { GLuint id; glGenTextures(1, &id); return id; },
-    [](GLuint& id) { glDeleteTextures(1, &id); }
->;
+using GLTexture = TotoEngine::Core::LibObject<createTexture, deleteTexture>;
 
 enum class TextureTarget {
     TEXTURE_2D = GL_TEXTURE_2D,
@@ -58,13 +58,11 @@ public:
         parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }
 
-    static void activeTexture(uint id) {
-        glActiveTexture(GL_TEXTURE0 + id);
-    }
+    static void activeTexture(uint id) { glActiveTexture(GL_TEXTURE0 + id); }
 
     constexpr static auto NONE = std::nullopt;
     static void bind(const optional_ref<const Texture<TARGET>>& texture) {
-        if(!texture.has_value()) {
+        if (!texture.has_value()) {
             glBindTexture(static_cast<GLenum>(TARGET), 0U);
             return;
         }
@@ -84,26 +82,40 @@ public:
         glTexParameterf(static_cast<GLenum>(TARGET), pname, param);
     }
 
-    static void generateMipmap() {
-        glGenerateMipmap(static_cast<GLenum>(TARGET));
-    }
+    static void generateMipmap() { glGenerateMipmap(static_cast<GLenum>(TARGET)); }
 
-    template<typename T = uint8_t, TextureTarget TARGET_T = TARGET>
-    typename std::enable_if<TARGET_T == TextureTarget::TEXTURE_2D || TARGET_T == TextureTarget::TEXTURE_CUBE_MAP>::type
-    static image(const int& width, const int& height, const TextureFormat& in_format, const TextureFormat& out_format, const T* data) {
-        glTexImage2D(static_cast<GLenum>(TARGET_T), 0, static_cast<GLenum>(in_format), width, height, 0, static_cast<GLenum>(out_format), getType<T>(), data);
+    template <typename T = uint8_t, TextureTarget TARGET_T = TARGET>
+    typename std::enable_if<TARGET_T == TextureTarget::TEXTURE_2D || TARGET_T == TextureTarget::TEXTURE_CUBE_MAP>::
+        type static image(
+            const int& width, const int& height, const TextureFormat& in_format, const TextureFormat& out_format,
+            const T* data
+        ) {
+        glTexImage2D(
+            static_cast<GLenum>(TARGET_T), 0, static_cast<GLenum>(in_format), width, height, 0,
+            static_cast<GLenum>(out_format), getType<T>(), data
+        );
         GLenum error = glGetError();
-        if(error != GL_NO_ERROR) {
-            throw std::runtime_error(std::format("Failed to create texture image: {}", (const char*)glewGetErrorString(error)));
+        if (error != GL_NO_ERROR) {
+            throw std::runtime_error(
+                std::format("Failed to create texture image: {}", (const char*)glewGetErrorString(error))
+            );
         }
     }
-    template<typename T = uint8_t, TextureTarget TARGET_T = TARGET>
-    typename std::enable_if<TARGET_T == TextureTarget::TEXTURE_2D_ARRAY || TARGET_T == TextureTarget::TEXTURE_CUBE_MAP>::type
-    static image(const int& width, const int& height, const int& depth, const TextureFormat& in_format, const TextureFormat& out_format, const T* data) {
-        glTexImage3D(static_cast<GLenum>(TARGET_T), 0, in_format, width, height, depth, 0, out_format, getType<T>(), data);
+    template <typename T = uint8_t, TextureTarget TARGET_T = TARGET>
+    typename std::enable_if<
+        TARGET_T == TextureTarget::TEXTURE_2D_ARRAY || TARGET_T == TextureTarget::TEXTURE_CUBE_MAP>::
+        type static image(
+            const int& width, const int& height, const int& depth, const TextureFormat& in_format,
+            const TextureFormat& out_format, const T* data
+        ) {
+        glTexImage3D(
+            static_cast<GLenum>(TARGET_T), 0, in_format, width, height, depth, 0, out_format, getType<T>(), data
+        );
         GLenum error = glGetError();
-        if(error != GL_NO_ERROR) {
-            throw std::runtime_error(std::format("Failed to create texture image: {}", (const char*)glewGetErrorString(error)));
+        if (error != GL_NO_ERROR) {
+            throw std::runtime_error(
+                std::format("Failed to create texture image: {}", (const char*)glewGetErrorString(error))
+            );
         }
     }
 
@@ -112,12 +124,16 @@ public:
 private:
     GLTexture _texture;
 
-    template<typename T>
+    template <typename T>
     static GLuint getType() {
-        if constexpr(std::is_same_v<T, uint8_t>) return GL_UNSIGNED_BYTE;
-        if constexpr(std::is_same_v<T, uint16_t>) return GL_UNSIGNED_SHORT;
-        if constexpr(std::is_same_v<T, uint32_t>) return GL_UNSIGNED_INT;
-        if constexpr(std::is_same_v<T, float>) return GL_FLOAT;
+        if constexpr (std::is_same_v<T, uint8_t>)
+            return GL_UNSIGNED_BYTE;
+        if constexpr (std::is_same_v<T, uint16_t>)
+            return GL_UNSIGNED_SHORT;
+        if constexpr (std::is_same_v<T, uint32_t>)
+            return GL_UNSIGNED_INT;
+        if constexpr (std::is_same_v<T, float>)
+            return GL_FLOAT;
     }
 };
 
@@ -142,6 +158,6 @@ using TextureCubeMap = Texture<TextureTarget::TEXTURE_CUBE_MAP>;
 using TextureCubeMapInstance = Core::Manager<TextureCubeMap>::Instance;
 using TextureCubeMapManager = Core::Manager<TextureCubeMap>;
 
-}
+} // namespace Graphics
 
-}
+} // namespace TotoEngine

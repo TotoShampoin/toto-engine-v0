@@ -31,12 +31,13 @@ public:
     Vector3 position() const { return _position; }
     Vector3 rotation() const { return _rotation; }
     Vector3 scale() const { return _scale; }
+
 private:
     Vector3 _position {0.0f, 0.0f, 0.0f};
     Vector3 _rotation {0.0f, 0.0f, 0.0f};
     Vector3 _scale {1.0f, 1.0f, 1.0f};
 };
 
-}
+} // namespace Math
 
-};
+}; // namespace TotoEngine
