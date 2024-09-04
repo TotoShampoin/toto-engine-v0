@@ -1,42 +1,38 @@
 #pragma once
 
-#include "TotoEngine/Audio/Sample.hpp"
-#include "TotoEngine/Graphics/GPUObjects/GeometryBuffer.hpp"
-#include "TotoEngine/Graphics/Loaders/TextureLoader.hpp"
-#include "TotoEngine/Graphics/RenderData/Camera.hpp"
-#include "TotoEngine/Graphics/RenderData/Light.hpp"
-#include "TotoEngine/Graphics/RenderData/Materials.hpp"
-#include "TotoEngine/Math/Transform.hpp"
-#include "TotoEngine/Core/Window.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include <TotoEngine/Graphics/GPUObjects/Texture.hpp>
-#include <TotoEngine/Graphics/GPUObjects/ShaderProgram.hpp>
 #include <TotoEngine/TotoEngine.hpp>
+
 #include <functional>
 #include <vector>
 
 namespace Test_Deferred {
 
 struct DeferredRendering {
-    DeferredRendering(int width, int height):
-        buffer(width, height, {
-            TotoEngine::Graphics::TextureFormat::RGB32F, // Position
-            TotoEngine::Graphics::TextureFormat::RGB32F, // Normal
-            TotoEngine::Graphics::TextureFormat::RGB32F, // Ambient
-            TotoEngine::Graphics::TextureFormat::RGB32F, // Diffuse
-            TotoEngine::Graphics::TextureFormat::RGB32F, // Specular
-            TotoEngine::Graphics::TextureFormat::RGB32F, // Emissive
-            TotoEngine::Graphics::TextureFormat::RGB32F, // Shininess
-            TotoEngine::Graphics::TextureFormat::RGB32F, // Alpha
-        }),
-        shader(
-            TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("tests_assets/screen.vert"),
-            TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>("tests_assets/deferred.frag")
-        ),
-        hdri(TotoEngine::Graphics::loadTexture2D("tests_assets/hdri.jpg"))
-    {}
+    DeferredRendering(int width, int height)
+        : buffer(
+              width, height,
+              {
+                  TotoEngine::Graphics::TextureFormat::RGB32F, // Position
+                  TotoEngine::Graphics::TextureFormat::RGB32F, // Normal
+                  TotoEngine::Graphics::TextureFormat::RGB32F, // Ambient
+                  TotoEngine::Graphics::TextureFormat::RGB32F, // Diffuse
+                  TotoEngine::Graphics::TextureFormat::RGB32F, // Specular
+                  TotoEngine::Graphics::TextureFormat::RGB32F, // Emissive
+                  TotoEngine::Graphics::TextureFormat::RGB32F, // Shininess
+                  TotoEngine::Graphics::TextureFormat::RGB32F, // Alpha
+              }
+          ),
+          shader(
+              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("tests_assets/screen.vert"
+              ),
+              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>(
+                  "tests_assets/deferred.frag"
+              )
+          ),
+          hdri(TotoEngine::Graphics::loadTexture2D("tests_assets/hdri.jpg")) {}
 
     void apply() {
         TotoEngine::Graphics::Texture2D::bindAs(hdri, 0);
@@ -57,7 +53,7 @@ struct DeferredRendering {
         shader.uniform("u_emissive", EMISSIVE + 1);
         shader.uniform("u_shininess", SHININESS + 1);
         shader.uniform("u_alpha", ALPHA + 1);
-    }        
+    }
 
     TotoEngine::Graphics::FrameBuffer buffer;
     TotoEngine::Graphics::ShaderProgram shader;
@@ -74,22 +70,21 @@ struct DeferredRendering {
 };
 
 struct MyMaterial {
-    MyMaterial():
-        uv_texture(TotoEngine::Graphics::loadTexture2D("tests_assets/uv.png")),
-        shader(
-            TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("tests_assets/basic.vert"),
-            TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>("tests_assets/phong_pass.frag")
-        )
-    {
+    MyMaterial()
+        : uv_texture(TotoEngine::Graphics::loadTexture2D("tests_assets/uv.png")),
+          shader(
+              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("tests_assets/basic.vert"),
+              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>(
+                  "tests_assets/phong_pass.frag"
+              )
+          ) {
         material.diffuse_map = uv_texture;
         material.specular = TotoEngine::Math::ColorRGB(1.0f);
         material.shininess = 64.f;
         material.ambient_map = uv_texture;
     }
 
-    void apply() {
-        material.apply(shader);
-    }
+    void apply() { material.apply(shader); }
 
     TotoEngine::Graphics::Texture2D uv_texture;
     TotoEngine::Graphics::ShaderProgram shader;
@@ -102,18 +97,15 @@ struct Mesh {
 };
 
 inline void renderDeferred(
-    TotoEngine::Core::Window& window,
-    DeferredRendering& deferred, MyMaterial& material,
-    const std::vector<std::reference_wrapper<Mesh>>& meshes,
-    const std::vector<TotoEngine::Graphics::Light>& lights,
-    TotoEngine::Graphics::Camera& camera,
-    Mesh& screen
+    TotoEngine::Core::Window& window, DeferredRendering& deferred, MyMaterial& material,
+    const std::vector<std::reference_wrapper<Mesh>>& meshes, const std::vector<TotoEngine::Graphics::Light>& lights,
+    TotoEngine::Graphics::Camera& camera, Mesh& screen
 ) {
     TotoEngine::Graphics::Renderer::bindRenderTarget(deferred.buffer);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     TotoEngine::Graphics::ShaderProgram::use(material.shader);
     material.apply();
-    for(const Mesh& mesh : meshes) {
+    for (const Mesh& mesh : meshes) {
         TotoEngine::Graphics::GeometryBuffer::bind(mesh.model);
         TotoEngine::Graphics::Renderer::apply(material.shader, camera, mesh.transform);
         TotoEngine::Graphics::Renderer::draw(mesh.model);
@@ -129,30 +121,18 @@ inline void renderDeferred(
     TotoEngine::Graphics::Renderer::draw(screen.model);
 }
 
-inline void imguiRender(
-    float& render_time,
-    bool& plays,
-    TotoEngine::Audio::Sample& sample
-) {
+inline void imguiRender(float& render_time, bool& plays, TotoEngine::Audio::Sample& sample) {
     static std::vector<float> render_times(200);
     render_times.push_back(1.f / render_time);
-    if(render_times.size() > 200) {
+    if (render_times.size() > 200) {
         render_times.erase(render_times.begin());
     }
     std::string state;
-    switch(sample.state()) {
-        case AL_INITIAL:
-            state = "INITIAL";
-            break;
-        case AL_PLAYING:
-            state = "PLAYING";
-            break;
-        case AL_PAUSED:
-            state = "PAUSED";
-            break;
-        case AL_STOPPED:
-            state = "STOPPED";
-            break;
+    switch (sample.state()) {
+    case AL_INITIAL: state = "INITIAL"; break;
+    case AL_PLAYING: state = "PLAYING"; break;
+    case AL_PAUSED: state = "PAUSED"; break;
+    case AL_STOPPED: state = "STOPPED"; break;
     }
 
     ImGui_ImplOpenGL3_NewFrame();
@@ -161,8 +141,16 @@ inline void imguiRender(
 
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::SetNextWindowSize(ImVec2(0, 0));
-    ImGui::Begin("##", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
-    ImGui::PlotHistogram("##fps", render_times.data(), render_times.size(), 0, nullptr, 0, std::max_element(render_times.begin(), render_times.end()).operator*(), ImVec2(400, 80));
+    ImGui::Begin(
+        "##", nullptr,
+        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing |
+            ImGuiWindowFlags_NoBringToFrontOnFocus
+    );
+    ImGui::PlotHistogram(
+        "##fps", render_times.data(), render_times.size(), 0, nullptr, 0,
+        std::max_element(render_times.begin(), render_times.end()).operator*(), ImVec2(400, 80)
+    );
     ImGui::Text("Render FPS: %.2f", 1 / render_time);
     plays |= ImGui::Button("Play");
     ImGui::SameLine();
@@ -173,4 +161,4 @@ inline void imguiRender(
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-}
+} // namespace Test_Deferred

@@ -1,9 +1,9 @@
 #include "gfx-data.hpp"
 #include <TotoEngine/TotoEngine.hpp>
 
-#include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <imgui.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -12,19 +12,18 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
-#include <vector>
 #include <chrono>
+#include <vector>
 
-namespace Test_Deferred {
-
-int test_deferred() {
-    using TotoEngine::Graphics::TextureTarget::TEXTURE_2D;
-    using TotoEngine::Graphics::ShaderType::VERTEX;
-    using TotoEngine::Graphics::ShaderType::FRAGMENT;
+int main() {
+    using namespace Test_Deferred;
     using TotoEngine::Graphics::LightType::AMBIENT;
     using TotoEngine::Graphics::LightType::DIRECTIONAL;
     using TotoEngine::Graphics::LightType::POINT;
-    
+    using TotoEngine::Graphics::ShaderType::FRAGMENT;
+    using TotoEngine::Graphics::ShaderType::VERTEX;
+    using TotoEngine::Graphics::TextureTarget::TEXTURE_2D;
+
     auto window = TotoEngine::Core::Window(800, 600, "TotoEngine");
     TotoEngine::Graphics::Renderer::init();
 
@@ -39,9 +38,9 @@ int test_deferred() {
     auto camera = TotoEngine::Graphics::Camera(glm::perspective(glm::radians(70.0f), 320.0f / 240.0f, 0.1f, 100.0f));
     auto deferred = DeferredRendering(800, 600);
     auto material = MyMaterial();
-    auto screen_model = Mesh { TotoEngine::Graphics::plane(2, 2) };
-    auto plane_model = Mesh { TotoEngine::Graphics::cube(2, 2, 2) };
-    auto sphere_model = Mesh { TotoEngine::Graphics::sphere(1, 32, 16)  };
+    auto screen_model = Mesh {TotoEngine::Graphics::plane(2, 2)};
+    auto plane_model = Mesh {TotoEngine::Graphics::cube(2, 2, 2)};
+    auto sphere_model = Mesh {TotoEngine::Graphics::sphere(1, 32, 16)};
     // auto amb_light = TotoEngine::Graphics::Light(AMBIENT, TotoEngine::Math::ColorRGB(1, 1, 1), 0.33333f);
     auto dir_light = TotoEngine::Graphics::Light(DIRECTIONAL, TotoEngine::Math::ColorRGB(1, 1, 1), 1);
     auto pt_light = TotoEngine::Graphics::Light(POINT, TotoEngine::Math::ColorRGB(1, 1, 1), 2);
@@ -63,7 +62,7 @@ int test_deferred() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    while(!window.shouldClose()) {
+    while (!window.shouldClose()) {
         auto current_time = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration<float>(current_time - start_time).count();
         // auto delta_time = std::chrono::duration<float>(current_time - last_time).count();
@@ -74,11 +73,9 @@ int test_deferred() {
         TotoEngine::Core::Window::makeContextCurrent(window);
 
         renderDeferred(
-            window, deferred, material,
-            { plane_model, sphere_model }, { dir_light , pt_light },
-            camera, screen_model
+            window, deferred, material, {plane_model, sphere_model}, {dir_light, pt_light}, camera, screen_model
         );
-        
+
         auto time_after_render = std::chrono::high_resolution_clock::now();
         auto render_time = std::chrono::duration<float>(time_after_render - current_time).count();
 
@@ -92,7 +89,7 @@ int test_deferred() {
         sphere_model.transform.rotation().y = time;
         camera.lookAt({0, 0, -5});
 
-        if(plays) {
+        if (plays) {
             sample.play();
             plays = false;
         }
@@ -101,6 +98,4 @@ int test_deferred() {
     }
 
     return 0;
-}
-
 }
