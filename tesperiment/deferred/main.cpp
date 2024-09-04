@@ -51,7 +51,7 @@ int main() {
     dir_light.lookAt({0, 1, 1});
     pt_light.position() = {0, 2, -4};
 
-    auto sample = TotoEngine::Audio::loadSample("tests_assets/Bass-Drum-1.wav");
+    auto sample = TotoEngine::Audio::loadSample("assets/Bass-Drum-1.wav");
 
     auto start_time = std::chrono::high_resolution_clock::now();
     auto last_time = start_time;

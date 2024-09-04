@@ -26,13 +26,10 @@ struct DeferredRendering {
               }
           ),
           shader(
-              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("tests_assets/screen.vert"
-              ),
-              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>(
-                  "tests_assets/deferred.frag"
-              )
+              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("assets/screen.vert"),
+              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>("assets/deferred.frag")
           ),
-          hdri(TotoEngine::Graphics::loadTexture2D("tests_assets/hdri.jpg")) {}
+          hdri(TotoEngine::Graphics::loadTexture2D("assets/hdri.jpg")) {}
 
     void apply() {
         TotoEngine::Graphics::Texture2D::bindAs(hdri, 0);
@@ -71,12 +68,10 @@ struct DeferredRendering {
 
 struct MyMaterial {
     MyMaterial()
-        : uv_texture(TotoEngine::Graphics::loadTexture2D("tests_assets/uv.png")),
+        : uv_texture(TotoEngine::Graphics::loadTexture2D("assets/uv.png")),
           shader(
-              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("tests_assets/basic.vert"),
-              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>(
-                  "tests_assets/phong_pass.frag"
-              )
+              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::VERTEX>("assets/basic.vert"),
+              TotoEngine::Graphics::loadShaderFile<TotoEngine::Graphics::ShaderType::FRAGMENT>("assets/phong_pass.frag")
           ) {
         material.diffuse_map = uv_texture;
         material.specular = TotoEngine::Math::ColorRGB(1.0f);
