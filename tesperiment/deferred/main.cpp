@@ -24,7 +24,7 @@ int main() {
     using TotoEngine::Graphics::ShaderType::VERTEX;
     using TotoEngine::Graphics::TextureTarget::TEXTURE_2D;
 
-    auto window = TotoEngine::Core::Window(800, 600, "TotoEngine");
+    auto window = TotoEngine::Core::Window(800, 600, "TotoEngine: Deferred Rendering");
     TotoEngine::Graphics::Renderer::init();
 
     auto& device = TotoEngine::Audio::DeviceManager::open();

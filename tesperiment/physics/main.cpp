@@ -25,7 +25,7 @@ Object sphere() {
 }
 
 int main() {
-    auto window = Core::Window(800, 600, "Doing Physics");
+    auto window = Core::Window(800, 600, "TotoEngine: Physics Attempt");
     Graphics::Renderer::init();
 
     IMGUI_CHECKVERSION();
